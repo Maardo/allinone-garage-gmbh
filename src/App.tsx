@@ -11,6 +11,7 @@ import Calendar from "./pages/Calendar";
 import Customers from "./pages/Customers";
 import LoanerCars from "./pages/LoanerCars";
 import ServiceTypes from "./pages/ServiceTypes";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/customers" element={<Customers />} />
             <Route path="/loaner-cars" element={<LoanerCars />} />
             <Route path="/service-types" element={<ServiceTypes />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
