@@ -37,12 +37,12 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <main className="flex-1 pl-0 md:pl-64 transition-all">
+      <main className="flex-1 pl-0 md:pl-64 transition-all bg-background text-foreground">
         <div className="p-6 max-w-7xl mx-auto animate-fade-in">
           {(title || subtitle) && (
             <div className="mb-8">
               {title && (
-                <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+                <h1 className="text-3xl font-bold tracking-tight text-foreground">{title}</h1>
               )}
               {subtitle && (
                 <p className="mt-2 text-muted-foreground">{subtitle}</p>
