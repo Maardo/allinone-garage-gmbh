@@ -36,23 +36,16 @@
     --radius: 0.5rem;
 
     --sidebar-background: 210 50% 10%;
-    --sidebar-foreground: 210 20% 98%;
+    --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 210 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 50% 15%;
-    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-accent: 210 40% 20%;
+    --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 210 50% 15%;
     --sidebar-ring: 210 100% 50%;
   }
 
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+  /* ... keep existing code (fonts and scrollbar styles) */
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {
@@ -140,10 +133,10 @@
   }
   
   .sidebar-link {
-    @apply flex items-center gap-2 px-4 py-2 rounded-md transition-colors duration-200;
+    @apply flex items-center gap-2 px-4 py-2 rounded-md transition-colors duration-200 text-gray-200 hover:bg-blue-700;
   }
   
   .sidebar-link-active {
-    @apply bg-sidebar-accent text-sidebar-accent-foreground;
+    @apply bg-blue-700 text-white font-medium;
   }
 }

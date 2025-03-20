@@ -87,10 +87,10 @@ export function Sidebar() {
       >
         {/* Logo area */}
         <div className="p-6 border-b border-sidebar-border">
-          <h1 className="text-xl font-bold text-sidebar-foreground">
+          <h1 className="text-xl font-bold text-white">
             Workshop Manager
           </h1>
-          <p className="text-sm text-sidebar-foreground/70 mt-1">
+          <p className="text-sm text-gray-300 mt-1">
             {currentUser?.role === 'admin' ? 'Administrator' : 'Mechanic'}
           </p>
         </div>
@@ -103,8 +103,8 @@ export function Sidebar() {
                 <Link
                   to={item.path}
                   className={cn(
-                    "sidebar-link",
-                    location.pathname === item.path && "sidebar-link-active"
+                    "flex items-center gap-2 px-4 py-2 rounded-md text-gray-200 hover:bg-blue-700 transition-colors duration-200",
+                    location.pathname === item.path && "bg-blue-700 text-white font-medium"
                   )}
                 >
                   {item.icon}
@@ -119,10 +119,10 @@ export function Sidebar() {
         <div className="p-4 border-t border-sidebar-border mt-auto">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-sidebar-foreground">
+              <p className="text-sm font-medium text-white">
                 {currentUser?.name}
               </p>
-              <p className="text-xs text-sidebar-foreground/70">
+              <p className="text-xs text-gray-300">
                 {currentUser?.email}
               </p>
             </div>
@@ -130,7 +130,7 @@ export function Sidebar() {
               variant="ghost" 
               size="icon" 
               onClick={logout}
-              className="text-sidebar-foreground hover:bg-sidebar-accent"
+              className="text-white hover:bg-blue-700"
             >
               <LogOut className="h-5 w-5" />
             </Button>
