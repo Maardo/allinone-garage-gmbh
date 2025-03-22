@@ -46,7 +46,7 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
       <div className="flex-1 pl-0 md:pl-64 transition-all bg-background text-foreground flex flex-col">
         <Navbar toggleSidebar={toggleSidebar} />
         <main className="flex-1 bg-background text-foreground">
-          <div className="p-3 sm:p-6 max-w-7xl mx-auto animate-fade-in">
+          <div className="p-3 sm:p-6 max-w-7xl mx-auto">
             {(title || subtitle) && (
               <div className="mb-4 sm:mb-8">
                 {title && (
