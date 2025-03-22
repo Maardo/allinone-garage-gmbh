@@ -28,6 +28,25 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
     setIsMobileOpen((prev) => !prev);
   };
 
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (isMobileOpen && window.innerWidth < 768) {
+        const target = e.target as HTMLElement;
+        // Don't close if clicking sidebar or navbar toggle button
+        if (!target.closest('[data-sidebar="sidebar"]') && 
+            !target.closest('[data-toggle="sidebar"]')) {
+          setIsMobileOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isMobileOpen]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -41,11 +60,11 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen overflow-hidden">
       <Sidebar isMobileOpen={isMobileOpen} toggleSidebar={toggleSidebar} />
       <div className="flex-1 pl-0 md:pl-64 transition-all bg-background text-foreground flex flex-col">
         <Navbar toggleSidebar={toggleSidebar} />
-        <main className="flex-1 bg-background text-foreground">
+        <main className="flex-1 bg-background text-foreground overflow-auto">
           <div className="p-3 sm:p-6 max-w-7xl mx-auto">
             {(title || subtitle) && (
               <div className="mb-4 sm:mb-8">

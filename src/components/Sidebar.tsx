@@ -25,7 +25,7 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
   
   // Close sidebar on mobile when route changes
   useEffect(() => {
-    if (isMobileOpen && toggleSidebar) {
+    if (isMobileOpen && toggleSidebar && window.innerWidth < 768) {
       toggleSidebar();
     }
   }, [location.pathname, isMobileOpen, toggleSidebar]);
@@ -67,13 +67,15 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
         <div 
           className="fixed inset-0 bg-black/30 z-40 md:hidden"
           onClick={toggleSidebar}
+          data-backdrop="sidebar"
         />
       )}
       
       {/* Sidebar */}
       <div
+        data-sidebar="sidebar"
         className={cn(
-          "fixed h-full w-64 bg-sidebar flex flex-col border-r border-sidebar-border z-50 shadow-lg transition-transform duration-300 ease-in-out",
+          "fixed h-full w-64 bg-sidebar flex flex-col border-r border-sidebar-border z-50 shadow-lg transition-all duration-300 ease-in-out",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
@@ -107,7 +109,7 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
                 <Link
                   to={item.path}
                   className={cn(
-                    "flex items-center gap-2 px-4 py-2 rounded-md text-gray-200 hover:bg-blue-700 transition-colors duration-200",
+                    "flex items-center gap-2 px-4 py-3 rounded-md text-gray-200 hover:bg-blue-700 transition-colors duration-200",
                     location.pathname === item.path && "bg-blue-700 text-white font-medium"
                   )}
                 >

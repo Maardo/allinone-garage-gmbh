@@ -19,6 +19,7 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
           className="md:hidden"
           onClick={toggleSidebar}
           aria-label="Toggle menu"
+          data-toggle="sidebar"
         >
           <Menu className="h-5 w-5" />
         </Button>
