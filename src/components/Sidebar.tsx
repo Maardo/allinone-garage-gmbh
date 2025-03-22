@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -10,19 +10,24 @@ import {
   Car, 
   ClipboardList, 
   Settings, 
-  Menu, 
   LogOut 
 } from 'lucide-react';
 
-export function Sidebar() {
+interface SidebarProps {
+  isMobileOpen?: boolean;
+  toggleSidebar?: () => void;
+}
+
+export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
   const { logout, currentUser } = useAuth();
   const location = useLocation();
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
   
   // Close sidebar on mobile when route changes
   useEffect(() => {
-    setIsMobileOpen(false);
-  }, [location.pathname]);
+    if (isMobileOpen && toggleSidebar) {
+      toggleSidebar();
+    }
+  }, [location.pathname, isMobileOpen, toggleSidebar]);
 
   const menuItems = [
     {
@@ -54,27 +59,13 @@ export function Sidebar() {
     ] : []),
   ];
 
-  const toggleSidebar = () => {
-    setIsMobileOpen(!isMobileOpen);
-  };
-
   return (
     <>
-      {/* Mobile sidebar toggle */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="fixed top-4 left-4 z-50 md:hidden"
-        onClick={toggleSidebar}
-      >
-        <Menu className="h-6 w-6" />
-      </Button>
-      
       {/* Sidebar backdrop for mobile */}
       {isMobileOpen && (
         <div 
           className="fixed inset-0 bg-black/30 z-40 md:hidden animate-fade-in"
-          onClick={() => setIsMobileOpen(false)}
+          onClick={toggleSidebar}
         />
       )}
       
@@ -88,7 +79,7 @@ export function Sidebar() {
         {/* Logo area */}
         <div className="p-6 border-b border-sidebar-border">
           <h1 className="text-xl font-bold text-white">
-            Workshop Manager
+            Allinone Garage
           </h1>
           <p className="text-sm text-gray-300 mt-1">
             {currentUser?.role === 'admin' ? 'Administrator' : 'Mechanic'}
