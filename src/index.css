@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -76,7 +75,7 @@
   
   /* Calendar styles */
   .calendar-day {
-    @apply bg-card border rounded-md p-2 h-24 overflow-y-auto transition-all duration-200 text-foreground;
+    @apply bg-card border rounded-md p-1 sm:p-2 h-16 sm:h-24 overflow-y-auto transition-all duration-200 text-foreground text-xs sm:text-sm;
   }
   
   .calendar-day:hover {
@@ -84,28 +83,28 @@
   }
   
   .calendar-appointment {
-    @apply text-xs p-1 mb-1 rounded-sm cursor-pointer transition-all text-foreground;
+    @apply text-xs p-0.5 sm:p-1 mb-0.5 sm:mb-1 rounded-sm cursor-pointer transition-all text-foreground;
   }
   
   /* Service type colors */
   .service-type-1 {
-    @apply bg-blue-100 border-l-4 border-blue-500 text-blue-800;
+    @apply bg-blue-100 border-l-2 sm:border-l-4 border-blue-500 text-blue-800;
   }
   
   .service-type-2 {
-    @apply bg-red-100 border-l-4 border-red-500 text-red-800;
+    @apply bg-red-100 border-l-2 sm:border-l-4 border-red-500 text-red-800;
   }
   
   .service-type-3 {
-    @apply bg-green-100 border-l-4 border-green-500 text-green-800;
+    @apply bg-green-100 border-l-2 sm:border-l-4 border-green-500 text-green-800;
   }
   
   .service-type-4 {
-    @apply bg-purple-100 border-l-4 border-purple-500 text-purple-800;
+    @apply bg-purple-100 border-l-2 sm:border-l-4 border-purple-500 text-purple-800;
   }
   
   .service-type-5 {
-    @apply bg-amber-100 border-l-4 border-amber-500 text-amber-800;
+    @apply bg-amber-100 border-l-2 sm:border-l-4 border-amber-500 text-amber-800;
   }
   
   /* Loaner car states */
