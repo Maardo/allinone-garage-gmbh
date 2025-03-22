@@ -25,7 +25,7 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   }, [currentUser, isLoading, navigate]);
 
   const toggleSidebar = () => {
-    setIsMobileOpen(!isMobileOpen);
+    setIsMobileOpen((prev) => !prev);
   };
 
   if (isLoading) {

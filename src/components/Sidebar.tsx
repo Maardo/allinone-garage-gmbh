@@ -10,7 +10,8 @@ import {
   Car, 
   ClipboardList, 
   Settings, 
-  LogOut 
+  LogOut,
+  X
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -77,13 +78,25 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
         )}
       >
         {/* Logo area */}
-        <div className="p-6 border-b border-sidebar-border">
-          <h1 className="text-xl font-bold text-white">
-            Allinone Garage
-          </h1>
-          <p className="text-sm text-gray-300 mt-1">
-            {currentUser?.role === 'admin' ? 'Administrator' : 'Mechanic'}
-          </p>
+        <div className="p-6 border-b border-sidebar-border flex justify-between items-center">
+          <div>
+            <h1 className="text-xl font-bold text-white">
+              Allinone Garage
+            </h1>
+            <p className="text-sm text-gray-300 mt-1">
+              {currentUser?.role === 'admin' ? 'Administrator' : 'Mechanic'}
+            </p>
+          </div>
+          {isMobileOpen && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleSidebar}
+              className="text-white hover:bg-blue-700 md:hidden"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          )}
         </div>
 
         {/* Nav items */}

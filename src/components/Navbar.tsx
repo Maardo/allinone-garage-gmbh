@@ -1,6 +1,6 @@
 
 import { useAuth } from "@/context/AuthContext";
-import { MenuIcon } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface NavbarProps {
@@ -18,8 +18,9 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
           size="icon"
           className="md:hidden"
           onClick={toggleSidebar}
+          aria-label="Toggle menu"
         >
-          <MenuIcon className="h-5 w-5" />
+          <Menu className="h-5 w-5" />
         </Button>
         <div>
           <h1 className="font-bold text-xl text-primary">Allinone Garage</h1>
