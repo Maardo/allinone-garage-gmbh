@@ -65,7 +65,7 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
       {/* Sidebar backdrop for mobile */}
       {isMobileOpen && (
         <div 
-          className="fixed inset-0 bg-black/30 z-40 md:hidden"
+          className="fixed inset-0 bg-black/30 z-40 md:hidden animate-fade-in"
           onClick={toggleSidebar}
         />
       )}
@@ -73,7 +73,7 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed h-full w-64 bg-sidebar flex flex-col border-r border-sidebar-border z-50 shadow-lg transition-transform duration-300 ease-in-out",
+          "fixed h-screen w-64 bg-sidebar flex flex-col border-r border-sidebar-border z-50 shadow-lg transition-transform duration-300 ease-in-out",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
