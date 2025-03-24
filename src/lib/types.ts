@@ -90,3 +90,68 @@ export interface LoanerCar {
   assignedTo?: string;
   assignedUntil?: Date;
 }
+
+export type Language = 'en' | 'sv' | 'de';
+
+export const LANGUAGES: Record<Language, string> = {
+  en: 'English',
+  sv: 'Svenska',
+  de: 'Deutsch'
+};
+
+export const TRANSLATIONS = {
+  en: {
+    serviceTypes: {
+      title: 'Service Types',
+      subtitle: 'Manage and configure service categories',
+      description: 'Service types are used for categorizing workshop jobs in the calendar',
+      new: 'New Service Type',
+      edit: 'Edit Service Type',
+      create: 'Create New Service Type',
+      name: 'Name',
+      desc: 'Description',
+      color: 'Color',
+      about: 'About this service type',
+      code: 'Code',
+      calendarColor: 'Calendar Color',
+      update: 'Update',
+      create: 'Create'
+    }
+  },
+  sv: {
+    serviceTypes: {
+      title: 'Servicetyper',
+      subtitle: 'Hantera och konfigurera servicekategorier',
+      description: 'Servicetyper används för att kategorisera verkstadsjobb i kalendern',
+      new: 'Ny Servicetyp',
+      edit: 'Redigera Servicetyp',
+      create: 'Skapa Ny Servicetyp',
+      name: 'Namn',
+      desc: 'Beskrivning',
+      color: 'Färg',
+      about: 'Om denna servicetyp',
+      code: 'Kod',
+      calendarColor: 'Kalenderfärg',
+      update: 'Uppdatera',
+      create: 'Skapa'
+    }
+  },
+  de: {
+    serviceTypes: {
+      title: 'Service-Typen',
+      subtitle: 'Verwalten und konfigurieren Sie Servicekategorien',
+      description: 'Service-Typen werden zur Kategorisierung von Werkstattarbeiten im Kalender verwendet',
+      new: 'Neue Service-Type',
+      edit: 'Service-Type bearbeiten',
+      create: 'Neue Service-Type erstellen',
+      name: 'Name',
+      desc: 'Beschreibung',
+      color: 'Farbe',
+      about: 'Über diesen Service-Typ',
+      code: 'Code',
+      calendarColor: 'Kalenderfarbe',
+      update: 'Aktualisieren',
+      create: 'Erstellen'
+    }
+  }
+};

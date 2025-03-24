@@ -12,13 +12,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { SERVICE_TYPES, ServiceType, ServiceTypeInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ServiceTypesPage() {
   const [serviceTypes, setServiceTypes] = useState<Record<ServiceType, ServiceTypeInfo>>(SERVICE_TYPES);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedType, setSelectedType] = useState<ServiceTypeInfo | null>(null);
+  const { t } = useLanguage();
   
-  const colors = ["blue", "red", "green", "purple", "amber", "cyan", "pink", "indigo"];
+  // Updated colorblind-friendly colors
+  const colors = ["blue", "red", "green", "purple", "amber"];
   
   const handleEditType = (type: ServiceTypeInfo) => {
     setSelectedType(type);
@@ -35,12 +38,12 @@ export default function ServiceTypesPage() {
   };
 
   return (
-    <Layout title="Service Types" subtitle="Manage and configure service categories">
+    <Layout title={t('serviceTypes.title')} subtitle={t('serviceTypes.subtitle')}>
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div>
             <p className="text-muted-foreground">
-              Service types are used for categorizing workshop jobs in the calendar
+              {t('serviceTypes.description')}
             </p>
           </div>
           
@@ -48,13 +51,13 @@ export default function ServiceTypesPage() {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
-                New Service Type
+                {t('serviceTypes.new')}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
                 <DialogTitle>
-                  {selectedType ? "Edit Service Type" : "Create New Service Type"}
+                  {selectedType ? t('serviceTypes.edit') : t('serviceTypes.create')}
                 </DialogTitle>
               </DialogHeader>
               
@@ -83,34 +86,34 @@ export default function ServiceTypesPage() {
                 }}
               >
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name">{t('serviceTypes.name')}</Label>
                   <Input
                     id="name"
                     name="name"
                     defaultValue={selectedType?.name}
-                    placeholder="Service type name"
+                    placeholder={t('serviceTypes.name')}
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t('serviceTypes.desc')}</Label>
                   <Textarea
                     id="description"
                     name="description"
                     defaultValue={selectedType?.description}
-                    placeholder="Brief description of this service type"
+                    placeholder={t('serviceTypes.desc')}
                     className="h-20"
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>Color</Label>
+                  <Label>{t('serviceTypes.color')}</Label>
                   <RadioGroup 
                     defaultValue={selectedType?.color} 
                     name="color"
-                    className="grid grid-cols-4 gap-2"
+                    className="grid grid-cols-5 gap-2"
                   >
                     {colors.map((color) => (
                       <div key={color} className="flex items-center justify-center">
@@ -122,13 +125,12 @@ export default function ServiceTypesPage() {
                         <Label
                           htmlFor={`color-${color}`}
                           className={cn(
-                            "w-full h-8 rounded-md border-2 cursor-pointer transition-all flex items-center justify-center",
-                            `bg-${color}-100 hover:bg-${color}-200`,
-                            `border-${color}-300`,
-                            selectedType?.color === color && `border-${color}-500 ring-2 ring-${color}-500/30`
+                            "w-full h-10 rounded-md border-2 cursor-pointer transition-all flex items-center justify-center",
+                            `border-${color}-400`,
+                            selectedType?.color === color && `border-${color}-700 ring-2 ring-${color}-500/30`
                           )}
                         >
-                          <div className={`w-4 h-4 rounded-full bg-${color}-500`}></div>
+                          <div className={`w-6 h-6 rounded-full bg-${color}-swatch`}></div>
                         </Label>
                       </div>
                     ))}
@@ -137,7 +139,7 @@ export default function ServiceTypesPage() {
                 
                 <div className="flex justify-end">
                   <Button type="submit">
-                    {selectedType ? "Update" : "Create"}
+                    {selectedType ? t('serviceTypes.update') : t('serviceTypes.create')}
                   </Button>
                 </div>
               </form>
@@ -151,21 +153,21 @@ export default function ServiceTypesPage() {
               key={type.id} 
               className={cn(
                 "overflow-hidden transition-all duration-200 hover:shadow-md",
-                `border-${type.color}-200`
+                `border-${type.color}-300`
               )}
             >
               <CardHeader 
                 className={cn(
                   "pb-3",
-                  `bg-${type.color}-50`
+                  `bg-${type.color}-header`
                 )}
               >
                 <CardTitle className="flex justify-between items-center">
                   <div className="flex items-center">
                     <div 
                       className={cn(
-                        "w-4 h-4 rounded-full mr-2",
-                        `bg-${type.color}-500`
+                        "w-5 h-5 rounded-full mr-2",
+                        `bg-${type.color}-swatch`
                       )}
                     ></div>
                     <span>{type.name}</span>
@@ -179,16 +181,16 @@ export default function ServiceTypesPage() {
                       </PopoverTrigger>
                       <PopoverContent side="left" className="w-80">
                         <div className="space-y-2">
-                          <h4 className="font-medium">About this service type</h4>
+                          <h4 className="font-medium">{t('serviceTypes.about')}</h4>
                           <p className="text-sm text-muted-foreground">{type.description}</p>
                           <div className="pt-2">
                             <div 
                               className={cn(
                                 "px-3 py-2 text-sm rounded-md",
-                                `bg-${type.color}-100 text-${type.color}-800 border border-${type.color}-200`
+                                `bg-${type.color}-100 text-${type.color}-900 border border-${type.color}-300`
                               )}
                             >
-                              Used for job type {type.id}
+                              {t('serviceTypes.code')} {type.id}
                             </div>
                           </div>
                         </div>
@@ -213,19 +215,19 @@ export default function ServiceTypesPage() {
               <CardFooter 
                 className={cn(
                   "flex justify-between border-t pt-4",
-                  `border-${type.color}-100`
+                  `border-${type.color}-200`
                 )}
               >
                 <div 
                   className={cn(
                     "text-xs px-2 py-1 rounded",
-                    `bg-${type.color}-100 text-${type.color}-800`
+                    `bg-${type.color}-100 text-${type.color}-900`
                   )}
                 >
-                  Code: {type.id}
+                  {t('serviceTypes.code')}: {type.id}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Calendar Color
+                  {t('serviceTypes.calendarColor')}
                 </div>
               </CardFooter>
             </Card>
