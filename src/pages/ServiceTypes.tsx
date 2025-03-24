@@ -11,6 +11,7 @@ import { Plus, Edit, Info } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SERVICE_TYPES, ServiceType, ServiceTypeInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function ServiceTypesPage() {
   const [serviceTypes, setServiceTypes] = useState<Record<ServiceType, ServiceTypeInfo>>(SERVICE_TYPES);
@@ -106,28 +107,32 @@ export default function ServiceTypesPage() {
                 
                 <div className="space-y-2">
                   <Label>Color</Label>
-                  <div className="grid grid-cols-4 gap-2">
+                  <RadioGroup 
+                    defaultValue={selectedType?.color} 
+                    name="color"
+                    className="grid grid-cols-4 gap-2"
+                  >
                     {colors.map((color) => (
-                      <div key={color} className="flex items-center">
-                        <input
-                          type="radio"
-                          id={`color-${color}`}
-                          name="color"
-                          value={color}
-                          defaultChecked={selectedType?.color === color}
+                      <div key={color} className="flex items-center justify-center">
+                        <RadioGroup.Item 
+                          value={color} 
+                          id={`color-${color}`} 
                           className="sr-only"
                         />
-                        <label
+                        <Label
                           htmlFor={`color-${color}`}
                           className={cn(
-                            "w-full h-8 rounded-md border-2 cursor-pointer transition-all",
+                            "w-full h-8 rounded-md border-2 cursor-pointer transition-all flex items-center justify-center",
                             `bg-${color}-100 hover:bg-${color}-200`,
+                            `border-${color}-300`,
                             selectedType?.color === color && `border-${color}-500 ring-2 ring-${color}-500/30`
                           )}
-                        ></label>
+                        >
+                          <div className={`w-4 h-4 rounded-full bg-${color}-500`}></div>
+                        </Label>
                       </div>
                     ))}
-                  </div>
+                  </RadioGroup>
                 </div>
                 
                 <div className="flex justify-end">
