@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { addMonths, subMonths } from "date-fns";
+import { addDays, addMonths, addWeeks, startOfDay, startOfMonth, startOfWeek, subDays, subMonths, subWeeks } from "date-fns";
 import { Layout } from "@/components/Layout";
 import { CalendarHeader } from "@/components/calendar/CalendarHeader";
 import { CalendarGrid } from "@/components/calendar/CalendarGrid";
@@ -50,10 +50,50 @@ export default function CalendarPage() {
   const [appointments, setAppointments] = useState<Appointment[]>(MOCK_APPOINTMENTS);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('month');
 
-  const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
-  const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
-  const goToToday = () => setCurrentDate(new Date());
+  const handleNavigatePrev = () => {
+    switch (viewMode) {
+      case 'day':
+        setCurrentDate(subDays(currentDate, 1));
+        break;
+      case 'week':
+        setCurrentDate(subWeeks(currentDate, 1));
+        break;
+      case 'month':
+        setCurrentDate(subMonths(currentDate, 1));
+        break;
+    }
+  };
+
+  const handleNavigateNext = () => {
+    switch (viewMode) {
+      case 'day':
+        setCurrentDate(addDays(currentDate, 1));
+        break;
+      case 'week':
+        setCurrentDate(addWeeks(currentDate, 1));
+        break;
+      case 'month':
+        setCurrentDate(addMonths(currentDate, 1));
+        break;
+    }
+  };
+
+  const goToToday = () => {
+    const today = new Date();
+    switch (viewMode) {
+      case 'day':
+        setCurrentDate(startOfDay(today));
+        break;
+      case 'week':
+        setCurrentDate(startOfWeek(today, { weekStartsOn: 1 }));
+        break;
+      case 'month':
+        setCurrentDate(startOfMonth(today));
+        break;
+    }
+  };
 
   const handleAddAppointment = (appointment: Appointment) => {
     if (selectedAppointment) {
@@ -95,18 +135,38 @@ export default function CalendarPage() {
     setIsDialogOpen(true);
   };
 
+  const handleChangeViewMode = (mode: 'day' | 'week' | 'month') => {
+    setViewMode(mode);
+    
+    // Adjust the current date to the start of the appropriate period
+    const today = new Date();
+    switch (mode) {
+      case 'day':
+        setCurrentDate(startOfDay(today));
+        break;
+      case 'week':
+        setCurrentDate(startOfWeek(today, { weekStartsOn: 1 }));
+        break;
+      case 'month':
+        setCurrentDate(startOfMonth(today));
+        break;
+    }
+  };
+
   return (
     <Layout title="Calendar" subtitle="Schedule and manage appointments">
       <CalendarHeader 
         currentDate={currentDate}
-        onPrevMonth={prevMonth}
-        onNextMonth={nextMonth}
+        onPrevMonth={handleNavigatePrev}
+        onNextMonth={handleNavigateNext}
         onToday={goToToday}
         onAddAppointment={handleAddAppointment}
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
         selectedAppointment={selectedAppointment}
         setSelectedAppointment={setSelectedAppointment}
+        viewMode={viewMode}
+        onChangeViewMode={handleChangeViewMode}
       />
 
       <CalendarGrid 
@@ -114,6 +174,7 @@ export default function CalendarPage() {
         appointments={appointments}
         onSelectAppointment={handleSelectAppointment}
         onNewAppointmentAtDate={handleNewAppointmentAtDate}
+        viewMode={viewMode}
       />
 
       <ServiceTypeLegend />
