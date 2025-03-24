@@ -114,7 +114,7 @@ export default function ServiceTypesPage() {
                   >
                     {colors.map((color) => (
                       <div key={color} className="flex items-center justify-center">
-                        <RadioGroup.Item 
+                        <RadioGroupItem 
                           value={color} 
                           id={`color-${color}`} 
                           className="sr-only"
