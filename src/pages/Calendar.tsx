@@ -6,6 +6,7 @@ import { CalendarHeader } from "@/components/calendar/CalendarHeader";
 import { CalendarGrid } from "@/components/calendar/CalendarGrid";
 import { ServiceTypeLegend } from "@/components/calendar/ServiceTypeLegend";
 import { Appointment } from "@/lib/types";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Mock data for demo purposes
 const MOCK_APPOINTMENTS: Appointment[] = [
@@ -51,6 +52,14 @@ export default function CalendarPage() {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('month');
+  const isMobile = useIsMobile();
+  
+  // If on mobile, default to week view for better UX
+  useState(() => {
+    if (isMobile) {
+      setViewMode('week');
+    }
+  });
 
   const handleNavigatePrev = () => {
     switch (viewMode) {

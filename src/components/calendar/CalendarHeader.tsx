@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AppointmentForm } from "@/components/AppointmentForm";
 import { Appointment } from "@/lib/types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -34,12 +35,14 @@ export function CalendarHeader({
   viewMode,
   onChangeViewMode,
 }: CalendarHeaderProps) {
+  const isMobile = useIsMobile();
+  
   const getViewTitle = () => {
     switch (viewMode) {
       case 'day':
         return format(currentDate, 'd MMM yyyy');
       case 'week':
-        return `Week ${format(currentDate, 'w')} - ${format(currentDate, 'MMM yyyy')}`;
+        return `${format(currentDate, 'd')}–${format(currentDate, 'd MMM')}`;
       case 'month':
       default:
         return format(currentDate, 'MMM yyyy');
@@ -119,16 +122,19 @@ export function CalendarHeader({
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Button variant="outline" onClick={onToday} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
-            <CalendarIcon className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            Today
-          </Button>
+          {/* Hide Today button on mobile to save space */}
+          {!isMobile && (
+            <Button variant="outline" onClick={onToday} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
+              <CalendarIcon className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              Today
+            </Button>
+          )}
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
                 <PlusCircle className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                New
+                {isMobile ? "" : "New"}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
