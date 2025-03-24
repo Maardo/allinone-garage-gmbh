@@ -30,7 +30,7 @@ export function CalendarHeader({
   setSelectedAppointment,
 }: CalendarHeaderProps) {
   return (
-    <div className="mb-6 flex flex-col space-y-4">
+    <div className="mb-4 sm:mb-6 flex flex-col space-y-3 sm:space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center space-x-1">
           <Button
@@ -38,38 +38,38 @@ export function CalendarHeader({
             size="icon"
             onClick={onPrevMonth}
             aria-label="Previous month"
-            className="h-8 w-8"
+            className="h-7 w-7 sm:h-8 sm:w-8"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <h2 className="text-lg font-semibold px-1 w-28 text-center">
-            {format(currentDate, "MMMM yyyy")}
+          <h2 className="text-base sm:text-lg font-semibold px-1 w-24 sm:w-28 text-center">
+            {format(currentDate, "MMM yyyy")}
           </h2>
           <Button
             variant="outline"
             size="icon"
             onClick={onNextMonth}
             aria-label="Next month"
-            className="h-8 w-8"
+            className="h-7 w-7 sm:h-8 sm:w-8"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
         
         <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={onToday} size="sm" className="h-8">
-            <CalendarIcon className="mr-1 h-3.5 w-3.5" />
+          <Button variant="outline" onClick={onToday} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
+            <CalendarIcon className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
             Today
           </Button>
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-8">
-                <PlusCircle className="mr-1 h-3.5 w-3.5" />
-                New Appointment
+              <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
+                <PlusCircle className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                New
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
                   {selectedAppointment ? "Edit Appointment" : "New Appointment"}

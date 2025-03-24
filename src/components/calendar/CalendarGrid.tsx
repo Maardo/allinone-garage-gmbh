@@ -31,12 +31,12 @@ export function CalendarGrid({
 
   return (
     <div className="overflow-x-auto pb-4">
-      <div className="min-w-[640px]">
+      <div className="min-w-full sm:min-w-[640px]">
         <div className="grid grid-cols-7 gap-1 mb-2">
           {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
             <div 
               key={day} 
-              className="text-center font-medium text-muted-foreground py-2 text-xs sm:text-sm"
+              className="text-center font-medium text-muted-foreground py-1 sm:py-2 text-xs"
             >
               {day}
             </div>
@@ -60,7 +60,7 @@ export function CalendarGrid({
                 <div
                   key={day.toISOString()}
                   className={cn(
-                    "calendar-day",
+                    "calendar-day min-h-[80px] p-1 border rounded-md bg-card",
                     !isSameMonth(day, currentDate) && "opacity-40",
                     isToday(day) && "border-primary shadow-sm"
                   )}
@@ -80,7 +80,7 @@ export function CalendarGrid({
               <div
                 key={day.toISOString()}
                 className={cn(
-                  "calendar-day",
+                  "calendar-day min-h-[80px] p-1 border rounded-md bg-card",
                   !isSameMonth(day, currentDate) && "opacity-40",
                   isToday(day) && "border-primary shadow-sm"
                 )}
@@ -121,8 +121,8 @@ function DayContent({
       <div className="flex justify-between items-center mb-1">
         <span 
           className={cn(
-            "text-xs sm:text-sm font-medium",
-            isToday(day) && "bg-primary text-primary-foreground rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center"
+            "text-xs font-medium",
+            isToday(day) && "bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center"
           )}
         >
           {format(day, "d")}
@@ -132,7 +132,7 @@ function DayContent({
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-4 w-4 sm:h-5 sm:w-5 opacity-50 hover:opacity-100"
+              className="h-4 w-4 opacity-50 hover:opacity-100"
               onClick={onNewAppointmentAtDate}
             >
               <PlusCircle className="h-3 w-3" />
@@ -140,14 +140,14 @@ function DayContent({
           </DialogTrigger>
         </Dialog>
       </div>
-      <div className="space-y-0.5 max-h-16 overflow-y-auto">
+      <div className="space-y-0.5 max-h-12 sm:max-h-16 overflow-y-auto text-xs">
         {appointments.map((appointment) => (
           <div
             key={appointment.id}
             onClick={() => onSelectAppointment(appointment)}
             className={cn(
-              "calendar-appointment",
-              `service-type-${appointment.serviceType}`,
+              "calendar-appointment p-0.5 px-1 rounded cursor-pointer text-white",
+              `bg-blue-${appointment.serviceType * 100 + 500}`,
               appointment.isPaid && "opacity-80",
               appointment.isCompleted && "line-through opacity-60"
             )}
@@ -155,7 +155,7 @@ function DayContent({
             <div className="font-medium truncate text-xs">
               {format(new Date(appointment.date), "HH:mm")} {appointment.customerName}
             </div>
-            <div className="truncate text-xs">{appointment.vehicleInfo}</div>
+            <div className="truncate text-xs hidden sm:block">{appointment.vehicleInfo}</div>
           </div>
         ))}
       </div>

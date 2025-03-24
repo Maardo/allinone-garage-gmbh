@@ -24,7 +24,7 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
           <Menu className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="font-bold text-xl text-primary">Allinone Garage</h1>
+          <h1 className="font-bold text-lg sm:text-xl text-primary">Allinone Garage</h1>
         </div>
       </div>
       

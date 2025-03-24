@@ -95,6 +95,7 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
               size="icon" 
               onClick={toggleSidebar}
               className="text-white hover:bg-blue-700 md:hidden"
+              data-toggle="sidebar"
             >
               <X className="h-5 w-5" />
             </Button>
