@@ -33,6 +33,11 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
   const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
   
+  // For debugging
+  useEffect(() => {
+    console.log("Sidebar status:", isMobileOpen ? "OPEN" : "CLOSED");
+  }, [isMobileOpen]);
+
   // Close sidebar on mobile when route changes
   useEffect(() => {
     if (isMobileOpen && toggleSidebar && window.innerWidth < 768) {

@@ -11,7 +11,7 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
   const { currentUser } = useAuth();
   
   const handleToggle = () => {
-    console.log("Navbar toggle clicked"); // Debug
+    console.log("Navbar hamburger clicked"); // Debug
     toggleSidebar();
   };
   

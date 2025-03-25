@@ -27,8 +27,8 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   }, [currentUser, isLoading, navigate]);
 
   const toggleSidebar = () => {
-    setIsMobileOpen(prev => !prev);
-    console.log("Toggling sidebar:", !isMobileOpen); // Debug
+    console.log("Layout toggle called, current state:", isMobileOpen);
+    setIsMobileOpen(!isMobileOpen); // Simplified toggle
   };
 
   // Close sidebar when clicking outside on mobile
@@ -37,8 +37,12 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
       if (isMobileOpen && window.innerWidth < 768) {
         const target = e.target as HTMLElement;
         // Don't close if clicking sidebar or navbar toggle button
-        if (!target.closest('[data-sidebar="sidebar"]') && 
-            !target.closest('[data-toggle="sidebar"]')) {
+        const isSidebar = !!target.closest('[data-sidebar="sidebar"]');
+        const isToggle = !!target.closest('[data-toggle="sidebar"]');
+        
+        console.log("Outside click - sidebar:", isSidebar, "toggle:", isToggle);
+        
+        if (!isSidebar && !isToggle) {
           setIsMobileOpen(false);
         }
       }
