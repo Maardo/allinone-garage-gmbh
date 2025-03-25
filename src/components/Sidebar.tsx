@@ -74,6 +74,13 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
     setLanguage(lang);
   };
 
+  const handleCloseSidebar = () => {
+    if (toggleSidebar) {
+      console.log("Closing sidebar from X button"); // Debug
+      toggleSidebar();
+    }
+  };
+
   return (
     <>
       {/* Sidebar backdrop for mobile */}
@@ -89,7 +96,7 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
       <div
         data-sidebar="sidebar"
         className={cn(
-          "fixed h-full w-64 bg-sidebar flex flex-col border-r border-sidebar-border z-50 shadow-lg transition-all duration-300 ease-in-out",
+          "fixed h-full w-64 bg-sidebar flex flex-col border-r border-sidebar-border z-50 shadow-lg transition-transform duration-300 ease-in-out",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
@@ -107,7 +114,7 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
             <Button 
               variant="ghost" 
               size="icon" 
-              onClick={toggleSidebar}
+              onClick={handleCloseSidebar}
               className="text-white hover:bg-blue-700 md:hidden"
               data-toggle="sidebar"
             >

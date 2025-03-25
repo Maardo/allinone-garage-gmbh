@@ -27,7 +27,8 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   }, [currentUser, isLoading, navigate]);
 
   const toggleSidebar = () => {
-    setIsMobileOpen((prev) => !prev);
+    setIsMobileOpen(prev => !prev);
+    console.log("Toggling sidebar:", !isMobileOpen); // Debug
   };
 
   // Close sidebar when clicking outside on mobile
@@ -46,6 +47,20 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
     document.addEventListener('mousedown', handleOutsideClick);
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isMobileOpen]);
+
+  // Close sidebar when window is resized to desktop size
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && isMobileOpen) {
+        setIsMobileOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
     };
   }, [isMobileOpen]);
 
