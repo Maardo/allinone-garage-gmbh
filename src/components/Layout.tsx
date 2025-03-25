@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
 
 interface LayoutProps {
@@ -14,6 +15,7 @@ interface LayoutProps {
 
 export function Layout({ children, title, subtitle }: LayoutProps) {
   const { currentUser, isLoading } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -51,6 +53,7 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <span className="ml-2">{t('common.loading')}</span>
       </div>
     );
   }

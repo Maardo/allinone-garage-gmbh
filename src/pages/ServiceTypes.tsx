@@ -1,239 +1,199 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Edit, Info } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { SERVICE_TYPES, ServiceType, ServiceTypeInfo } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { SERVICE_TYPES, ServiceType } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function ServiceTypesPage() {
-  const [serviceTypes, setServiceTypes] = useState<Record<ServiceType, ServiceTypeInfo>>(SERVICE_TYPES);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState<ServiceTypeInfo | null>(null);
+export default function ServiceTypes() {
   const { t } = useLanguage();
-  
-  // Updated colorblind-friendly colors
-  const colors = ["blue", "red", "green", "purple", "amber"];
-  
-  const handleEditType = (type: ServiceTypeInfo) => {
+  const [selectedType, setSelectedType] = useState<ServiceType | null>(null);
+
+  const handleSelectType = (type: ServiceType) => {
     setSelectedType(type);
-    setIsDialogOpen(true);
-  };
-  
-  const handleUpdateType = (updatedType: ServiceTypeInfo) => {
-    setServiceTypes({
-      ...serviceTypes,
-      [updatedType.id]: updatedType
-    });
-    setIsDialogOpen(false);
-    setSelectedType(null);
   };
 
   return (
-    <Layout title={t('serviceTypes.title')} subtitle={t('serviceTypes.subtitle')}>
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <p className="text-muted-foreground">
-              {t('serviceTypes.description')}
-            </p>
-          </div>
-          
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                {t('serviceTypes.new')}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
-              <DialogHeader>
-                <DialogTitle>
-                  {selectedType ? t('serviceTypes.edit') : t('serviceTypes.create')}
-                </DialogTitle>
-              </DialogHeader>
-              
-              <form 
-                className="space-y-4 py-4"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.currentTarget);
-                  const name = formData.get("name") as string;
-                  const description = formData.get("description") as string;
-                  const color = formData.get("color") as string;
-                  
-                  if (selectedType) {
-                    handleUpdateType({
-                      ...selectedType,
-                      name,
-                      description,
-                      color
-                    });
-                  } else {
-                    // For now, we just demonstrate the functionality without actually
-                    // creating new types (since we're using a fixed set of types)
-                    // In a real app, this would add a new type with a new ID
-                    setIsDialogOpen(false);
-                  }
-                }}
-              >
-                <div className="space-y-2">
-                  <Label htmlFor="name">{t('serviceTypes.name')}</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    defaultValue={selectedType?.name}
-                    placeholder={t('serviceTypes.name')}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="description">{t('serviceTypes.desc')}</Label>
-                  <Textarea
-                    id="description"
-                    name="description"
-                    defaultValue={selectedType?.description}
-                    placeholder={t('serviceTypes.desc')}
-                    className="h-20"
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>{t('serviceTypes.color')}</Label>
-                  <RadioGroup 
-                    defaultValue={selectedType?.color} 
-                    name="color"
-                    className="grid grid-cols-5 gap-2"
+    <Layout 
+      title={t('serviceTypes.title')} 
+      subtitle={t('serviceTypes.subtitle')}
+    >
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="space-y-6 md:col-span-2 lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('serviceTypes.description')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {Object.values(SERVICE_TYPES).map((type) => (
+                  <div
+                    key={type.id}
+                    className="flex items-center p-4 border rounded-lg cursor-pointer hover:border-primary transition-colors"
+                    style={{ borderColor: type.color, borderWidth: '2px' }}
+                    onClick={() => handleSelectType(type.id)}
                   >
-                    {colors.map((color) => (
-                      <div key={color} className="flex items-center justify-center">
-                        <RadioGroupItem 
-                          value={color} 
-                          id={`color-${color}`} 
-                          className="sr-only"
-                        />
-                        <Label
-                          htmlFor={`color-${color}`}
-                          className={cn(
-                            "w-full h-10 rounded-md border-2 cursor-pointer transition-all flex items-center justify-center",
-                            `border-${color}-400`,
-                            selectedType?.color === color && `border-${color}-700 ring-2 ring-${color}-500/30`
-                          )}
-                        >
-                          <div className={`w-6 h-6 rounded-full bg-${color}-swatch`}></div>
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
-                
-                <div className="flex justify-end">
-                  <Button type="submit">
-                    {selectedType ? t('serviceTypes.update') : t('serviceTypes.create')}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {Object.values(serviceTypes).map((type) => (
-            <Card 
-              key={type.id} 
-              className={cn(
-                "overflow-hidden transition-all duration-200 hover:shadow-md",
-                `border-${type.color}-300`
-              )}
-            >
-              <CardHeader 
-                className={cn(
-                  "pb-3",
-                  `bg-${type.color}-header`
-                )}
-              >
-                <CardTitle className="flex justify-between items-center">
-                  <div className="flex items-center">
                     <div 
-                      className={cn(
-                        "w-5 h-5 rounded-full mr-2",
-                        `bg-${type.color}-swatch`
-                      )}
+                      className="h-8 w-8 rounded mr-4" 
+                      style={{ backgroundColor: type.color }}
                     ></div>
-                    <span>{type.name}</span>
+                    <div>
+                      <h3 className="font-medium">{type.name}</h3>
+                      <p className="text-sm text-muted-foreground truncate">
+                        {type.description}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-1">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <Info className="h-4 w-4" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent side="left" className="w-80">
-                        <div className="space-y-2">
-                          <h4 className="font-medium">{t('serviceTypes.about')}</h4>
-                          <p className="text-sm text-muted-foreground">{type.description}</p>
-                          <div className="pt-2">
-                            <div 
-                              className={cn(
-                                "px-3 py-2 text-sm rounded-md",
-                                `bg-${type.color}-100 text-${type.color}-900 border border-${type.color}-300`
-                              )}
-                            >
-                              {t('serviceTypes.code')} {type.id}
-                            </div>
-                          </div>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8"
-                      onClick={() => handleEditType(type)}
-                    >
-                      <Edit className="h-4 w-4" />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {selectedType 
+                  ? t('serviceTypes.edit')
+                  : t('serviceTypes.new')
+                }
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {selectedType ? (
+                <TypeEditor 
+                  typeId={selectedType} 
+                  onCancel={() => setSelectedType(null)} 
+                />
+              ) : (
+                <div className="flex items-center justify-center p-6">
+                  <div className="text-center">
+                    <h3 className="font-medium mb-2">
+                      {t('serviceTypes.createNew')}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {t('serviceTypes.about')}
+                    </p>
+                    <Button>
+                      {t('serviceTypes.create')}
                     </Button>
                   </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="py-4">
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {type.description}
-                </p>
-              </CardContent>
-              <CardFooter 
-                className={cn(
-                  "flex justify-between border-t pt-4",
-                  `border-${type.color}-200`
-                )}
-              >
-                <div 
-                  className={cn(
-                    "text-xs px-2 py-1 rounded",
-                    `bg-${type.color}-100 text-${type.color}-900`
-                  )}
-                >
-                  {t('serviceTypes.code')}: {type.id}
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  {t('serviceTypes.calendarColor')}
-                </div>
-              </CardFooter>
-            </Card>
-          ))}
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </Layout>
+  );
+}
+
+function TypeEditor({ typeId, onCancel }: { typeId: ServiceType; onCancel: () => void }) {
+  const { t } = useLanguage();
+  const [name, setName] = useState(SERVICE_TYPES[typeId].name);
+  const [description, setDescription] = useState(SERVICE_TYPES[typeId].description);
+  const [color, setColor] = useState(SERVICE_TYPES[typeId].color);
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="service-code">{t('serviceTypes.code')}</Label>
+        <Input id="service-code" value={typeId} disabled />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="service-name">{t('serviceTypes.name')}</Label>
+        <Input 
+          id="service-name" 
+          value={name} 
+          onChange={(e) => setName(e.target.value)} 
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="service-desc">{t('serviceTypes.desc')}</Label>
+        <Textarea 
+          id="service-desc" 
+          value={description} 
+          onChange={(e) => setDescription(e.target.value)} 
+          rows={3} 
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>{t('serviceTypes.calendarColor')}</Label>
+        <RadioGroup defaultValue={color} onValueChange={setColor} className="flex flex-wrap gap-2">
+          <div className="flex items-center">
+            <RadioGroupItem value="#0284c7" id="color-blue" className="sr-only" />
+            <Label
+              htmlFor="color-blue"
+              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
+              style={{ backgroundColor: "#0284c7", borderColor: color === "#0284c7" ? "black" : "#0284c7" }}
+            >
+              {color === "#0284c7" && (
+                <span className="text-white">✓</span>
+              )}
+            </Label>
+          </div>
+          <div className="flex items-center">
+            <RadioGroupItem value="#dc2626" id="color-red" className="sr-only" />
+            <Label
+              htmlFor="color-red"
+              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
+              style={{ backgroundColor: "#dc2626", borderColor: color === "#dc2626" ? "black" : "#dc2626" }}
+            >
+              {color === "#dc2626" && (
+                <span className="text-white">✓</span>
+              )}
+            </Label>
+          </div>
+          <div className="flex items-center">
+            <RadioGroupItem value="#16a34a" id="color-green" className="sr-only" />
+            <Label
+              htmlFor="color-green"
+              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
+              style={{ backgroundColor: "#16a34a", borderColor: color === "#16a34a" ? "black" : "#16a34a" }}
+            >
+              {color === "#16a34a" && (
+                <span className="text-white">✓</span>
+              )}
+            </Label>
+          </div>
+          <div className="flex items-center">
+            <RadioGroupItem value="#9333ea" id="color-purple" className="sr-only" />
+            <Label
+              htmlFor="color-purple"
+              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
+              style={{ backgroundColor: "#9333ea", borderColor: color === "#9333ea" ? "black" : "#9333ea" }}
+            >
+              {color === "#9333ea" && (
+                <span className="text-white">✓</span>
+              )}
+            </Label>
+          </div>
+          <div className="flex items-center">
+            <RadioGroupItem value="#d97706" id="color-amber" className="sr-only" />
+            <Label
+              htmlFor="color-amber"
+              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
+              style={{ backgroundColor: "#d97706", borderColor: color === "#d97706" ? "black" : "#d97706" }}
+            >
+              {color === "#d97706" && (
+                <span className="text-white">✓</span>
+              )}
+            </Label>
+          </div>
+        </RadioGroup>
+      </div>
+      <div className="flex justify-between pt-4">
+        <Button variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button>{t('serviceTypes.update')}</Button>
+      </div>
+    </div>
   );
 }

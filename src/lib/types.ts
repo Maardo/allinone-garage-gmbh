@@ -101,6 +101,42 @@ export const LANGUAGES: Record<Language, string> = {
 
 export const TRANSLATIONS = {
   en: {
+    common: {
+      appName: 'Allinone Garage',
+      save: 'Save',
+      cancel: 'Cancel',
+      edit: 'Edit',
+      delete: 'Delete',
+      create: 'Create',
+      submit: 'Submit',
+      logout: 'Logout',
+      loading: 'Loading...',
+      search: 'Search',
+      filter: 'Filter',
+      actions: 'Actions'
+    },
+    navigation: {
+      calendar: 'Calendar',
+      customers: 'Customers',
+      loanerCars: 'Loaner Cars',
+      serviceTypes: 'Service Types',
+      settings: 'Settings'
+    },
+    roles: {
+      administrator: 'Administrator',
+      mechanic: 'Mechanic'
+    },
+    login: {
+      title: 'Workshop Manager',
+      subtitle: 'Enter your credentials to access the system',
+      email: 'Email',
+      password: 'Password',
+      signIn: 'Sign In',
+      loggingIn: 'Logging in...',
+      demoAccounts: 'Demo Accounts:',
+      adminAccount: 'Admin: admin@workshop.com / admin123',
+      mechanicAccount: 'Mechanic: mechanic1@workshop.com / mechanic123'
+    },
     serviceTypes: {
       title: 'Service Types',
       subtitle: 'Manage and configure service categories',
@@ -119,6 +155,42 @@ export const TRANSLATIONS = {
     }
   },
   sv: {
+    common: {
+      appName: 'Allinone Verkstad',
+      save: 'Spara',
+      cancel: 'Avbryt',
+      edit: 'Redigera',
+      delete: 'Radera',
+      create: 'Skapa',
+      submit: 'Skicka',
+      logout: 'Logga ut',
+      loading: 'Laddar...',
+      search: 'Sök',
+      filter: 'Filtrera',
+      actions: 'Åtgärder'
+    },
+    navigation: {
+      calendar: 'Kalender',
+      customers: 'Kunder',
+      loanerCars: 'Lånebil',
+      serviceTypes: 'Servicetyper',
+      settings: 'Inställningar'
+    },
+    roles: {
+      administrator: 'Administratör',
+      mechanic: 'Mekaniker'
+    },
+    login: {
+      title: 'Verkstadshanterare',
+      subtitle: 'Ange dina uppgifter för att komma åt systemet',
+      email: 'E-post',
+      password: 'Lösenord',
+      signIn: 'Logga in',
+      loggingIn: 'Loggar in...',
+      demoAccounts: 'Demokonton:',
+      adminAccount: 'Admin: admin@workshop.com / admin123',
+      mechanicAccount: 'Mekaniker: mechanic1@workshop.com / mechanic123'
+    },
     serviceTypes: {
       title: 'Servicetyper',
       subtitle: 'Hantera och konfigurera servicekategorier',
@@ -137,6 +209,42 @@ export const TRANSLATIONS = {
     }
   },
   de: {
+    common: {
+      appName: 'Allinone Werkstatt',
+      save: 'Speichern',
+      cancel: 'Abbrechen',
+      edit: 'Bearbeiten',
+      delete: 'Löschen',
+      create: 'Erstellen',
+      submit: 'Absenden',
+      logout: 'Abmelden',
+      loading: 'Lädt...',
+      search: 'Suchen',
+      filter: 'Filtern',
+      actions: 'Aktionen'
+    },
+    navigation: {
+      calendar: 'Kalender',
+      customers: 'Kunden',
+      loanerCars: 'Leihwagen',
+      serviceTypes: 'Service-Typen',
+      settings: 'Einstellungen'
+    },
+    roles: {
+      administrator: 'Administrator',
+      mechanic: 'Mechaniker'
+    },
+    login: {
+      title: 'Werkstattverwaltung',
+      subtitle: 'Geben Sie Ihre Anmeldedaten ein, um auf das System zuzugreifen',
+      email: 'E-Mail',
+      password: 'Passwort',
+      signIn: 'Anmelden',
+      loggingIn: 'Anmeldung läuft...',
+      demoAccounts: 'Demo-Konten:',
+      adminAccount: 'Admin: admin@workshop.com / admin123',
+      mechanicAccount: 'Mechaniker: mechanic1@workshop.com / mechanic123'
+    },
     serviceTypes: {
       title: 'Service-Typen',
       subtitle: 'Verwalten und konfigurieren Sie Servicekategorien',

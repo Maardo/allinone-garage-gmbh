@@ -30,7 +30,7 @@ interface SidebarProps {
 
 export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
   const { logout, currentUser } = useAuth();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
   
   // Close sidebar on mobile when route changes
@@ -42,28 +42,28 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
 
   const menuItems = [
     {
-      name: "Calendar",
+      name: t('navigation.calendar'),
       icon: <Calendar className="h-5 w-5" />,
       path: "/calendar",
     },
     {
-      name: "Customers",
+      name: t('navigation.customers'),
       icon: <Users className="h-5 w-5" />,
       path: "/customers",
     },
     {
-      name: "Loaner Cars",
+      name: t('navigation.loanerCars'),
       icon: <Car className="h-5 w-5" />,
       path: "/loaner-cars",
     },
     {
-      name: "Service Types",
+      name: t('navigation.serviceTypes'),
       icon: <ClipboardList className="h-5 w-5" />,
       path: "/service-types",
     },
     ...(currentUser?.role === 'admin' ? [
       {
-        name: "Settings",
+        name: t('navigation.settings'),
         icon: <Settings className="h-5 w-5" />,
         path: "/settings",
       }
@@ -97,10 +97,10 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
         <div className="p-6 border-b border-sidebar-border flex justify-between items-center">
           <div>
             <h1 className="text-xl font-bold text-white">
-              Allinone Garage
+              {t('common.appName')}
             </h1>
             <p className="text-sm text-gray-300 mt-1">
-              {currentUser?.role === 'admin' ? 'Administrator' : 'Mechanic'}
+              {currentUser?.role === 'admin' ? t('roles.administrator') : t('roles.mechanic')}
             </p>
           </div>
           {isMobileOpen && (
@@ -183,6 +183,7 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
               size="icon" 
               onClick={logout}
               className="text-white hover:bg-blue-700"
+              title={t('common.logout')}
             >
               <LogOut className="h-5 w-5" />
             </Button>
