@@ -22,31 +22,31 @@ export const SERVICE_TYPES: Record<ServiceType, ServiceTypeInfo> = {
     id: 1,
     name: 'Service',
     description: 'Regular maintenance service',
-    color: 'blue'
+    color: '#0284c7' // bright blue, accessible
   },
   2: {
     id: 2,
     name: 'Repair',
     description: 'Mechanical repair',
-    color: 'red'
+    color: '#dc2626' // bright red, accessible
   },
   3: {
     id: 3,
     name: 'Inspection',
     description: 'Vehicle inspection',
-    color: 'green'
+    color: '#16a34a' // bright green, accessible
   },
   4: {
     id: 4,
     name: 'Diagnostic',
     description: 'Computer diagnostic',
-    color: 'purple'
+    color: '#9333ea' // bright purple, accessible
   },
   5: {
     id: 5,
     name: 'Bodywork',
     description: 'Body repair',
-    color: 'amber'
+    color: '#d97706' // bright amber, accessible
   }
 };
 
@@ -107,7 +107,7 @@ export const TRANSLATIONS = {
       description: 'Service types are used for categorizing workshop jobs in the calendar',
       new: 'New Service Type',
       edit: 'Edit Service Type',
-      create: 'Create New Service Type',
+      createNew: 'Create New Service Type',
       name: 'Name',
       desc: 'Description',
       color: 'Color',
@@ -125,7 +125,7 @@ export const TRANSLATIONS = {
       description: 'Servicetyper används för att kategorisera verkstadsjobb i kalendern',
       new: 'Ny Servicetyp',
       edit: 'Redigera Servicetyp',
-      create: 'Skapa Ny Servicetyp',
+      createNew: 'Skapa Ny Servicetyp',
       name: 'Namn',
       desc: 'Beskrivning',
       color: 'Färg',
@@ -143,7 +143,7 @@ export const TRANSLATIONS = {
       description: 'Service-Typen werden zur Kategorisierung von Werkstattarbeiten im Kalender verwendet',
       new: 'Neue Service-Type',
       edit: 'Service-Type bearbeiten',
-      create: 'Neue Service-Type erstellen',
+      createNew: 'Neue Service-Type erstellen',
       name: 'Name',
       desc: 'Beschreibung',
       color: 'Farbe',
