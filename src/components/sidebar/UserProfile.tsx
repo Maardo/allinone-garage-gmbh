@@ -1,0 +1,34 @@
+
+import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
+
+export function UserProfile() {
+  const { logout, currentUser } = useAuth();
+  const { t } = useLanguage();
+
+  return (
+    <div className="p-4 border-t border-sidebar-border mt-auto">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-white">
+            {currentUser?.name}
+          </p>
+          <p className="text-xs text-gray-300">
+            {currentUser?.email}
+          </p>
+        </div>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={logout}
+          className="text-white hover:bg-blue-700"
+          title={t('common.logout')}
+        >
+          <LogOut className="h-5 w-5" />
+        </Button>
+      </div>
+    </div>
+  );
+}
