@@ -1,3 +1,4 @@
+
 export type UserRole = 'admin' | 'mechanic';
 
 export interface User {
@@ -146,7 +147,8 @@ export const TRANSLATIONS = {
       serviceTypeDistribution: 'Service Type Distribution',
       week: 'Week',
       month: 'Month',
-      appointments: 'Appointments'
+      appointments: 'Appointments',
+      upcomingAppointments: 'Upcoming Appointments'
     },
     serviceTypes: {
       maintenance: 'Maintenance',
@@ -252,7 +254,8 @@ export const TRANSLATIONS = {
       serviceTypeDistribution: 'Fördelning av tjänstetyper',
       week: 'Vecka',
       month: 'Månad',
-      appointments: 'Bokningar'
+      appointments: 'Bokningar',
+      upcomingAppointments: 'Kommande bokningar'
     },
     serviceTypes: {
       maintenance: 'Underhåll',
@@ -328,6 +331,7 @@ export const TRANSLATIONS = {
       welcome: 'Willkommen'
     },
     navigation: {
+      overview: 'Übersicht',
       calendar: 'Kalender',
       customers: 'Kunden',
       loanerCars: 'Leihwagen',
@@ -349,7 +353,23 @@ export const TRANSLATIONS = {
       adminAccount: 'Admin: admin@workshop.com / admin123',
       mechanicAccount: 'Mechaniker: mechanic1@workshop.com / mechanic123'
     },
+    overview: {
+      todayAppointments: 'Heutige Termine',
+      weekAppointments: 'Wöchentliche Termine',
+      totalCustomers: 'Gesamtkunden',
+      completedJobs: 'Abgeschlossene Aufträge',
+      serviceTypeDistribution: 'Verteilung der Servicetypen',
+      week: 'Woche',
+      month: 'Monat',
+      appointments: 'Termine',
+      upcomingAppointments: 'Kommende Termine'
+    },
     serviceTypes: {
+      maintenance: 'Wartung',
+      repair: 'Reparatur',
+      inspection: 'Inspektion',
+      tireChange: 'Reifenwechsel',
+      other: 'Sonstiges',
       title: 'Service-Typen',
       subtitle: 'Verwalten und konfigurieren Sie Servicekategorien',
       description: 'Service-Typen werden zur Kategorisierung von Werkstattarbeiten im Kalender verwendet',
@@ -366,10 +386,9 @@ export const TRANSLATIONS = {
       create: 'Erstellen'
     },
     pages: {
-      notFound: {
-        title: '404',
-        message: 'Hoppla! Seite nicht gefunden',
-        returnHome: 'Zurück zur Startseite'
+      overview: {
+        title: 'Übersicht',
+        subtitle: 'Willkommen zu Ihrem Werkstatt-Dashboard'
       },
       dashboard: {
         title: 'Dashboard',
@@ -387,9 +406,18 @@ export const TRANSLATIONS = {
         title: 'Leihwagen',
         subtitle: 'Leihwagenbestand und Zuweisungen verwalten'
       },
+      serviceTypes: {
+        title: 'Service-Typen',
+        subtitle: 'Servicekategorien verwalten und konfigurieren'
+      },
       settings: {
         title: 'Einstellungen',
         subtitle: 'Systemeinstellungen konfigurieren'
+      },
+      notFound: {
+        title: '404',
+        message: 'Hoppla! Seite nicht gefunden',
+        returnHome: 'Zurück zur Startseite'
       }
     }
   }

@@ -106,7 +106,7 @@ export default function Overview() {
       <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
         <Card>
           <CardHeader>
-            <CardTitle>{t('overview.serviceTypeDistribution')}</CardTitle>
+            <CardTitle>{t('overview.upcomingAppointments')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="week" className="w-full">
