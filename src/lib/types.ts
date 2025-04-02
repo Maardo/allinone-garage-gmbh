@@ -1,4 +1,3 @@
-
 export type UserRole = 'admin' | 'mechanic';
 
 export interface User {
@@ -117,6 +116,7 @@ export const TRANSLATIONS = {
       welcome: 'Welcome'
     },
     navigation: {
+      overview: 'Overview',
       calendar: 'Calendar',
       customers: 'Customers',
       loanerCars: 'Loaner Cars',
@@ -138,7 +138,22 @@ export const TRANSLATIONS = {
       adminAccount: 'Admin: admin@workshop.com / admin123',
       mechanicAccount: 'Mechanic: mechanic1@workshop.com / mechanic123'
     },
+    overview: {
+      todayAppointments: 'Today\'s Appointments',
+      weekAppointments: 'Week\'s Appointments',
+      totalCustomers: 'Total Customers',
+      completedJobs: 'Completed Jobs',
+      serviceTypeDistribution: 'Service Type Distribution',
+      week: 'Week',
+      month: 'Month',
+      appointments: 'Appointments'
+    },
     serviceTypes: {
+      maintenance: 'Maintenance',
+      repair: 'Repair',
+      inspection: 'Inspection',
+      tireChange: 'Tire Change',
+      other: 'Other',
       title: 'Service Types',
       subtitle: 'Manage and configure service categories',
       description: 'Service types are used for categorizing workshop jobs in the calendar',
@@ -155,10 +170,9 @@ export const TRANSLATIONS = {
       create: 'Create'
     },
     pages: {
-      notFound: {
-        title: '404',
-        message: 'Oops! Page not found',
-        returnHome: 'Return to Home'
+      overview: {
+        title: 'Overview',
+        subtitle: 'Welcome to your workshop dashboard'
       },
       dashboard: {
         title: 'Dashboard',
@@ -176,9 +190,18 @@ export const TRANSLATIONS = {
         title: 'Loaner Cars',
         subtitle: 'Manage loaner car inventory and assignments'
       },
+      serviceTypes: {
+        title: 'Service Types',
+        subtitle: 'Manage and configure service categories'
+      },
       settings: {
         title: 'Settings',
         subtitle: 'Configure system settings'
+      },
+      notFound: {
+        title: '404',
+        message: 'Oops! Page not found',
+        returnHome: 'Return to Home'
       }
     }
   },
@@ -199,6 +222,7 @@ export const TRANSLATIONS = {
       welcome: 'Välkommen'
     },
     navigation: {
+      overview: 'Översikt',
       calendar: 'Kalender',
       customers: 'Kunder',
       loanerCars: 'Lånebil',
@@ -220,7 +244,22 @@ export const TRANSLATIONS = {
       adminAccount: 'Admin: admin@workshop.com / admin123',
       mechanicAccount: 'Mekaniker: mechanic1@workshop.com / mechanic123'
     },
+    overview: {
+      todayAppointments: 'Dagens bokningar',
+      weekAppointments: 'Veckans bokningar',
+      totalCustomers: 'Totala kunder',
+      completedJobs: 'Totala jobb',
+      serviceTypeDistribution: 'Fördelning av tjänstetyper',
+      week: 'Vecka',
+      month: 'Månad',
+      appointments: 'Bokningar'
+    },
     serviceTypes: {
+      maintenance: 'Underhåll',
+      repair: 'Reparation',
+      inspection: 'Inspektion',
+      tireChange: 'Däckbyte',
+      other: 'Övrigt',
       title: 'Servicetyper',
       subtitle: 'Hantera och konfigurera servicekategorier',
       description: 'Servicetyper används för att kategorisera verkstadsjobb i kalendern',
@@ -237,13 +276,12 @@ export const TRANSLATIONS = {
       create: 'Skapa'
     },
     pages: {
-      notFound: {
-        title: '404',
-        message: 'Hoppsan! Sidan hittades inte',
-        returnHome: 'Återgå till startsidan'
+      overview: {
+        title: 'Översikt',
+        subtitle: 'Välkommen till din verkstads dashboard'
       },
       dashboard: {
-        title: 'Översikt',
+        title: 'Dashboard',
         subtitle: 'Översikt över verkstadens verksamhet'
       },
       calendar: {
@@ -258,9 +296,18 @@ export const TRANSLATIONS = {
         title: 'Lånebil',
         subtitle: 'Hantera lånebilsinventarier och tilldelningar'
       },
+      serviceTypes: {
+        title: 'Servicetyper',
+        subtitle: 'Hantera och konfigurera servicekategorier'
+      },
       settings: {
         title: 'Inställningar',
         subtitle: 'Konfigurera systeminställningar'
+      },
+      notFound: {
+        title: '404',
+        message: 'Hoppsan! Sidan hittades inte',
+        returnHome: 'Återgå till startsidan'
       }
     }
   },

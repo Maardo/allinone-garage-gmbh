@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Car, CheckCircle, Clock, Users, Wrench } from "lucide-react";
+import { Calendar, Users, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Bar,
@@ -26,50 +26,6 @@ export default function Overview() {
     totalCustomers: 275,
     completedJobs: 843
   };
-  
-  // Mock upcoming appointments
-  const upcomingAppointments = [
-    {
-      id: "1",
-      date: "2023-07-12",
-      time: "10:00",
-      customer: "Johan Andersson",
-      vehicle: "Volvo V70",
-      serviceType: t('serviceTypes.maintenance')
-    },
-    {
-      id: "2",
-      date: "2023-07-13",
-      time: "13:30",
-      customer: "Maria Johansson",
-      vehicle: "Audi A4",
-      serviceType: t('serviceTypes.repair')
-    },
-    {
-      id: "3",
-      date: "2023-07-14",
-      time: "15:45",
-      customer: "Erik Svensson",
-      vehicle: "BMW 3 Series",
-      serviceType: t('serviceTypes.inspection')
-    },
-    {
-      id: "4",
-      date: "2023-07-17",
-      time: "09:30",
-      customer: "Anna Lindberg",
-      vehicle: "Tesla Model 3",
-      serviceType: t('serviceTypes.repair')
-    },
-    {
-      id: "5",
-      date: "2023-07-18",
-      time: "11:00",
-      customer: "Karl Nilsson",
-      vehicle: "Volvo XC60",
-      serviceType: t('serviceTypes.maintenance')
-    }
-  ];
   
   // Mock chart data
   const weekChartData = [
@@ -147,73 +103,7 @@ export default function Overview() {
         </Card>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('overview.upcomingJobs')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="week" className="w-full">
-              <TabsList className="mb-4">
-                <TabsTrigger 
-                  value="week"
-                  onClick={() => setTimeRange("week")}
-                >
-                  {t('overview.week')}
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="month"
-                  onClick={() => setTimeRange("month")}
-                >
-                  {t('overview.month')}
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="week" className="space-y-4">
-                {upcomingAppointments.slice(0, 3).map((appointment) => (
-                  <div 
-                    key={appointment.id} 
-                    className="flex items-center p-3 bg-secondary/50 rounded-lg"
-                  >
-                    <div className="bg-primary/10 p-3 rounded-full mr-4">
-                      <Clock className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-center mb-1">
-                        <p className="font-medium text-foreground">{appointment.date} {appointment.time}</p>
-                      </div>
-                      <div className="flex justify-between text-sm text-muted-foreground">
-                        <p className="truncate">{appointment.customer} - {appointment.vehicle}</p>
-                        <p>{appointment.serviceType}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </TabsContent>
-              <TabsContent value="month" className="space-y-4">
-                {upcomingAppointments.map((appointment) => (
-                  <div 
-                    key={appointment.id} 
-                    className="flex items-center p-3 bg-secondary/50 rounded-lg"
-                  >
-                    <div className="bg-primary/10 p-3 rounded-full mr-4">
-                      <Clock className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-center mb-1">
-                        <p className="font-medium text-foreground">{appointment.date} {appointment.time}</p>
-                      </div>
-                      <div className="flex justify-between text-sm text-muted-foreground">
-                        <p className="truncate">{appointment.customer} - {appointment.vehicle}</p>
-                        <p>{appointment.serviceType}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-        
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
         <Card>
           <CardHeader>
             <CardTitle>{t('overview.serviceTypeDistribution')}</CardTitle>
