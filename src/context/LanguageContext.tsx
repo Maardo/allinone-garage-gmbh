@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Language, TRANSLATIONS } from '@/lib/types';
 
@@ -287,9 +288,9 @@ export const translations = {
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
-    // Try to get language from localStorage or use 'en' as default
+    // Ändra standardspråket till svenska
     const savedLang = localStorage.getItem('language');
-    return (savedLang as Language) || 'en';
+    return (savedLang as Language) || 'sv';
   });
 
   useEffect(() => {
