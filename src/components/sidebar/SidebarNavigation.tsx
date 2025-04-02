@@ -8,7 +8,8 @@ import {
   Users, 
   Car, 
   ClipboardList, 
-  Settings 
+  Settings,
+  LayoutDashboard
 } from 'lucide-react';
 
 export function SidebarNavigation() {
@@ -17,6 +18,11 @@ export function SidebarNavigation() {
   const location = useLocation();
 
   const menuItems = [
+    {
+      name: t('navigation.overview'),
+      icon: <LayoutDashboard className="h-5 w-5" />,
+      path: "/overview",
+    },
     {
       name: t('navigation.calendar'),
       icon: <Calendar className="h-5 w-5" />,

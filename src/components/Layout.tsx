@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
@@ -21,7 +22,7 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
 
   const getPageKey = () => {
     const path = location.pathname.substring(1);
-    return path || 'dashboard';
+    return path || 'overview';
   };
 
   const getPageInfo = () => {
