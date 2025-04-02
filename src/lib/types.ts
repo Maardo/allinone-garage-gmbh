@@ -113,7 +113,8 @@ export const TRANSLATIONS = {
       loading: 'Loading...',
       search: 'Search',
       filter: 'Filter',
-      actions: 'Actions'
+      actions: 'Actions',
+      welcome: 'Welcome'
     },
     navigation: {
       calendar: 'Calendar',
@@ -152,6 +153,33 @@ export const TRANSLATIONS = {
       calendarColor: 'Calendar Color',
       update: 'Update',
       create: 'Create'
+    },
+    pages: {
+      notFound: {
+        title: '404',
+        message: 'Oops! Page not found',
+        returnHome: 'Return to Home'
+      },
+      dashboard: {
+        title: 'Dashboard',
+        subtitle: 'Overview of garage operations'
+      },
+      calendar: {
+        title: 'Calendar',
+        subtitle: 'Manage appointments and schedule'
+      },
+      customers: {
+        title: 'Customers',
+        subtitle: 'Manage customer information and vehicles'
+      },
+      loanerCars: {
+        title: 'Loaner Cars',
+        subtitle: 'Manage loaner car inventory and assignments'
+      },
+      settings: {
+        title: 'Settings',
+        subtitle: 'Configure system settings'
+      }
     }
   },
   sv: {
@@ -167,7 +195,8 @@ export const TRANSLATIONS = {
       loading: 'Laddar...',
       search: 'Sök',
       filter: 'Filtrera',
-      actions: 'Åtgärder'
+      actions: 'Åtgärder',
+      welcome: 'Välkommen'
     },
     navigation: {
       calendar: 'Kalender',
@@ -206,6 +235,33 @@ export const TRANSLATIONS = {
       calendarColor: 'Kalenderfärg',
       update: 'Uppdatera',
       create: 'Skapa'
+    },
+    pages: {
+      notFound: {
+        title: '404',
+        message: 'Hoppsan! Sidan hittades inte',
+        returnHome: 'Återgå till startsidan'
+      },
+      dashboard: {
+        title: 'Översikt',
+        subtitle: 'Översikt över verkstadens verksamhet'
+      },
+      calendar: {
+        title: 'Kalender',
+        subtitle: 'Hantera bokningar och schema'
+      },
+      customers: {
+        title: 'Kunder',
+        subtitle: 'Hantera kundinformation och fordon'
+      },
+      loanerCars: {
+        title: 'Lånebil',
+        subtitle: 'Hantera lånebilsinventarier och tilldelningar'
+      },
+      settings: {
+        title: 'Inställningar',
+        subtitle: 'Konfigurera systeminställningar'
+      }
     }
   },
   de: {
@@ -221,7 +277,8 @@ export const TRANSLATIONS = {
       loading: 'Lädt...',
       search: 'Suchen',
       filter: 'Filtern',
-      actions: 'Aktionen'
+      actions: 'Aktionen',
+      welcome: 'Willkommen'
     },
     navigation: {
       calendar: 'Kalender',
@@ -260,6 +317,33 @@ export const TRANSLATIONS = {
       calendarColor: 'Kalenderfarbe',
       update: 'Aktualisieren',
       create: 'Erstellen'
+    },
+    pages: {
+      notFound: {
+        title: '404',
+        message: 'Hoppla! Seite nicht gefunden',
+        returnHome: 'Zurück zur Startseite'
+      },
+      dashboard: {
+        title: 'Dashboard',
+        subtitle: 'Überblick über die Werkstattoperationen'
+      },
+      calendar: {
+        title: 'Kalender',
+        subtitle: 'Termine und Zeitplan verwalten'
+      },
+      customers: {
+        title: 'Kunden',
+        subtitle: 'Kundeninformationen und Fahrzeuge verwalten'
+      },
+      loanerCars: {
+        title: 'Leihwagen',
+        subtitle: 'Leihwagenbestand und Zuweisungen verwalten'
+      },
+      settings: {
+        title: 'Einstellungen',
+        subtitle: 'Systemeinstellungen konfigurieren'
+      }
     }
   }
 };

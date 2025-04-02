@@ -1,5 +1,6 @@
 
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Menu } from "lucide-react";
 import { Button } from "./ui/button";
 
@@ -9,6 +10,7 @@ interface NavbarProps {
 
 export function Navbar({ toggleSidebar }: NavbarProps) {
   const { currentUser } = useAuth();
+  const { t } = useLanguage();
   
   const handleToggle = () => {
     console.log("Navbar hamburger clicked"); // Debug
@@ -29,14 +31,14 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
           <Menu className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="font-bold text-lg sm:text-xl text-primary">Allinone Garage</h1>
+          <h1 className="font-bold text-lg sm:text-xl text-primary">{t('common.appName')}</h1>
         </div>
       </div>
       
       <div className="flex items-center gap-4">
         {currentUser && (
           <span className="text-sm text-muted-foreground hidden md:block">
-            Welcome, {currentUser.name}
+            {t('common.welcome')}, {currentUser.name}
           </span>
         )}
       </div>

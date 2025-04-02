@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
 import { useAuth } from "@/context/AuthContext";
@@ -17,9 +16,32 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   const { currentUser, isLoading } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  // Redirect to login if not authenticated
+  const getPageKey = () => {
+    const path = location.pathname.substring(1);
+    return path || 'dashboard';
+  };
+
+  const getPageInfo = () => {
+    const pageKey = getPageKey();
+    
+    if (title || subtitle) {
+      return { 
+        title: title, 
+        subtitle: subtitle 
+      };
+    }
+    
+    return {
+      title: t(`pages.${pageKey}.title`),
+      subtitle: t(`pages.${pageKey}.subtitle`)
+    };
+  };
+
+  const pageInfo = getPageInfo();
+
   useEffect(() => {
     if (!isLoading && !currentUser) {
       navigate("/login");
@@ -31,12 +53,10 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
     setIsMobileOpen(!isMobileOpen); // Simplified toggle
   };
 
-  // Close sidebar when clicking outside on mobile
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (isMobileOpen && window.innerWidth < 768) {
         const target = e.target as HTMLElement;
-        // Don't close if clicking sidebar or navbar toggle button
         const isSidebar = !!target.closest('[data-sidebar="sidebar"]');
         const isToggle = !!target.closest('[data-toggle="sidebar"]');
         
@@ -54,7 +74,6 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
     };
   }, [isMobileOpen]);
 
-  // Close sidebar when window is resized to desktop size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768 && isMobileOpen) {
@@ -88,13 +107,13 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
         <Navbar toggleSidebar={toggleSidebar} />
         <main className="flex-1 bg-background text-foreground overflow-auto">
           <div className="p-3 sm:p-6 max-w-7xl mx-auto">
-            {(title || subtitle) && (
+            {(pageInfo.title || pageInfo.subtitle) && (
               <div className="mb-4 sm:mb-8">
-                {title && (
-                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{title}</h1>
+                {pageInfo.title && (
+                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{pageInfo.title}</h1>
                 )}
-                {subtitle && (
-                  <p className="mt-1 sm:mt-2 text-sm sm:text-base text-muted-foreground">{subtitle}</p>
+                {pageInfo.subtitle && (
+                  <p className="mt-1 sm:mt-2 text-sm sm:text-base text-muted-foreground">{pageInfo.subtitle}</p>
                 )}
               </div>
             )}
