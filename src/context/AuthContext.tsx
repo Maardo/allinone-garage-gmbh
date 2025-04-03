@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '@/lib/types';
+import { useNavigate } from 'react-router-dom';
 
 // Demo users for this prototype
 const DEMO_USERS = [

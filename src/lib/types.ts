@@ -137,7 +137,10 @@ export const TRANSLATIONS = {
       loggingIn: 'Logging in...',
       demoAccounts: 'Demo Accounts:',
       adminAccount: 'Admin: admin@workshop.com / admin123',
-      mechanicAccount: 'Mechanic: mechanic1@workshop.com / mechanic123'
+      mechanicAccount: 'Mechanic: mechanic1@workshop.com / mechanic123',
+      successMessage: 'Login successful',
+      invalidCredentials: 'Invalid email or password',
+      failedMessage: 'Login failed'
     },
     overview: {
       todayAppointments: 'Today\'s Appointments',
@@ -244,7 +247,10 @@ export const TRANSLATIONS = {
       loggingIn: 'Loggar in...',
       demoAccounts: 'Demokonton:',
       adminAccount: 'Admin: admin@workshop.com / admin123',
-      mechanicAccount: 'Mekaniker: mechanic1@workshop.com / mechanic123'
+      mechanicAccount: 'Mekaniker: mechanic1@workshop.com / mechanic123',
+      successMessage: 'Inloggning lyckades',
+      invalidCredentials: 'Ogiltig e-post eller lösenord',
+      failedMessage: 'Inloggning misslyckades'
     },
     overview: {
       todayAppointments: 'Dagens bokningar',
@@ -351,7 +357,10 @@ export const TRANSLATIONS = {
       loggingIn: 'Anmeldung läuft...',
       demoAccounts: 'Demo-Konten:',
       adminAccount: 'Admin: admin@workshop.com / admin123',
-      mechanicAccount: 'Mechaniker: mechanic1@workshop.com / mechanic123'
+      mechanicAccount: 'Mechaniker: mechanic1@workshop.com / mechanic123',
+      successMessage: 'Anmeldung erfolgreich',
+      invalidCredentials: 'Ungültige E-Mail oder Passwort',
+      failedMessage: 'Anmeldung fehlgeschlagen'
     },
     overview: {
       todayAppointments: 'Heutige Termine',

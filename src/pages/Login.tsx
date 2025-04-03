@@ -25,13 +25,13 @@ export default function Login() {
       const success = await login(email, password);
       
       if (success) {
-        toast.success("Login successful");
-        navigate("/calendar");
+        toast.success(t("login.successMessage"));
+        navigate("/overview");
       } else {
-        toast.error("Invalid email or password");
+        toast.error(t("login.invalidCredentials"));
       }
     } catch (error) {
-      toast.error("Login failed");
+      toast.error(t("login.failedMessage"));
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -59,15 +59,15 @@ export default function Login() {
                 />
               </svg>
             </div>
-            <CardTitle className="text-2xl font-bold">Workshop Manager</CardTitle>
+            <CardTitle className="text-2xl font-bold">{t("login.title")}</CardTitle>
             <CardDescription>
-              Enter your credentials to access the system
+              {t("login.subtitle")}
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("login.email")}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -81,7 +81,7 @@ export default function Login() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{t("login.password")}</Label>
                 </div>
                 <Input
                   id="password"
@@ -94,10 +94,10 @@ export default function Login() {
                 />
               </div>
               <div className="text-xs text-muted-foreground">
-                <p>Demo Accounts:</p>
+                <p>{t("login.demoAccounts")}</p>
                 <ul className="list-disc list-inside mt-1">
-                  <li>Admin: admin@workshop.com / admin123</li>
-                  <li>Mechanic: mechanic1@workshop.com / mechanic123</li>
+                  <li>{t("login.adminAccount")}</li>
+                  <li>{t("login.mechanicAccount")}</li>
                 </ul>
               </div>
             </CardContent>
@@ -110,10 +110,10 @@ export default function Login() {
                 {isLoading ? (
                   <div className="flex items-center justify-center">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-                    <span className="ml-2">Logging in...</span>
+                    <span className="ml-2">{t("login.loggingIn")}</span>
                   </div>
                 ) : (
-                  "Sign In"
+                  t("login.signIn")
                 )}
               </Button>
             </CardFooter>
