@@ -1,4 +1,3 @@
-
 import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, ChevronRight, PlusCircle, CalendarDays, CalendarCheck, Calendar as CalendarIcon2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,12 +39,25 @@ export function CalendarHeader({
   const getViewTitle = () => {
     switch (viewMode) {
       case 'day':
-        return format(currentDate, 'd MMM yyyy');
+        return format(currentDate, 'd MMMM yyyy');
       case 'week':
-        return `${format(currentDate, 'd')}–${format(currentDate, 'd MMM')}`;
+        const startOfWeek = new Date(currentDate);
+        startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1)); // Start from Monday
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6); // End on Sunday
+        
+        if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
+          return `${format(startOfWeek, 'd')}–${format(endOfWeek, 'd MMM yyyy')}`;
+        }
+        else if (startOfWeek.getFullYear() === endOfWeek.getFullYear()) {
+          return `${format(startOfWeek, 'd MMM')}–${format(endOfWeek, 'd MMM yyyy')}`;
+        }
+        else {
+          return `${format(startOfWeek, 'd MMM yyyy')}–${format(endOfWeek, 'd MMM yyyy')}`;
+        }
       case 'month':
       default:
-        return format(currentDate, 'MMM yyyy');
+        return format(currentDate, 'MMMM yyyy');
     }
   };
 
@@ -84,7 +96,7 @@ export function CalendarHeader({
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <h2 className="text-base sm:text-lg font-semibold px-1 w-24 sm:w-28 text-center">
+          <h2 className="text-base sm:text-lg font-semibold px-1 min-w-28 sm:min-w-32 text-center">
             {getViewTitle()}
           </h2>
           <Button
@@ -122,7 +134,6 @@ export function CalendarHeader({
             </DropdownMenuContent>
           </DropdownMenu>
           
-          {/* Hide Today button on mobile to save space */}
           {!isMobile && (
             <Button variant="outline" onClick={onToday} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
               <CalendarIcon className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />

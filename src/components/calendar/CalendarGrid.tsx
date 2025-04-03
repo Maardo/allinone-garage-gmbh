@@ -1,4 +1,3 @@
-
 import { 
   format, 
   startOfMonth, 
@@ -302,17 +301,15 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
   // Generate days of the week
   const daysOfWeek = eachDayOfInterval({ start: weekStart, end: weekEnd });
   
-  // For mobile view, determine visible days
-  const visibleDays = isMobile 
-    ? daysOfWeek.slice(0, 4) // Show only 4 days on mobile
-    : daysOfWeek;
+  // Always show all 7 days of the week, regardless of mobile or desktop
+  const visibleDays = daysOfWeek;
   
   return (
     <div className="border rounded-md bg-card overflow-x-auto">
       <div className={cn(
         "grid divide-x",
-        isMobile ? "grid-cols-4" : "grid-cols-7",
-        isMobile ? "min-w-full" : "min-w-[700px]"
+        "grid-cols-7",
+        "min-w-[700px]"
       )}>
         {/* Days of the week header */}
         {visibleDays.map(day => (
@@ -328,7 +325,7 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
               "text-xs sm:text-sm",
               isToday(day) && "bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center mx-auto"
             )}>
-              {format(day, "d")}
+              {format(day, "d MMM")} {/* Add month abbreviation to make date clearer */}
             </div>
           </div>
         ))}
@@ -337,8 +334,8 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
       {/* Week content */}
       <div className={cn(
         "grid divide-x min-h-[200px] max-h-[calc(100vh-250px)] overflow-y-auto",
-        isMobile ? "grid-cols-4" : "grid-cols-7",
-        isMobile ? "min-w-full" : "min-w-[700px]"
+        "grid-cols-7",
+        "min-w-[700px]"
       )}>
         {visibleDays.map(day => {
           const dayAppointments = appointments.filter(appointment => 
