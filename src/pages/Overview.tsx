@@ -1,8 +1,6 @@
 
-import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Users, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -17,7 +15,6 @@ import {
 
 export default function Overview() {
   const { t } = useLanguage();
-  const [timeRange, setTimeRange] = useState<"week" | "month">("week");
   
   // Mock data - in a real app, this would come from your backend
   const stats = {
@@ -27,29 +24,14 @@ export default function Overview() {
     completedJobs: 843
   };
   
-  // Mock chart data
-  const weekChartData = [
-    { name: t('serviceTypes.maintenance'), value: 8 },
-    { name: t('serviceTypes.repair'), value: 5 },
-    { name: t('serviceTypes.inspection'), value: 3 },
-    { name: t('serviceTypes.tireChange'), value: 4 },
-    { name: t('serviceTypes.other'), value: 2 }
-  ];
-  
-  const monthChartData = [
+  // Mock chart data - total upcoming appointments by service type
+  const totalChartData = [
     { name: t('serviceTypes.maintenance'), value: 28 },
     { name: t('serviceTypes.repair'), value: 15 },
     { name: t('serviceTypes.inspection'), value: 12 },
     { name: t('serviceTypes.tireChange'), value: 18 },
     { name: t('serviceTypes.other'), value: 7 }
   ];
-  
-  // In a real app, you would fetch data here
-  useEffect(() => {
-    // Fetch data based on timeRange
-    console.log(`Fetching data for ${timeRange}`);
-    // fetchData(timeRange);
-  }, [timeRange]);
   
   return (
     <Layout title={t('pages.overview.title')} subtitle={t('pages.overview.subtitle')}>
@@ -109,48 +91,17 @@ export default function Overview() {
             <CardTitle>{t('overview.upcomingAppointments')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="week" className="w-full">
-              <TabsList className="mb-4">
-                <TabsTrigger 
-                  value="week"
-                  onClick={() => setTimeRange("week")}
-                >
-                  {t('overview.week')}
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="month"
-                  onClick={() => setTimeRange("month")}
-                >
-                  {t('overview.month')}
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="week">
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={weekChartData}>
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="value" fill="#6366f1" name={t('overview.appointments')} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </TabsContent>
-              <TabsContent value="month">
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={monthChartData}>
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="value" fill="#6366f1" name={t('overview.appointments')} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </TabsContent>
-            </Tabs>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={totalChartData}>
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="value" fill="#6366f1" name={t('overview.appointments')} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
       </div>
