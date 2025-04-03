@@ -1,3 +1,4 @@
+
 import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, ChevronRight, PlusCircle, CalendarDays, CalendarCheck, Calendar as CalendarIcon2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { AppointmentForm } from "@/components/AppointmentForm";
 import { Appointment } from "@/lib/types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -35,6 +37,7 @@ export function CalendarHeader({
   onChangeViewMode,
 }: CalendarHeaderProps) {
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
   
   const getViewTitle = () => {
     switch (viewMode) {
@@ -64,11 +67,11 @@ export function CalendarHeader({
   const getViewButtonLabel = () => {
     switch (viewMode) {
       case 'day':
-        return 'Day';
+        return t('calendar.day');
       case 'week':
-        return 'Week';
+        return t('calendar.week');
       case 'month':
-        return 'Month';
+        return t('calendar.month');
     }
   };
 
@@ -91,7 +94,7 @@ export function CalendarHeader({
             variant="outline"
             size="icon"
             onClick={onPrevMonth}
-            aria-label={`Previous ${viewMode}`}
+            aria-label={`${t('calendar.previous')} ${viewMode}`}
             className="h-7 w-7 sm:h-8 sm:w-8"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -103,7 +106,7 @@ export function CalendarHeader({
             variant="outline"
             size="icon"
             onClick={onNextMonth}
-            aria-label={`Next ${viewMode}`}
+            aria-label={`${t('calendar.next')} ${viewMode}`}
             className="h-7 w-7 sm:h-8 sm:w-8"
           >
             <ChevronRight className="h-4 w-4" />
@@ -121,15 +124,15 @@ export function CalendarHeader({
             <DropdownMenuContent align="end" className="bg-white">
               <DropdownMenuItem onClick={() => onChangeViewMode('day')} className="cursor-pointer">
                 <CalendarIcon2 className="mr-2 h-4 w-4" />
-                <span>Day</span>
+                <span>{t('calendar.day')}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onChangeViewMode('week')} className="cursor-pointer">
                 <CalendarCheck className="mr-2 h-4 w-4" />
-                <span>Week</span>
+                <span>{t('calendar.week')}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onChangeViewMode('month')} className="cursor-pointer">
                 <CalendarDays className="mr-2 h-4 w-4" />
-                <span>Month</span>
+                <span>{t('calendar.month')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -137,7 +140,7 @@ export function CalendarHeader({
           {!isMobile && (
             <Button variant="outline" onClick={onToday} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
               <CalendarIcon className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              Today
+              {t('calendar.today')}
             </Button>
           )}
           
@@ -145,13 +148,13 @@ export function CalendarHeader({
             <DialogTrigger asChild>
               <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
                 <PlusCircle className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                {isMobile ? "" : "New"}
+                {isMobile ? "" : t('calendar.new')}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
-                  {selectedAppointment ? "Edit Appointment" : "New Appointment"}
+                  {selectedAppointment ? t('appointment.editAppointment') : t('appointment.newAppointment')}
                 </DialogTitle>
               </DialogHeader>
               <AppointmentForm 

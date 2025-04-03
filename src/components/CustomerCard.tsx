@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Customer } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface CustomerCardProps {
   customer: Customer;
@@ -15,6 +16,7 @@ interface CustomerCardProps {
 
 export function CustomerCard({ customer }: CustomerCardProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { t } = useLanguage();
   
   return (
     <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
@@ -26,7 +28,8 @@ export function CustomerCard({ customer }: CustomerCardProps) {
               {customer.name}
             </div>
             <div className="text-sm text-muted-foreground mt-1">
-              {customer.vehicles.length} vehicle{customer.vehicles.length !== 1 && "s"}
+              {customer.vehicles.length} {customer.vehicles.length === 1 ? 
+                t('customer.vehicle') : t('customer.vehicles')}
             </div>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -37,36 +40,36 @@ export function CustomerCard({ customer }: CustomerCardProps) {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
-                <DialogTitle>Customer Details</DialogTitle>
+                <DialogTitle>{t('customer.details')}</DialogTitle>
               </DialogHeader>
               
               <Tabs defaultValue="details" className="mt-4">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="details">Customer Info</TabsTrigger>
-                  <TabsTrigger value="vehicles">Vehicles</TabsTrigger>
+                  <TabsTrigger value="details">{t('customer.info')}</TabsTrigger>
+                  <TabsTrigger value="vehicles">{t('customer.vehiclesTab')}</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="details" className="space-y-4 py-4">
                   <div className="space-y-3">
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground mb-1">Name</h3>
+                      <h3 className="text-sm font-medium text-muted-foreground mb-1">{t('customer.name')}</h3>
                       <p className="font-medium">{customer.name}</p>
                     </div>
                     
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground mb-1">Email</h3>
-                      <p>{customer.email || "Not provided"}</p>
+                      <h3 className="text-sm font-medium text-muted-foreground mb-1">{t('customer.email')}</h3>
+                      <p>{customer.email || t('customer.notProvided')}</p>
                     </div>
                     
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground mb-1">Phone</h3>
-                      <p>{customer.phone || "Not provided"}</p>
+                      <h3 className="text-sm font-medium text-muted-foreground mb-1">{t('customer.phone')}</h3>
+                      <p>{customer.phone || t('customer.notProvided')}</p>
                     </div>
                     
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground mb-1">Notes</h3>
+                      <h3 className="text-sm font-medium text-muted-foreground mb-1">{t('customer.notes')}</h3>
                       <p className="whitespace-pre-wrap">
-                        {customer.notes || "No notes added for this customer"}
+                        {customer.notes || t('customer.noNotes')}
                       </p>
                     </div>
                   </div>
@@ -76,7 +79,7 @@ export function CustomerCard({ customer }: CustomerCardProps) {
                   {customer.vehicles.length === 0 ? (
                     <div className="bg-muted p-4 rounded-md text-center text-muted-foreground">
                       <Car className="h-12 w-12 mx-auto mb-2 opacity-30" />
-                      <p>No vehicles registered for this customer</p>
+                      <p>{t('customer.noVehicles')}</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -91,16 +94,16 @@ export function CustomerCard({ customer }: CustomerCardProps) {
                           <CardContent className="py-4 text-sm">
                             <div className="grid grid-cols-2 gap-3">
                               <div>
-                                <p className="text-muted-foreground mb-1">Year</p>
+                                <p className="text-muted-foreground mb-1">{t('vehicle.year')}</p>
                                 <p className="font-medium">{vehicle.year}</p>
                               </div>
                               <div>
-                                <p className="text-muted-foreground mb-1">License Plate</p>
+                                <p className="text-muted-foreground mb-1">{t('vehicle.license')}</p>
                                 <p className="font-medium">{vehicle.license}</p>
                               </div>
                               {vehicle.vin && (
                                 <div className="col-span-2">
-                                  <p className="text-muted-foreground mb-1">VIN</p>
+                                  <p className="text-muted-foreground mb-1">{t('vehicle.vin')}</p>
                                   <p className="font-medium font-mono text-xs">{vehicle.vin}</p>
                                 </div>
                               )}

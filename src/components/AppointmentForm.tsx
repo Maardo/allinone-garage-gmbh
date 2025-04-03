@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Appointment, SERVICE_TYPES } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface AppointmentFormProps {
   initialData?: Appointment;
@@ -19,6 +20,8 @@ interface AppointmentFormProps {
 }
 
 export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps) {
+  const { t } = useLanguage();
+  
   const [formData, setFormData] = useState<Appointment>(
     initialData || {
       id: "",
@@ -82,25 +85,25 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
         {/* Customer Details */}
         <div className="space-y-4">
           <div>
-            <Label htmlFor="customerName">Customer Name</Label>
+            <Label htmlFor="customerName">{t('appointment.customerName')}</Label>
             <Input
               id="customerName"
               name="customerName"
               value={formData.customerName}
               onChange={handleChange}
-              placeholder="Customer name"
+              placeholder={t('appointment.customerNamePlaceholder')}
               required
             />
           </div>
           
           <div>
-            <Label htmlFor="vehicleInfo">Vehicle Information</Label>
+            <Label htmlFor="vehicleInfo">{t('appointment.vehicleInfo')}</Label>
             <Input
               id="vehicleInfo"
               name="vehicleInfo"
               value={formData.vehicleInfo}
               onChange={handleChange}
-              placeholder="Make, model, registration"
+              placeholder={t('appointment.vehicleInfoPlaceholder')}
               required
             />
           </div>
@@ -109,7 +112,7 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
         {/* Appointment Details */}
         <div className="space-y-4">
           <div className="flex flex-col space-y-2">
-            <Label>Date</Label>
+            <Label>{t('appointment.date')}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -123,7 +126,7 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
                   {formData.date ? (
                     format(formData.date, "PPP")
                   ) : (
-                    <span>Pick a date</span>
+                    <span>{t('appointment.pickDate')}</span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -140,7 +143,7 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
           </div>
 
           <div>
-            <Label htmlFor="time">Time</Label>
+            <Label htmlFor="time">{t('appointment.time')}</Label>
             <Input
               id="time"
               type="time"
@@ -151,13 +154,13 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
           </div>
 
           <div>
-            <Label htmlFor="serviceType">Service Type</Label>
+            <Label htmlFor="serviceType">{t('appointment.serviceType')}</Label>
             <Select 
               value={formData.serviceType.toString()} 
               onValueChange={handleServiceTypeChange}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select service type" />
+                <SelectValue placeholder={t('appointment.selectServiceType')} />
               </SelectTrigger>
               <SelectContent>
                 {Object.values(SERVICE_TYPES).map((type) => (
@@ -172,13 +175,13 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
       </div>
 
       <div>
-        <Label htmlFor="notes">Notes</Label>
+        <Label htmlFor="notes">{t('appointment.notes')}</Label>
         <Textarea
           id="notes"
           name="notes"
           value={formData.notes}
           onChange={handleChange}
-          placeholder="Additional notes about the appointment"
+          placeholder={t('appointment.notesPlaceholder')}
           className="h-24"
         />
       </div>
@@ -193,9 +196,9 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
           <Label htmlFor="paid" className="flex items-center cursor-pointer">
             <CreditCard className="mr-2 h-4 w-4" />
             {formData.isPaid ? (
-              <span className="text-green-600">Paid</span>
+              <span className="text-green-600">{t('appointment.paid')}</span>
             ) : (
-              <span className="text-red-600">Unpaid</span>
+              <span className="text-red-600">{t('appointment.unpaid')}</span>
             )}
           </Label>
         </div>
@@ -209,9 +212,9 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
           <Label htmlFor="completed" className="flex items-center cursor-pointer">
             <Check className="mr-2 h-4 w-4" />
             {formData.isCompleted ? (
-              <span className="text-green-600">Completed</span>
+              <span className="text-green-600">{t('appointment.completed')}</span>
             ) : (
-              <span>In Progress</span>
+              <span>{t('appointment.inProgress')}</span>
             )}
           </Label>
         </div>
@@ -219,7 +222,7 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
 
       <div className="flex justify-end">
         <Button type="submit">
-          {initialData?.id ? "Update Appointment" : "Create Appointment"}
+          {initialData?.id ? t('appointment.updateAppointment') : t('appointment.createAppointment')}
         </Button>
       </div>
     </form>
