@@ -107,6 +107,12 @@ export function CustomerCard({ customer }: CustomerCardProps) {
                                   <p className="font-medium font-mono text-xs">{vehicle.vin}</p>
                                 </div>
                               )}
+                              {vehicle.carId && (
+                                <div className="col-span-2">
+                                  <p className="text-muted-foreground mb-1">{t('vehicle.carId')}</p>
+                                  <p className="font-medium">{vehicle.carId}</p>
+                                </div>
+                              )}
                             </div>
                           </CardContent>
                         </Card>

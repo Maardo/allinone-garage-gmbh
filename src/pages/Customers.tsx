@@ -13,7 +13,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock data for demo purposes
 const MOCK_CUSTOMERS: Customer[] = [
   {
     id: "c1",
@@ -118,7 +117,8 @@ export default function CustomersPage() {
     model: "",
     year: new Date().getFullYear(),
     license: "",
-    vin: ""
+    vin: "",
+    carId: ""
   });
 
   const isAdmin = currentUser?.role === 'admin';
@@ -208,7 +208,8 @@ export default function CustomersPage() {
       model: newVehicle.model || "",
       year: newVehicle.year || new Date().getFullYear(),
       license: newVehicle.license || "",
-      vin: newVehicle.vin || ""
+      vin: newVehicle.vin || "",
+      carId: newVehicle.carId || ""
     };
     
     if (isEditDialogOpen && selectedCustomer) {
@@ -228,7 +229,8 @@ export default function CustomersPage() {
       model: "",
       year: new Date().getFullYear(),
       license: "",
-      vin: ""
+      vin: "",
+      carId: ""
     });
   };
 
@@ -500,6 +502,19 @@ export default function CustomersPage() {
                   value={newVehicle.vin || ""}
                   onChange={(e) => setNewVehicle({...newVehicle, vin: e.target.value})}
                   placeholder={t('vehicle.vinPlaceholder')}
+                  className="text-sm"
+                />
+              </div>
+              
+              <div className="space-y-2 col-span-2">
+                <label htmlFor="carId" className="text-xs font-medium">
+                  {t('vehicle.carId')}
+                </label>
+                <Input
+                  id="carId"
+                  value={newVehicle.carId || ""}
+                  onChange={(e) => setNewVehicle({...newVehicle, carId: e.target.value})}
+                  placeholder={t('vehicle.carIdPlaceholder')}
                   className="text-sm"
                 />
               </div>

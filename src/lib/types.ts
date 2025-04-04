@@ -86,6 +86,7 @@ export interface Vehicle {
   year: number;
   license: string;
   vin: string;
+  carId: string;
 }
 
 export interface LoanerCar {
@@ -235,11 +236,13 @@ export const TRANSLATIONS = {
       year: 'Year',
       license: 'License Plate',
       vin: 'VIN',
+      carId: 'Car ID',
       makePlaceholder: 'Enter make',
       modelPlaceholder: 'Enter model',
       yearPlaceholder: 'Enter year',
       licensePlaceholder: 'Enter license plate',
-      vinPlaceholder: 'Enter VIN (optional)'
+      vinPlaceholder: 'Enter VIN (optional)',
+      carIdPlaceholder: 'Enter Car ID (optional)'
     },
     actions: {
       save: 'Save',
@@ -415,7 +418,7 @@ export const TRANSLATIONS = {
       addNew: 'Lägg till kund',
       editTitle: 'Redigera kund',
       deleteTitle: 'Ta bort kund',
-      deleteConfirmation: 'Är du säker på att du vill ta bort den här kunden? Denna åtgärd kan inte ångras.',
+      deleteConfirmation: 'Är du säker på att du vill ta bort den här kunden? Denna åtg��rd kan inte ångras.',
       addedTitle: 'Kund tillagd',
       addedDescription: 'Kunden har lagts till',
       updatedTitle: 'Kund uppdaterad',
@@ -436,11 +439,13 @@ export const TRANSLATIONS = {
       year: 'År',
       license: 'Registreringsnummer',
       vin: 'Chassinummer',
+      carId: 'Bil ID',
       makePlaceholder: 'Ange märke',
       modelPlaceholder: 'Ange modell',
       yearPlaceholder: 'Ange år',
       licensePlaceholder: 'Ange registreringsnummer',
-      vinPlaceholder: 'Ange chassinummer (valfritt)'
+      vinPlaceholder: 'Ange chassinummer (valfritt)',
+      carIdPlaceholder: 'Ange Bil ID (valfritt)'
     },
     actions: {
       save: 'Spara',
@@ -637,11 +642,13 @@ export const TRANSLATIONS = {
       year: 'Jahr',
       license: 'Kennzeichen',
       vin: 'Fahrgestellnummer',
+      carId: 'Auto ID',
       makePlaceholder: 'Marke eingeben',
       modelPlaceholder: 'Modell eingeben',
       yearPlaceholder: 'Jahr eingeben',
       licensePlaceholder: 'Kennzeichen eingeben',
-      vinPlaceholder: 'Fahrgestellnummer eingeben (optional)'
+      vinPlaceholder: 'Fahrgestellnummer eingeben (optional)',
+      carIdPlaceholder: 'Auto ID eingeben (optional)'
     },
     actions: {
       save: 'Speichern',
