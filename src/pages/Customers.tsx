@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Search, Plus, Phone, Mail, Car, Edit, Trash2, User, MapPin } from "lucide-react";
 import { Layout } from "@/components/Layout";
@@ -7,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Customer, Vehicle } from "@/lib/types";
+import { Customer, Vehicle, Address } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/context/LanguageContext";
@@ -249,9 +248,45 @@ export default function CustomersPage() {
 
   const renderCustomerForm = (isEdit = false) => {
     const customer = isEdit ? selectedCustomer : newCustomer;
-    const setCustomer = isEdit ? setSelectedCustomer : setNewCustomer;
+    const setCustomer = isEdit 
+      ? (value: React.SetStateAction<Customer | null>) => setSelectedCustomer(value as Customer | null)
+      : setNewCustomer;
     
     if (!customer) return null;
+    
+    const updateCustomer = (field: string, value: any) => {
+      if (isEdit && selectedCustomer) {
+        setSelectedCustomer({
+          ...selectedCustomer,
+          [field]: value
+        } as Customer);
+      } else {
+        setNewCustomer({
+          ...newCustomer,
+          [field]: value
+        });
+      }
+    };
+    
+    const updateAddress = (field: string, value: string) => {
+      if (isEdit && selectedCustomer) {
+        setSelectedCustomer({
+          ...selectedCustomer,
+          address: {
+            ...(selectedCustomer.address || { street: "", zipCode: "", city: "" }),
+            [field]: value
+          }
+        } as Customer);
+      } else {
+        setNewCustomer({
+          ...newCustomer,
+          address: {
+            ...(newCustomer.address || { street: "", zipCode: "", city: "" }),
+            [field]: value
+          }
+        });
+      }
+    };
     
     return (
       <Tabs defaultValue="details" className="mt-4">
@@ -269,7 +304,7 @@ export default function CustomersPage() {
               <Input
                 id="name"
                 value={customer.name || ""}
-                onChange={(e) => setCustomer({...customer, name: e.target.value})}
+                onChange={(e) => updateCustomer('name', e.target.value)}
                 placeholder={t('customer.namePlaceholder')}
                 required
               />
@@ -284,7 +319,7 @@ export default function CustomersPage() {
                 <Input
                   id="email"
                   value={customer.email || ""}
-                  onChange={(e) => setCustomer({...customer, email: e.target.value})}
+                  onChange={(e) => updateCustomer('email', e.target.value)}
                   placeholder={t('customer.emailPlaceholder')}
                   className="pl-10"
                   type="email"
@@ -301,7 +336,7 @@ export default function CustomersPage() {
                 <Input
                   id="phone"
                   value={customer.phone || ""}
-                  onChange={(e) => setCustomer({...customer, phone: e.target.value})}
+                  onChange={(e) => updateCustomer('phone', e.target.value)}
                   placeholder={t('customer.phonePlaceholder')}
                   className="pl-10"
                 />
@@ -317,10 +352,7 @@ export default function CustomersPage() {
                 <Input
                   id="street"
                   value={customer.address?.street || ""}
-                  onChange={(e) => setCustomer({
-                    ...customer, 
-                    address: {...customer.address, street: e.target.value}
-                  })}
+                  onChange={(e) => updateAddress('street', e.target.value)}
                   placeholder={t('customer.streetPlaceholder')}
                   className="pl-10"
                 />
@@ -335,10 +367,7 @@ export default function CustomersPage() {
                 <Input
                   id="zipCode"
                   value={customer.address?.zipCode || ""}
-                  onChange={(e) => setCustomer({
-                    ...customer, 
-                    address: {...customer.address, zipCode: e.target.value}
-                  })}
+                  onChange={(e) => updateAddress('zipCode', e.target.value)}
                   placeholder={t('customer.zipCodePlaceholder')}
                 />
               </div>
@@ -350,10 +379,7 @@ export default function CustomersPage() {
                 <Input
                   id="city"
                   value={customer.address?.city || ""}
-                  onChange={(e) => setCustomer({
-                    ...customer, 
-                    address: {...customer.address, city: e.target.value}
-                  })}
+                  onChange={(e) => updateAddress('city', e.target.value)}
                   placeholder={t('customer.cityPlaceholder')}
                 />
               </div>
@@ -366,7 +392,7 @@ export default function CustomersPage() {
               <Input
                 id="notes"
                 value={customer.notes || ""}
-                onChange={(e) => setCustomer({...customer, notes: e.target.value})}
+                onChange={(e) => updateCustomer('notes', e.target.value)}
                 placeholder={t('customer.notesPlaceholder')}
               />
             </div>
