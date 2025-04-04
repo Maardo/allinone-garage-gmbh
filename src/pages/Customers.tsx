@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Search, Plus, Phone, Mail, Car, Edit, Trash2, User, MapPin } from "lucide-react";
 import { Layout } from "@/components/Layout";
@@ -32,7 +33,8 @@ const MOCK_CUSTOMERS: Customer[] = [
         model: "V70",
         year: 2018,
         license: "ABC123",
-        vin: "YV1SW6111345678"
+        vin: "YV1SW6111345678",
+        carId: "VOL-2018-001"
       }
     ]
   },
@@ -54,7 +56,8 @@ const MOCK_CUSTOMERS: Customer[] = [
         model: "A4",
         year: 2020,
         license: "XYZ789",
-        vin: "WAUZZZ885565432"
+        vin: "WAUZZZ885565432",
+        carId: "AUD-2020-002"
       }
     ]
   },
@@ -76,7 +79,8 @@ const MOCK_CUSTOMERS: Customer[] = [
         model: "3 Series",
         year: 2019,
         license: "DEF456",
-        vin: "WBA57210987654"
+        vin: "WBA57210987654",
+        carId: "BMW-2019-003"
       },
       {
         id: "v4",
@@ -84,7 +88,8 @@ const MOCK_CUSTOMERS: Customer[] = [
         model: "Corolla",
         year: 2021,
         license: "GHI789",
-        vin: "SB153234567890"
+        vin: "SB153234567890",
+        carId: "TOY-2021-004"
       }
     ]
   }
