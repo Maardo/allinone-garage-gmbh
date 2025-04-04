@@ -1,4 +1,3 @@
-
 export type UserRole = 'admin' | 'mechanic';
 
 export interface User {
@@ -64,12 +63,19 @@ export interface Appointment {
   isCompleted: boolean;
 }
 
+export interface Address {
+  street: string;
+  zipCode: string;
+  city: string;
+}
+
 export interface Customer {
   id: string;
   name: string;
   email: string;
   phone: string;
   notes: string;
+  address?: Address;
   vehicles: Vehicle[];
 }
 
@@ -189,16 +195,60 @@ export const TRANSLATIONS = {
       email: 'Email',
       phone: 'Phone',
       notes: 'Notes',
+      street: 'Street',
+      zipCode: 'Zip Code',
+      city: 'City',
+      address: 'Address',
+      namePlaceholder: 'Enter customer name',
+      emailPlaceholder: 'Enter email address',
+      phonePlaceholder: 'Enter phone number',
+      streetPlaceholder: 'Enter street address',
+      zipCodePlaceholder: 'Enter zip code',
+      cityPlaceholder: 'Enter city',
+      notesPlaceholder: 'Additional notes about the customer',
       notProvided: 'Not provided',
       noNotes: 'No notes added for this customer',
       noVehicles: 'No vehicles registered for this customer',
       vehicle: 'vehicle',
-      vehicles: 'vehicles'
+      vehicles: 'vehicles',
+      addNew: 'Add Customer',
+      editTitle: 'Edit Customer',
+      deleteTitle: 'Delete Customer',
+      deleteConfirmation: 'Are you sure you want to delete this customer? This action cannot be undone.',
+      addedTitle: 'Customer Added',
+      addedDescription: 'The customer was successfully added',
+      updatedTitle: 'Customer Updated',
+      updatedDescription: 'The customer was successfully updated',
+      deletedTitle: 'Customer Deleted',
+      deletedDescription: 'The customer was successfully deleted',
+      searchPlaceholder: 'Search customers',
+      noResults: 'No customers found',
+      noResultsFor: 'No results found for',
+      addVehicle: 'Add Vehicle',
+      addedVehicles: 'Added Vehicles',
+      manageSubtitle: 'Manage customer information and vehicles',
+      contact: 'Contact Information'
     },
     vehicle: {
+      make: 'Make',
+      model: 'Model',
       year: 'Year',
       license: 'License Plate',
-      vin: 'VIN'
+      vin: 'VIN',
+      makePlaceholder: 'Enter make',
+      modelPlaceholder: 'Enter model',
+      yearPlaceholder: 'Enter year',
+      licensePlaceholder: 'Enter license plate',
+      vinPlaceholder: 'Enter VIN (optional)'
+    },
+    actions: {
+      save: 'Save',
+      cancel: 'Cancel',
+      edit: 'Edit',
+      delete: 'Delete',
+      remove: 'Remove',
+      confirmDelete: 'Yes, Delete',
+      actions: 'Actions'
     },
     serviceTypes: {
       maintenance: 'Maintenance',
@@ -346,16 +396,60 @@ export const TRANSLATIONS = {
       email: 'E-post',
       phone: 'Telefon',
       notes: 'Anteckningar',
+      street: 'Gata',
+      zipCode: 'Postnummer',
+      city: 'Ort',
+      address: 'Adress',
+      namePlaceholder: 'Ange kundnamn',
+      emailPlaceholder: 'Ange e-postadress',
+      phonePlaceholder: 'Ange telefonnummer',
+      streetPlaceholder: 'Ange gatuadress',
+      zipCodePlaceholder: 'Ange postnummer',
+      cityPlaceholder: 'Ange ort',
+      notesPlaceholder: 'Ytterligare anteckningar om kunden',
       notProvided: 'Ej angivet',
       noNotes: 'Inga anteckningar tillagda för denna kund',
       noVehicles: 'Inga fordon registrerade för denna kund',
       vehicle: 'fordon',
-      vehicles: 'fordon'
+      vehicles: 'fordon',
+      addNew: 'Lägg till kund',
+      editTitle: 'Redigera kund',
+      deleteTitle: 'Ta bort kund',
+      deleteConfirmation: 'Är du säker på att du vill ta bort den här kunden? Denna åtgärd kan inte ångras.',
+      addedTitle: 'Kund tillagd',
+      addedDescription: 'Kunden har lagts till',
+      updatedTitle: 'Kund uppdaterad',
+      updatedDescription: 'Kunden har uppdaterats',
+      deletedTitle: 'Kund borttagen',
+      deletedDescription: 'Kunden har tagits bort',
+      searchPlaceholder: 'Sök kunder',
+      noResults: 'Inga kunder hittades',
+      noResultsFor: 'Inga resultat hittades för',
+      addVehicle: 'Lägg till fordon',
+      addedVehicles: 'Tillagda fordon',
+      manageSubtitle: 'Hantera kundinformation och fordon',
+      contact: 'Kontaktinformation'
     },
     vehicle: {
+      make: 'Märke',
+      model: 'Modell',
       year: 'År',
       license: 'Registreringsnummer',
-      vin: 'Chassinummer'
+      vin: 'Chassinummer',
+      makePlaceholder: 'Ange märke',
+      modelPlaceholder: 'Ange modell',
+      yearPlaceholder: 'Ange år',
+      licensePlaceholder: 'Ange registreringsnummer',
+      vinPlaceholder: 'Ange chassinummer (valfritt)'
+    },
+    actions: {
+      save: 'Spara',
+      cancel: 'Avbryt',
+      edit: 'Redigera',
+      delete: 'Ta bort',
+      remove: 'Ta bort',
+      confirmDelete: 'Ja, ta bort',
+      actions: 'Åtgärder'
     },
     serviceTypes: {
       maintenance: 'Underhåll',
@@ -503,16 +597,60 @@ export const TRANSLATIONS = {
       email: 'E-Mail',
       phone: 'Telefon',
       notes: 'Notizen',
+      street: 'Straße',
+      zipCode: 'Postleitzahl',
+      city: 'Stadt',
+      address: 'Adresse',
+      namePlaceholder: 'Kundennamen eingeben',
+      emailPlaceholder: 'E-Mail-Adresse eingeben',
+      phonePlaceholder: 'Telefonnummer eingeben',
+      streetPlaceholder: 'Straßenadresse eingeben',
+      zipCodePlaceholder: 'Postleitzahl eingeben',
+      cityPlaceholder: 'Stadt eingeben',
+      notesPlaceholder: 'Weitere Notizen zum Kunden',
       notProvided: 'Nicht angegeben',
       noNotes: 'Keine Notizen für diesen Kunden hinzugefügt',
       noVehicles: 'Keine Fahrzeuge für diesen Kunden registriert',
       vehicle: 'Fahrzeug',
-      vehicles: 'Fahrzeuge'
+      vehicles: 'Fahrzeuge',
+      addNew: 'Kunden hinzufügen',
+      editTitle: 'Kunden bearbeiten',
+      deleteTitle: 'Kunden löschen',
+      deleteConfirmation: 'Sind Sie sicher, dass Sie diesen Kunden löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.',
+      addedTitle: 'Kunde hinzugefügt',
+      addedDescription: 'Der Kunde wurde erfolgreich hinzugefügt',
+      updatedTitle: 'Kunde aktualisiert',
+      updatedDescription: 'Der Kunde wurde erfolgreich aktualisiert',
+      deletedTitle: 'Kunde gelöscht',
+      deletedDescription: 'Der Kunde wurde erfolgreich gelöscht',
+      searchPlaceholder: 'Kunden suchen',
+      noResults: 'Keine Kunden gefunden',
+      noResultsFor: 'Keine Ergebnisse gefunden für',
+      addVehicle: 'Fahrzeug hinzufügen',
+      addedVehicles: 'Hinzugefügte Fahrzeuge',
+      manageSubtitle: 'Kundeninformationen und Fahrzeuge verwalten',
+      contact: 'Kontaktinformationen'
     },
     vehicle: {
+      make: 'Marke',
+      model: 'Modell',
       year: 'Jahr',
       license: 'Kennzeichen',
-      vin: 'Fahrgestellnummer'
+      vin: 'Fahrgestellnummer',
+      makePlaceholder: 'Marke eingeben',
+      modelPlaceholder: 'Modell eingeben',
+      yearPlaceholder: 'Jahr eingeben',
+      licensePlaceholder: 'Kennzeichen eingeben',
+      vinPlaceholder: 'Fahrgestellnummer eingeben (optional)'
+    },
+    actions: {
+      save: 'Speichern',
+      cancel: 'Abbrechen',
+      edit: 'Bearbeiten',
+      delete: 'Löschen',
+      remove: 'Entfernen',
+      confirmDelete: 'Ja, löschen',
+      actions: 'Aktionen'
     },
     serviceTypes: {
       maintenance: 'Wartung',
