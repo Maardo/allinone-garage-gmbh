@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Check, CreditCard, User, Car } from "lucide-react";
+import { CalendarIcon, Check, User, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -58,7 +57,6 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      // Preserve the time from the previous date
       const previousDate = new Date(formData.date);
       date.setHours(previousDate.getHours());
       date.setMinutes(previousDate.getMinutes());
@@ -92,17 +90,12 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Combine vehicle info for backwards compatibility
     const updatedFormData = {
       ...formData,
       vehicleInfo: `${formData.vehicleMake} ${formData.vehicleModel}, ${formData.vehicleLicense}`
     };
     
     onSubmit(updatedFormData);
-  };
-
-  const togglePaid = () => {
-    setFormData({ ...formData, isPaid: !formData.isPaid });
   };
 
   const toggleCompleted = () => {
@@ -322,38 +315,20 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
         />
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-        <div className="flex items-center space-x-2">
-          <Switch 
-            id="paid" 
-            checked={formData.isPaid} 
-            onCheckedChange={togglePaid} 
-          />
-          <Label htmlFor="paid" className="flex items-center cursor-pointer">
-            <CreditCard className="mr-2 h-4 w-4" />
-            {formData.isPaid ? (
-              <span className="text-green-600">{t('appointment.paid')}</span>
-            ) : (
-              <span className="text-red-600">{t('appointment.unpaid')}</span>
-            )}
-          </Label>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Switch 
-            id="completed" 
-            checked={formData.isCompleted} 
-            onCheckedChange={toggleCompleted} 
-          />
-          <Label htmlFor="completed" className="flex items-center cursor-pointer">
-            <Check className="mr-2 h-4 w-4" />
-            {formData.isCompleted ? (
-              <span className="text-green-600">{t('appointment.completed')}</span>
-            ) : (
-              <span>{t('appointment.inProgress')}</span>
-            )}
-          </Label>
-        </div>
+      <div className="flex items-center space-x-2">
+        <Switch 
+          id="completed" 
+          checked={formData.isCompleted} 
+          onCheckedChange={toggleCompleted} 
+        />
+        <Label htmlFor="completed" className="flex items-center cursor-pointer">
+          <Check className="mr-2 h-4 w-4" />
+          {formData.isCompleted ? (
+            <span className="text-green-600">{t('appointment.completed')}</span>
+          ) : (
+            <span>{t('appointment.inProgress')}</span>
+          )}
+        </Label>
       </div>
 
       <div className="flex justify-end">
