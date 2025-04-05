@@ -36,6 +36,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       
       for (const k of keys) {
         if (!value || !value[k]) {
+          // If the translation is missing, fall back to English, then to the key itself
+          if (language !== 'en') {
+            const enValue = getTranslation(key, 'en');
+            if (enValue !== key) return enValue;
+          }
           console.warn(`Translation missing for key: ${key} in language: ${language}`);
           return key; // Return the key if translation not found
         }
@@ -45,6 +50,25 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       return value;
     } catch (err) {
       console.error(`Translation error for key: ${key}`, err);
+      return key;
+    }
+  };
+
+  // Helper function to try getting a translation in a specific language
+  const getTranslation = (key: string, lang: Language): string => {
+    try {
+      const keys = key.split('.');
+      let value: any = TRANSLATIONS[lang];
+      
+      for (const k of keys) {
+        if (!value || !value[k]) {
+          return key;
+        }
+        value = value[k];
+      }
+      
+      return value;
+    } catch {
       return key;
     }
   };
