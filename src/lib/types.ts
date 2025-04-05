@@ -54,13 +54,24 @@ export interface Appointment {
   date: Date;
   customerId: string;
   customerName: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  customerAddress?: {
+    street: string;
+    zipCode: string;
+    city: string;
+  };
   vehicleInfo: string;
-  serviceType: ServiceType;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleLicense?: string;
+  vehicleVin?: string;
+  vehicleCarId?: string;
+  serviceType: 1 | 2 | 3 | 4 | 5;
   notes: string;
-  assignedMechanic?: string;
-  loanerCarId?: string;
   isPaid: boolean;
   isCompleted: boolean;
+  loanerCarId?: string;
 }
 
 export interface Address {

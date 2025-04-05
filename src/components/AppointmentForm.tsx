@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Check, CreditCard } from "lucide-react";
+import { CalendarIcon, Check, CreditCard, User, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Appointment, SERVICE_TYPES } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
@@ -28,7 +29,19 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
       date: new Date(),
       customerId: "",
       customerName: "",
+      customerEmail: "",
+      customerPhone: "",
+      customerAddress: {
+        street: "",
+        zipCode: "",
+        city: ""
+      },
       vehicleInfo: "",
+      vehicleMake: "",
+      vehicleModel: "",
+      vehicleLicense: "",
+      vehicleVin: "",
+      vehicleCarId: "",
       serviceType: 1,
       notes: "",
       isPaid: false,
@@ -66,9 +79,26 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
     setFormData({ ...formData, serviceType: parseInt(value) as 1 | 2 | 3 | 4 | 5 });
   };
 
+  const handleAddressChange = (field: string, value: string) => {
+    setFormData({ 
+      ...formData, 
+      customerAddress: {
+        ...formData.customerAddress,
+        [field]: value
+      }
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    
+    // Combine vehicle info for backwards compatibility
+    const updatedFormData = {
+      ...formData,
+      vehicleInfo: `${formData.vehicleMake} ${formData.vehicleModel}, ${formData.vehicleLicense}`
+    };
+    
+    onSubmit(updatedFormData);
   };
 
   const togglePaid = () => {
@@ -81,69 +111,38 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Customer Details */}
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="customerName">{t('appointment.customerName')}</Label>
-            <Input
-              id="customerName"
-              name="customerName"
-              value={formData.customerName}
-              onChange={handleChange}
-              placeholder={t('appointment.customerNamePlaceholder')}
-              required
-            />
-          </div>
+      <div className="flex flex-col space-y-2">
+        <Label>{t('appointment.date')}</Label>
+        <div className="grid grid-cols-2 gap-4">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "justify-start text-left font-normal",
+                  !formData.date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {formData.date ? (
+                  format(formData.date, "PPP")
+                ) : (
+                  <span>{t('appointment.pickDate')}</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={formData.date}
+                onSelect={handleDateChange}
+                initialFocus
+                className="p-3 pointer-events-auto"
+              />
+            </PopoverContent>
+          </Popover>
           
           <div>
-            <Label htmlFor="vehicleInfo">{t('appointment.vehicleInfo')}</Label>
-            <Input
-              id="vehicleInfo"
-              name="vehicleInfo"
-              value={formData.vehicleInfo}
-              onChange={handleChange}
-              placeholder={t('appointment.vehicleInfoPlaceholder')}
-              required
-            />
-          </div>
-        </div>
-
-        {/* Appointment Details */}
-        <div className="space-y-4">
-          <div className="flex flex-col space-y-2">
-            <Label>{t('appointment.date')}</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "justify-start text-left font-normal",
-                    !formData.date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.date ? (
-                    format(formData.date, "PPP")
-                  ) : (
-                    <span>{t('appointment.pickDate')}</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={formData.date}
-                  onSelect={handleDateChange}
-                  initialFocus
-                  className="p-3 pointer-events-auto"
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div>
-            <Label htmlFor="time">{t('appointment.time')}</Label>
             <Input
               id="time"
               type="time"
@@ -152,27 +151,164 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
               required
             />
           </div>
-
-          <div>
-            <Label htmlFor="serviceType">{t('appointment.serviceType')}</Label>
-            <Select 
-              value={formData.serviceType.toString()} 
-              onValueChange={handleServiceTypeChange}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={t('appointment.selectServiceType')} />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(SERVICE_TYPES).map((type) => (
-                  <SelectItem key={type.id} value={type.id.toString()}>
-                    {type.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
         </div>
       </div>
+
+      <div>
+        <Label htmlFor="serviceType">{t('appointment.serviceType')}</Label>
+        <Select 
+          value={formData.serviceType.toString()} 
+          onValueChange={handleServiceTypeChange}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={t('appointment.selectServiceType')} />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.values(SERVICE_TYPES).map((type) => (
+              <SelectItem key={type.id} value={type.id.toString()}>
+                {type.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Tabs defaultValue="customer" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="customer" className="flex items-center gap-1">
+            <User className="h-4 w-4" />
+            {t('customer.details')}
+          </TabsTrigger>
+          <TabsTrigger value="vehicle" className="flex items-center gap-1">
+            <Car className="h-4 w-4" />
+            {t('vehicle.details')}
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="customer" className="space-y-4 py-4">
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="customerName">{t('customer.name')}</Label>
+              <Input
+                id="customerName"
+                name="customerName"
+                value={formData.customerName}
+                onChange={handleChange}
+                placeholder={t('customer.namePlaceholder')}
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="customerEmail">{t('customer.email')}</Label>
+              <Input
+                id="customerEmail"
+                name="customerEmail"
+                type="email"
+                value={formData.customerEmail || ''}
+                onChange={handleChange}
+                placeholder={t('customer.emailPlaceholder')}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="customerPhone">{t('customer.phone')}</Label>
+              <Input
+                id="customerPhone"
+                name="customerPhone"
+                value={formData.customerPhone || ''}
+                onChange={handleChange}
+                placeholder={t('customer.phonePlaceholder')}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>{t('customer.address')}</Label>
+              <div className="space-y-2">
+                <Input
+                  id="street"
+                  placeholder={t('customer.streetPlaceholder')}
+                  value={formData.customerAddress?.street || ''}
+                  onChange={(e) => handleAddressChange('street', e.target.value)}
+                />
+                <div className="grid grid-cols-2 gap-2">
+                  <Input
+                    id="zipCode"
+                    placeholder={t('customer.zipCodePlaceholder')}
+                    value={formData.customerAddress?.zipCode || ''}
+                    onChange={(e) => handleAddressChange('zipCode', e.target.value)}
+                  />
+                  <Input
+                    id="city"
+                    placeholder={t('customer.cityPlaceholder')}
+                    value={formData.customerAddress?.city || ''}
+                    onChange={(e) => handleAddressChange('city', e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="vehicle" className="space-y-4 py-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="vehicleMake">{t('vehicle.make')}</Label>
+              <Input
+                id="vehicleMake"
+                name="vehicleMake"
+                value={formData.vehicleMake || ''}
+                onChange={handleChange}
+                placeholder={t('vehicle.makePlaceholder')}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="vehicleModel">{t('vehicle.model')}</Label>
+              <Input
+                id="vehicleModel"
+                name="vehicleModel"
+                value={formData.vehicleModel || ''}
+                onChange={handleChange}
+                placeholder={t('vehicle.modelPlaceholder')}
+              />
+            </div>
+          </div>
+          
+          <div>
+            <Label htmlFor="vehicleLicense">{t('vehicle.license')}</Label>
+            <Input
+              id="vehicleLicense"
+              name="vehicleLicense"
+              value={formData.vehicleLicense || ''}
+              onChange={handleChange}
+              placeholder={t('vehicle.licensePlaceholder')}
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="vehicleVin">{t('vehicle.vin')}</Label>
+            <Input
+              id="vehicleVin"
+              name="vehicleVin"
+              value={formData.vehicleVin || ''}
+              onChange={handleChange}
+              placeholder={t('vehicle.vinPlaceholder')}
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="vehicleCarId">{t('vehicle.carId')}</Label>
+            <Input
+              id="vehicleCarId"
+              name="vehicleCarId"
+              value={formData.vehicleCarId || ''}
+              onChange={handleChange}
+              placeholder={t('vehicle.carIdPlaceholder')}
+            />
+          </div>
+        </TabsContent>
+      </Tabs>
 
       <div>
         <Label htmlFor="notes">{t('appointment.notes')}</Label>
