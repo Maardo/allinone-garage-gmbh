@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 
 export function LanguageSelector() {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
 
   const handleLanguageChange = (lang: Language) => {
     setLanguage(lang);

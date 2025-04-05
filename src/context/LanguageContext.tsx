@@ -16,12 +16,9 @@ export const languageOptions = [
   { value: 'de', label: 'Deutsch' }
 ];
 
-// Ta bort dubbla översättningar för att använda de från lib/types.ts
-export const translations = TRANSLATIONS;
-
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
-    // Standardspråket är svenska
+    // Default language is Swedish
     const savedLang = localStorage.getItem('language');
     return (savedLang as Language) || 'sv';
   });
@@ -38,7 +35,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       let value: any = TRANSLATIONS[language];
       
       for (const k of keys) {
-        if (!value[k]) return key; // Return the key if translation not found
+        if (!value || !value[k]) {
+          console.warn(`Translation missing for key: ${key} in language: ${language}`);
+          return key; // Return the key if translation not found
+        }
         value = value[k];
       }
       
