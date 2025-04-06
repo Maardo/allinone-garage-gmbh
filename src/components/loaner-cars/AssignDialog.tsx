@@ -37,8 +37,9 @@ interface AssignDialogProps {
   assignData: {
     customerId: string;
     returnDate: string;
+    startDate: string;
   };
-  setAssignData: (data: { customerId: string; returnDate: string }) => void;
+  setAssignData: (data: { customerId: string; returnDate: string; startDate: string }) => void;
 }
 
 export function AssignDialog({
@@ -86,6 +87,16 @@ export function AssignDialog({
             </Select>
           </div>
           
+          <div className="space-y-2">
+            <Label htmlFor="startDate">{t('loanerCar.startDate')}</Label>
+            <Input 
+              id="startDate" 
+              type="date" 
+              value={assignData.startDate}
+              onChange={(e) => setAssignData({...assignData, startDate: e.target.value})}
+            />
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="returnDate">{t('loanerCar.returnDate')}</Label>
             <Input 

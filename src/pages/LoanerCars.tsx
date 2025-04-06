@@ -81,8 +81,10 @@ export default function LoanerCarsPage() {
             car={car}
             onAssign={(car) => {
               setSelectedCar(car);
+              const today = format(new Date(), "yyyy-MM-dd");
               setAssignData({
                 customerId: "",
+                startDate: today,
                 returnDate: format(new Date(new Date().setDate(new Date().getDate() + 3)), "yyyy-MM-dd"),
               });
               setIsAssignDialogOpen(true);

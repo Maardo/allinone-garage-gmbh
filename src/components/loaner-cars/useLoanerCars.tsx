@@ -19,6 +19,7 @@ const INITIAL_LOANER_CARS: LoanerCar[] = [
     license: "XYZ789",
     isAvailable: false,
     assignedTo: "Johan Andersson",
+    assignedFrom: new Date(new Date().setDate(new Date().getDate() - 2)),
     assignedUntil: new Date(new Date().setDate(new Date().getDate() + 2))
   }
 ];
@@ -39,8 +40,10 @@ export function useLoanerCars() {
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const today = format(new Date(), "yyyy-MM-dd");
   const [assignData, setAssignData] = useState({
     customerId: "",
+    startDate: today,
     returnDate: format(new Date(new Date().setDate(new Date().getDate() + 3)), "yyyy-MM-dd"),
   });
   const [newCar, setNewCar] = useState<Partial<LoanerCar>>({
@@ -61,6 +64,7 @@ export function useLoanerCars() {
           ...car,
           isAvailable: false,
           assignedTo: customer.name,
+          assignedFrom: new Date(assignData.startDate),
           assignedUntil: new Date(assignData.returnDate)
         };
       }
@@ -83,6 +87,7 @@ export function useLoanerCars() {
           ...car,
           isAvailable: true,
           assignedTo: undefined,
+          assignedFrom: undefined,
           assignedUntil: undefined
         };
       }

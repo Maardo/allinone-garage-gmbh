@@ -30,13 +30,13 @@ export function LoanerCarCard({
   return (
     <Card 
       className={cn(
-        "overflow-hidden transition-all duration-300 hover:shadow-md",
-        !car.isAvailable && "border-amber-200"
+        "overflow-hidden transition-all duration-300 hover:shadow-md border-2",
+        car.isAvailable ? "border-green-500" : "border-amber-500"
       )}
     >
       <CardHeader className={cn(
         "pb-2",
-        car.isAvailable ? "bg-green-50" : "bg-amber-50"
+        car.isAvailable ? "bg-green-100" : "bg-amber-100"
       )}>
         <CardTitle className="flex justify-between items-center">
           <div className="flex items-center">
@@ -46,7 +46,9 @@ export function LoanerCarCard({
           <Badge 
             variant={car.isAvailable ? "outline" : "secondary"}
             className={cn(
-              car.isAvailable ? "border-green-500 text-green-700 bg-green-50" : "border-amber-500 text-amber-700 bg-amber-50"
+              car.isAvailable 
+                ? "border-green-500 text-green-700 bg-green-50 font-bold" 
+                : "border-amber-500 text-amber-700 bg-amber-50 font-bold"
             )}
           >
             {car.isAvailable ? t('loanerCar.available') : t('loanerCar.loanedOut')}
@@ -70,6 +72,16 @@ export function LoanerCarCard({
                 </div>
               </div>
               
+              {car.assignedFrom && (
+                <div className="flex items-center text-sm">
+                  <span className="font-medium min-w-24">{t('loanerCar.startDate')}:</span>
+                  <div className="flex items-center">
+                    <Calendar className="h-4 w-4 mr-1 text-muted-foreground" />
+                    {format(new Date(car.assignedFrom), "PPP")}
+                  </div>
+                </div>
+              )}
+              
               {car.assignedUntil && (
                 <div className="flex items-center text-sm">
                   <span className="font-medium min-w-24">{t('loanerCar.returnDate')}:</span>
@@ -81,7 +93,7 @@ export function LoanerCarCard({
               )}
               
               {car.assignedUntil && new Date(car.assignedUntil) < new Date() && (
-                <div className="flex items-center text-sm text-red-600 mt-2">
+                <div className="flex items-center text-sm text-red-600 mt-2 font-bold">
                   <AlertCircle className="h-4 w-4 mr-1" />
                   {t('loanerCar.overdue')}
                 </div>

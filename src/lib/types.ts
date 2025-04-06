@@ -1,3 +1,4 @@
+
 export type UserRole = 'admin' | 'mechanic';
 
 export interface User {
@@ -107,6 +108,7 @@ export interface LoanerCar {
   isAvailable: boolean;
   assignedTo?: string;
   assignedUntil?: Date;
+  assignedFrom?: Date;
 }
 
 export type Language = 'en' | 'sv' | 'de';
@@ -160,6 +162,7 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       licensePlate: 'License Plate',
       assignedTo: 'Assigned To',
       returnDate: 'Return Date',
+      startDate: 'Start Date',
       overdue: 'Overdue - Should have been returned',
       assignToCustomer: 'Assign to Customer',
       markAsReturned: 'Mark as Returned',
@@ -191,6 +194,15 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       edit: 'Edit',
       delete: 'Delete',
       confirmDelete: 'Yes, Delete'
+    },
+    common: {
+      appName: 'Allinone Garage',
+      loading: 'Loading...',
+      welcome: 'Welcome'
+    },
+    roles: {
+      administrator: 'Administrator',
+      mechanic: 'Mechanic'
     }
   },
   sv: {
@@ -199,7 +211,7 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       calendar: 'Kalender',
       customers: 'Kunder',
       serviceTypes: 'Servicetyper',
-      loanerCars: 'Lånebilsflotta',
+      loanerCars: 'Lånebilar',
       settings: 'Inställningar',
       logout: 'Logga ut',
     },
@@ -235,6 +247,7 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       licensePlate: 'Registreringsnummer',
       assignedTo: 'Tilldelad Till',
       returnDate: 'Återlämningsdatum',
+      startDate: 'Startdatum',
       overdue: 'Försenad - Borde ha återlämnats',
       assignToCustomer: 'Tilldela till Kund',
       markAsReturned: 'Markera som Återlämnad',
@@ -266,6 +279,15 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       edit: 'Redigera',
       delete: 'Ta Bort',
       confirmDelete: 'Ja, Ta Bort'
+    },
+    common: {
+      appName: 'Allinone Garage',
+      loading: 'Laddar...',
+      welcome: 'Välkommen'
+    },
+    roles: {
+      administrator: 'Administratör',
+      mechanic: 'Mekaniker'
     }
   },
   de: {
@@ -310,6 +332,7 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       licensePlate: 'Kennzeichen',
       assignedTo: 'Zugewiesen an',
       returnDate: 'Rückgabedatum',
+      startDate: 'Startdatum',
       overdue: 'Überfällig - Hätte zurückgegeben werden sollen',
       assignToCustomer: 'Kunden zuweisen',
       markAsReturned: 'Als zurückgegeben markieren',
@@ -341,6 +364,15 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       edit: 'Bearbeiten',
       delete: 'Löschen',
       confirmDelete: 'Ja, Löschen'
+    },
+    common: {
+      appName: 'Allinone Garage',
+      loading: 'Wird geladen...',
+      welcome: 'Willkommen'
+    },
+    roles: {
+      administrator: 'Administrator',
+      mechanic: 'Mechaniker'
     }
   }
 };

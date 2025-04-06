@@ -10,7 +10,7 @@ export function LoanerCarsLegend() {
       <p>
         <Badge 
           variant="outline"
-          className="mr-2 border-green-500 text-green-700 bg-green-50"
+          className="mr-2 border-green-500 text-green-700 bg-green-100 font-bold"
         >
           {t('loanerCar.available')}
         </Badge>
@@ -19,7 +19,7 @@ export function LoanerCarsLegend() {
       <p className="mt-1">
         <Badge 
           variant="outline"
-          className="mr-2 border-amber-500 text-amber-700 bg-amber-50"
+          className="mr-2 border-amber-500 text-amber-700 bg-amber-100 font-bold"
         >
           {t('loanerCar.loanedOut')}
         </Badge>
