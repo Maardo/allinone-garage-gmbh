@@ -1,6 +1,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
-import { Language, LANGUAGES } from "@/lib/types";
+import { Language } from "@/lib/types";
+import { LANGUAGES } from "@/lib/translations";
 import { Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
