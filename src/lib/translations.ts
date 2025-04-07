@@ -49,6 +49,31 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       week: 'Week',
       day: 'Day',
       newAppointment: 'New Appointment',
+      new: 'New Appointment',
+      previous: 'Previous',
+      next: 'Next'
+    },
+    appointment: {
+      newAppointment: 'New Appointment',
+      editAppointment: 'Edit Appointment',
+      date: 'Date and Time',
+      serviceType: 'Service Type',
+      customerDetails: 'Customer Details',
+      customerName: 'Customer Name',
+      customerPhone: 'Phone Number',
+      customerEmail: 'Email Address',
+      customerAddress: 'Address',
+      street: 'Street Address',
+      zipCode: 'Postal Code',
+      city: 'City',
+      vehicleDetails: 'Vehicle Details',
+      vehicleMake: 'Make',
+      vehicleModel: 'Model',
+      vehicleLicense: 'License Plate',
+      vehicleVin: 'VIN Number',
+      notes: 'Notes',
+      create: 'Create Appointment',
+      update: 'Update Appointment'
     },
     loanerCar: {
       manageSubtitle: 'Manage your fleet of loaner vehicles',
@@ -97,7 +122,8 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
     common: {
       appName: 'Allinone Garage',
       loading: 'Loading...',
-      welcome: 'Welcome'
+      welcome: 'Welcome',
+      logout: 'Logout'
     },
     roles: {
       administrator: 'Administrator',
@@ -143,11 +169,29 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       }
     },
     serviceTypes: {
+      title: 'Service Types',
+      subtitle: 'Configure your service offerings',
       maintenance: 'Maintenance',
       repair: 'Repair',
       inspection: 'Inspection',
       tireChange: 'Tire Change',
-      other: 'Other'
+      other: 'Other',
+      edit: 'Edit Service Type',
+      new: 'New Service Type',
+      select: 'Select Service Type',
+      description: 'Available Service Types',
+      createNew: 'Create New Service Type',
+      about: 'Add a new service type to offer to your customers',
+      create: 'Create Service Type',
+      update: 'Update Service Type',
+      code: 'Service Code',
+      name: 'Service Name',
+      desc: 'Description',
+      calendarColor: 'Calendar Color',
+      updated: 'Service type updated',
+      created: 'New service type created',
+      namePlaceholder: 'Enter service name',
+      descPlaceholder: 'Enter service description'
     }
   },
   sv: {
@@ -191,6 +235,31 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       week: 'Vecka',
       day: 'Dag',
       newAppointment: 'Ny Bokning',
+      new: 'Ny Bokning',
+      previous: 'Föregående',
+      next: 'Nästa'
+    },
+    appointment: {
+      newAppointment: 'Ny Bokning',
+      editAppointment: 'Redigera Bokning',
+      date: 'Datum och Tid',
+      serviceType: 'Servicetyp',
+      customerDetails: 'Kunduppgifter',
+      customerName: 'Kundnamn',
+      customerPhone: 'Telefonnummer',
+      customerEmail: 'E-postadress',
+      customerAddress: 'Adress',
+      street: 'Gatuadress',
+      zipCode: 'Postnummer',
+      city: 'Stad',
+      vehicleDetails: 'Fordonsuppgifter',
+      vehicleMake: 'Märke',
+      vehicleModel: 'Modell',
+      vehicleLicense: 'Registreringsnummer',
+      vehicleVin: 'Chassinummer',
+      notes: 'Anteckningar',
+      create: 'Skapa Bokning',
+      update: 'Uppdatera Bokning'
     },
     loanerCar: {
       manageSubtitle: 'Hantera din flotta av lånebilar',
@@ -239,7 +308,8 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
     common: {
       appName: 'Allinone Garage',
       loading: 'Laddar...',
-      welcome: 'Välkommen'
+      welcome: 'Välkommen',
+      logout: 'Logga ut'
     },
     roles: {
       administrator: 'Administratör',
@@ -285,11 +355,29 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       }
     },
     serviceTypes: {
+      title: 'Servicetyper',
+      subtitle: 'Konfigurera dina serviceerbjudanden',
       maintenance: 'Underhåll',
       repair: 'Reparation',
       inspection: 'Inspektion',
       tireChange: 'Däckbyte',
-      other: 'Övrigt'
+      other: 'Övrigt',
+      edit: 'Redigera Servicetyp',
+      new: 'Ny Servicetyp',
+      select: 'Välj Servicetyp',
+      description: 'Tillgängliga Servicetyper',
+      createNew: 'Skapa Ny Servicetyp',
+      about: 'Lägg till en ny servicetyp att erbjuda dina kunder',
+      create: 'Skapa Servicetyp',
+      update: 'Uppdatera Servicetyp',
+      code: 'Servicekod',
+      name: 'Servicenamn',
+      desc: 'Beskrivning',
+      calendarColor: 'Kalenderfärg',
+      updated: 'Servicetyp uppdaterad',
+      created: 'Ny servicetyp skapad',
+      namePlaceholder: 'Ange servicenamn',
+      descPlaceholder: 'Ange servicebeskrivning'
     }
   },
   de: {
@@ -333,6 +421,31 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       week: 'Woche',
       day: 'Tag',
       newAppointment: 'Neuer Termin',
+      new: 'Neuer Termin',
+      previous: 'Vorherige',
+      next: 'Nächste'
+    },
+    appointment: {
+      newAppointment: 'Neuer Termin',
+      editAppointment: 'Termin bearbeiten',
+      date: 'Datum und Uhrzeit',
+      serviceType: 'Servicetyp',
+      customerDetails: 'Kundendetails',
+      customerName: 'Kundenname',
+      customerPhone: 'Telefonnummer',
+      customerEmail: 'E-Mail-Adresse',
+      customerAddress: 'Adresse',
+      street: 'Straße',
+      zipCode: 'Postleitzahl',
+      city: 'Stadt',
+      vehicleDetails: 'Fahrzeugdetails',
+      vehicleMake: 'Marke',
+      vehicleModel: 'Modell',
+      vehicleLicense: 'Kennzeichen',
+      vehicleVin: 'Fahrgestellnummer',
+      notes: 'Anmerkungen',
+      create: 'Termin erstellen',
+      update: 'Termin aktualisieren'
     },
     loanerCar: {
       manageSubtitle: 'Verwalten Sie Ihre Leihwagenflotte',
@@ -381,7 +494,8 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
     common: {
       appName: 'Allinone Garage',
       loading: 'Wird geladen...',
-      welcome: 'Willkommen'
+      welcome: 'Willkommen',
+      logout: 'Abmelden'
     },
     roles: {
       administrator: 'Administrator',
@@ -427,11 +541,29 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       }
     },
     serviceTypes: {
+      title: 'Servicetypen',
+      subtitle: 'Konfigurieren Sie Ihre Serviceangebote',
       maintenance: 'Wartung',
       repair: 'Reparatur',
       inspection: 'Inspektion',
       tireChange: 'Reifenwechsel',
-      other: 'Sonstiges'
+      other: 'Sonstiges',
+      edit: 'Servicetyp bearbeiten',
+      new: 'Neuer Servicetyp',
+      select: 'Servicetyp auswählen',
+      description: 'Verfügbare Servicetypen',
+      createNew: 'Neuen Servicetyp erstellen',
+      about: 'Fügen Sie einen neuen Servicetyp hinzu, den Sie Ihren Kunden anbieten können',
+      create: 'Servicetyp erstellen',
+      update: 'Servicetyp aktualisieren',
+      code: 'Servicecode',
+      name: 'Servicename',
+      desc: 'Beschreibung',
+      calendarColor: 'Kalenderfarbe',
+      updated: 'Servicetyp aktualisiert',
+      created: 'Neuer Servicetyp erstellt',
+      namePlaceholder: 'Servicenamen eingeben',
+      descPlaceholder: 'Servicebeschreibung eingeben'
     }
   }
 };
