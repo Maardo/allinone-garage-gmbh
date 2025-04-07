@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Search, Plus, Phone, Mail, Car, Edit, Trash2, User, MapPin } from "lucide-react";
 import { Layout } from "@/components/Layout";
@@ -418,7 +417,7 @@ export default function CustomersPage() {
                   >
                     <div>
                       <p className="font-medium">
-                        {vehicle.make} {vehicle.model} ({vehicle.year})
+                        {vehicle.make} {vehicle.model}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {vehicle.license}
@@ -472,6 +471,19 @@ export default function CustomersPage() {
               </div>
               
               <div className="space-y-2">
+                <label htmlFor="license" className="text-xs font-medium">
+                  {t('vehicle.license')}
+                </label>
+                <Input
+                  id="license"
+                  value={newVehicle.license || ""}
+                  onChange={(e) => setNewVehicle({...newVehicle, license: e.target.value})}
+                  placeholder={t('vehicle.licensePlaceholder')}
+                  className="text-sm"
+                />
+              </div>
+              
+              <div className="space-y-2">
                 <label htmlFor="year" className="text-xs font-medium">
                   {t('vehicle.year')}
                 </label>
@@ -481,19 +493,6 @@ export default function CustomersPage() {
                   value={newVehicle.year || ""}
                   onChange={(e) => setNewVehicle({...newVehicle, year: parseInt(e.target.value)})}
                   placeholder={t('vehicle.yearPlaceholder')}
-                  className="text-sm"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label htmlFor="license" className="text-xs font-medium">
-                  {t('vehicle.license')}
-                </label>
-                <Input
-                  id="license"
-                  value={newVehicle.license || ""}
-                  onChange={(e) => setNewVehicle({...newVehicle, license: e.target.value})}
-                  placeholder={t('vehicle.licensePlaceholder')}
                   className="text-sm"
                 />
               </div>
@@ -529,6 +528,7 @@ export default function CustomersPage() {
               size="sm"
               onClick={handleAddVehicle}
               disabled={!newVehicle.make || !newVehicle.model || !newVehicle.license}
+              className="bg-blue-400 hover:bg-blue-500 text-white"
             >
               {t('customer.addVehicle')}
             </Button>
@@ -569,6 +569,7 @@ export default function CustomersPage() {
               <Button 
                 onClick={handleAddCustomer}
                 disabled={!newCustomer.name}
+                className="bg-blue-400 hover:bg-blue-500 text-white"
               >
                 {t('actions.save')}
               </Button>

@@ -24,6 +24,7 @@ export function VehicleDetails({ formData, handleChange }: VehicleDetailsProps) 
             name="vehicleMake"
             value={formData.vehicleMake}
             onChange={handleChange}
+            placeholder={t('vehicle.makePlaceholder')}
             required
           />
         </div>
@@ -35,6 +36,7 @@ export function VehicleDetails({ formData, handleChange }: VehicleDetailsProps) 
             name="vehicleModel"
             value={formData.vehicleModel}
             onChange={handleChange}
+            placeholder={t('vehicle.modelPlaceholder')}
             required
           />
         </div>
@@ -46,6 +48,7 @@ export function VehicleDetails({ formData, handleChange }: VehicleDetailsProps) 
             name="vehicleLicense"
             value={formData.vehicleLicense}
             onChange={handleChange}
+            placeholder={t('vehicle.licensePlaceholder')}
             required
           />
         </div>
@@ -57,6 +60,18 @@ export function VehicleDetails({ formData, handleChange }: VehicleDetailsProps) 
             name="vehicleVin"
             value={formData.vehicleVin}
             onChange={handleChange}
+            placeholder={t('vehicle.vinPlaceholder')}
+          />
+        </div>
+        
+        <div className="space-y-2 col-span-2">
+          <Label htmlFor="vehicleCarId">{t('appointment.vehicleCarId')}</Label>
+          <Input
+            id="vehicleCarId"
+            name="vehicleCarId"
+            value={formData.vehicleCarId}
+            onChange={handleChange}
+            placeholder={t('vehicle.carIdPlaceholder')}
           />
         </div>
       </div>

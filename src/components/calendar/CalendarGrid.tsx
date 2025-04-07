@@ -261,7 +261,7 @@ function DayView({ day, appointments, onSelectAppointment, onNewAppointmentAtDat
                       <div className="font-medium">
                         {format(new Date(appointment.date), "HH:mm")} - {appointment.customerName}
                       </div>
-                      <div className="text-sm">{appointment.vehicleInfo}</div>
+                      <div className="text-sm">{appointment.vehicleMake} {appointment.vehicleModel}</div>
                       {appointment.notes && <div className="text-sm mt-1 opacity-90">{appointment.notes}</div>}
                     </div>
                   ))
@@ -375,7 +375,7 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
                       {format(new Date(appointment.date), "HH:mm")}
                     </div>
                     <div className="text-xs truncate">{appointment.customerName}</div>
-                    <div className="text-xs truncate hidden sm:block">{appointment.vehicleInfo}</div>
+                    <div className="text-xs truncate hidden sm:block">{appointment.vehicleMake} {appointment.vehicleModel}</div>
                   </div>
                 ))}
                 

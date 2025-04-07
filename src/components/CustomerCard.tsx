@@ -94,10 +94,6 @@ export function CustomerCard({ customer }: CustomerCardProps) {
                           <CardContent className="py-4 text-sm">
                             <div className="grid grid-cols-2 gap-3">
                               <div>
-                                <p className="text-muted-foreground mb-1">{t('vehicle.year')}</p>
-                                <p className="font-medium">{vehicle.year}</p>
-                              </div>
-                              <div>
                                 <p className="text-muted-foreground mb-1">{t('vehicle.license')}</p>
                                 <p className="font-medium">{vehicle.license}</p>
                               </div>
