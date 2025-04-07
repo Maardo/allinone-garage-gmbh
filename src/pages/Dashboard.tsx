@@ -4,9 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar, Car, CheckCircle, Clock, CreditCard, UserIcon, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   // Mock statistics for demonstration
   const stats = {
@@ -23,30 +25,30 @@ export default function Dashboard() {
       time: "10:00",
       customer: "Johan Andersson",
       vehicle: "Volvo V70",
-      serviceType: "Service"
+      serviceType: t('serviceTypes.maintenance')
     },
     {
       id: "2",
       time: "13:30",
       customer: "Maria Johansson",
       vehicle: "Audi A4",
-      serviceType: "Repair"
+      serviceType: t('serviceTypes.repair')
     },
     {
       id: "3",
       time: "15:45",
       customer: "Erik Svensson",
       vehicle: "BMW 3 Series",
-      serviceType: "Inspection"
+      serviceType: t('serviceTypes.inspection')
     }
   ];
 
   return (
-    <Layout title="Dashboard" subtitle="Overview of workshop operations">
+    <Layout title={t('dashboard.welcome')} subtitle={t('dashboard.summary')}>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card className="bg-blue-50 border-blue-100">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-blue-700">Today's Appointments</CardTitle>
+            <CardTitle className="text-sm font-medium text-blue-700">{t('dashboard.todayAppointments')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -58,7 +60,7 @@ export default function Dashboard() {
         
         <Card className="bg-amber-50 border-amber-100">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-amber-700">Pending Payments</CardTitle>
+            <CardTitle className="text-sm font-medium text-amber-700">{t('dashboard.pendingPayments')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -70,7 +72,7 @@ export default function Dashboard() {
         
         <Card className="bg-green-50 border-green-100">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-green-700">Available Loaner Cars</CardTitle>
+            <CardTitle className="text-sm font-medium text-green-700">{t('dashboard.availableLoanerCars')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -82,7 +84,7 @@ export default function Dashboard() {
         
         <Card className="bg-purple-50 border-purple-100">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-purple-700">Completed Today</CardTitle>
+            <CardTitle className="text-sm font-medium text-purple-700">{t('dashboard.completedToday')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -99,12 +101,12 @@ export default function Dashboard() {
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle>Today's Schedule</CardTitle>
-                <CardDescription>Upcoming appointments for today</CardDescription>
+                <CardTitle>{t('dashboard.todaySchedule')}</CardTitle>
+                <CardDescription>{t('dashboard.upcomingAppointmentsToday')}</CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={() => navigate("/calendar")}>
                 <Calendar className="h-4 w-4 mr-2" />
-                Full Calendar
+                {t('dashboard.fullCalendar')}
               </Button>
             </div>
           </CardHeader>
@@ -112,7 +114,7 @@ export default function Dashboard() {
             {upcomingAppointments.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <Clock className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p>No appointments scheduled for today</p>
+                <p>{t('dashboard.noAppointments')}</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -144,8 +146,8 @@ export default function Dashboard() {
         {/* Quick Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks and shortcuts</CardDescription>
+            <CardTitle>{t('dashboard.quickActions')}</CardTitle>
+            <CardDescription>{t('dashboard.commonTasks')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -155,7 +157,7 @@ export default function Dashboard() {
                 onClick={() => navigate("/calendar")}
               >
                 <Calendar className="h-8 w-8 mb-2" />
-                <span>Schedule</span>
+                <span>{t('dashboard.schedule')}</span>
               </Button>
               
               <Button 
@@ -164,7 +166,7 @@ export default function Dashboard() {
                 onClick={() => navigate("/customers")}
               >
                 <UserIcon className="h-8 w-8 mb-2" />
-                <span>Customers</span>
+                <span>{t('navigation.customers')}</span>
               </Button>
               
               <Button 
@@ -173,7 +175,7 @@ export default function Dashboard() {
                 onClick={() => navigate("/loaner-cars")}
               >
                 <Car className="h-8 w-8 mb-2" />
-                <span>Loaner Cars</span>
+                <span>{t('navigation.loanerCars')}</span>
               </Button>
               
               <Button 
@@ -182,7 +184,7 @@ export default function Dashboard() {
                 onClick={() => navigate("/service-types")}
               >
                 <Wrench className="h-8 w-8 mb-2" />
-                <span>Services</span>
+                <span>{t('navigation.serviceTypes')}</span>
               </Button>
               
               <Button 
@@ -190,7 +192,7 @@ export default function Dashboard() {
                 className="h-auto flex-col py-6 col-span-2 md:col-span-2"
               >
                 <CreditCard className="h-8 w-8 mb-2" />
-                <span>Payment Records</span>
+                <span>{t('dashboard.paymentRecords')}</span>
               </Button>
             </div>
           </CardContent>

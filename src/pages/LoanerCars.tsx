@@ -1,5 +1,5 @@
 
-import { Car, Edit, Trash2 } from "lucide-react";
+import { Car } from "lucide-react";
 import { format } from "date-fns";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,7 @@ export default function LoanerCarsPage() {
   } = useLoanerCars();
 
   return (
-    <Layout title={t('navigation.loanerCars')} subtitle={t('loanerCar.manageSubtitle')}>
+    <Layout>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-medium">{t('loanerCar.availableCars')}</h2>
         

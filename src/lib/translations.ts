@@ -17,6 +17,7 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       loanerCars: 'Loaner Cars',
       settings: 'Settings',
       logout: 'Logout',
+      overview: 'Overview',
     },
     dashboard: {
       welcome: 'Welcome back',
@@ -31,6 +32,16 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       statistics: 'Statistics',
       appointmentsCompleted: 'Appointments completed this month',
       averageServiceTime: 'Average service time',
+      pendingPayments: 'Pending Payments',
+      availableLoanerCars: 'Available Loaner Cars',
+      completedToday: 'Completed Today',
+      todaySchedule: 'Today\'s Schedule',
+      upcomingAppointmentsToday: 'Upcoming appointments for today',
+      fullCalendar: 'Full Calendar',
+      noAppointments: 'No appointments scheduled for today',
+      schedule: 'Schedule',
+      paymentRecords: 'Payment Records',
+      commonTasks: 'Common tasks and shortcuts'
     },
     calendar: {
       today: 'Today',
@@ -91,17 +102,64 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
     roles: {
       administrator: 'Administrator',
       mechanic: 'Mechanic'
+    },
+    overview: {
+      todayAppointments: 'Today\'s Appointments',
+      weekAppointments: 'This Week\'s Appointments',
+      totalCustomers: 'Total Customers',
+      completedJobs: 'Completed Jobs',
+      upcomingAppointments: 'Upcoming Appointments',
+      appointments: 'Appointments'
+    },
+    pages: {
+      overview: {
+        title: 'Overview',
+        subtitle: 'Summary of your workshop activities'
+      },
+      calendar: {
+        title: 'Calendar',
+        subtitle: 'Schedule and manage appointments'
+      },
+      customers: {
+        title: 'Customers',
+        subtitle: 'Manage your customer database'
+      },
+      loanerCars: {
+        title: 'Loaner Cars',
+        subtitle: 'Manage your fleet of loaner vehicles'
+      },
+      serviceTypes: {
+        title: 'Service Types',
+        subtitle: 'Configure service offerings and pricing'
+      },
+      settings: {
+        title: 'Settings',
+        subtitle: 'Configure your workshop settings'
+      },
+      notFound: {
+        title: 'Page Not Found',
+        message: 'The page you are looking for does not exist.',
+        returnHome: 'Return to Home'
+      }
+    },
+    serviceTypes: {
+      maintenance: 'Maintenance',
+      repair: 'Repair',
+      inspection: 'Inspection',
+      tireChange: 'Tire Change',
+      other: 'Other'
     }
   },
   sv: {
     navigation: {
-      dashboard: 'Översikt',
+      dashboard: 'Dashboard',
       calendar: 'Kalender',
       customers: 'Kunder',
       serviceTypes: 'Servicetyper',
       loanerCars: 'Lånebilar',
       settings: 'Inställningar',
       logout: 'Logga ut',
+      overview: 'Översikt',
     },
     dashboard: {
       welcome: 'Välkommen tillbaka',
@@ -116,6 +174,16 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       statistics: 'Statistik',
       appointmentsCompleted: 'Utförda bokningar denna månad',
       averageServiceTime: 'Genomsnittlig servicetid',
+      pendingPayments: 'Väntande Betalningar',
+      availableLoanerCars: 'Tillgängliga Lånebilar',
+      completedToday: 'Slutförda Idag',
+      todaySchedule: 'Dagens Schema',
+      upcomingAppointmentsToday: 'Kommande bokningar för idag',
+      fullCalendar: 'Fullständig Kalender',
+      noAppointments: 'Inga bokningar schemalagda för idag',
+      schedule: 'Schema',
+      paymentRecords: 'Betalningshistorik',
+      commonTasks: 'Vanliga uppgifter och genvägar'
     },
     calendar: {
       today: 'Idag',
@@ -176,6 +244,52 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
     roles: {
       administrator: 'Administratör',
       mechanic: 'Mekaniker'
+    },
+    overview: {
+      todayAppointments: 'Dagens Bokningar',
+      weekAppointments: 'Veckans Bokningar',
+      totalCustomers: 'Totalt Antal Kunder',
+      completedJobs: 'Utförda Arbeten',
+      upcomingAppointments: 'Kommande Bokningar',
+      appointments: 'Bokningar'
+    },
+    pages: {
+      overview: {
+        title: 'Översikt',
+        subtitle: 'Sammanfattning av verkstadsaktiviteter'
+      },
+      calendar: {
+        title: 'Kalender',
+        subtitle: 'Planera och hantera bokningar'
+      },
+      customers: {
+        title: 'Kunder',
+        subtitle: 'Hantera din kunddatabas'
+      },
+      loanerCars: {
+        title: 'Lånebilar',
+        subtitle: 'Hantera din flotta av lånebilar'
+      },
+      serviceTypes: {
+        title: 'Servicetyper',
+        subtitle: 'Konfigurera serviceerbjudanden och prissättning'
+      },
+      settings: {
+        title: 'Inställningar',
+        subtitle: 'Konfigurera dina verkstadsinställningar'
+      },
+      notFound: {
+        title: 'Sidan Hittades Inte',
+        message: 'Sidan du letar efter finns inte.',
+        returnHome: 'Återgå till Startsidan'
+      }
+    },
+    serviceTypes: {
+      maintenance: 'Underhåll',
+      repair: 'Reparation',
+      inspection: 'Inspektion',
+      tireChange: 'Däckbyte',
+      other: 'Övrigt'
     }
   },
   de: {
@@ -187,6 +301,7 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       loanerCars: 'Leihwagen',
       settings: 'Einstellungen',
       logout: 'Abmelden',
+      overview: 'Übersicht',
     },
     dashboard: {
       welcome: 'Willkommen zurück',
@@ -201,6 +316,16 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
       statistics: 'Statistiken',
       appointmentsCompleted: 'Erledigte Termine diesen Monat',
       averageServiceTime: 'Durchschnittliche Servicezeit',
+      pendingPayments: 'Ausstehende Zahlungen',
+      availableLoanerCars: 'Verfügbare Leihwagen',
+      completedToday: 'Heute Abgeschlossen',
+      todaySchedule: 'Heutiger Zeitplan',
+      upcomingAppointmentsToday: 'Bevorstehende Termine für heute',
+      fullCalendar: 'Vollständiger Kalender',
+      noAppointments: 'Keine Termine für heute geplant',
+      schedule: 'Zeitplan',
+      paymentRecords: 'Zahlungsbelege',
+      commonTasks: 'Häufige Aufgaben und Verknüpfungen'
     },
     calendar: {
       today: 'Heute',
@@ -261,6 +386,52 @@ export const TRANSLATIONS: Record<Language, Record<string, any>> = {
     roles: {
       administrator: 'Administrator',
       mechanic: 'Mechaniker'
+    },
+    overview: {
+      todayAppointments: 'Heutige Termine',
+      weekAppointments: 'Termine dieser Woche',
+      totalCustomers: 'Gesamtzahl der Kunden',
+      completedJobs: 'Abgeschlossene Arbeiten',
+      upcomingAppointments: 'Bevorstehende Termine',
+      appointments: 'Termine'
+    },
+    pages: {
+      overview: {
+        title: 'Übersicht',
+        subtitle: 'Zusammenfassung der Werkstattaktivitäten'
+      },
+      calendar: {
+        title: 'Kalender',
+        subtitle: 'Termine planen und verwalten'
+      },
+      customers: {
+        title: 'Kunden',
+        subtitle: 'Verwalten Sie Ihre Kundendatenbank'
+      },
+      loanerCars: {
+        title: 'Leihwagen',
+        subtitle: 'Verwalten Sie Ihre Leihwagenflotte'
+      },
+      serviceTypes: {
+        title: 'Servicetypen',
+        subtitle: 'Serviceangebote und Preise konfigurieren'
+      },
+      settings: {
+        title: 'Einstellungen',
+        subtitle: 'Konfigurieren Sie Ihre Werkstatteinstellungen'
+      },
+      notFound: {
+        title: 'Seite nicht gefunden',
+        message: 'Die gesuchte Seite existiert nicht.',
+        returnHome: 'Zurück zur Startseite'
+      }
+    },
+    serviceTypes: {
+      maintenance: 'Wartung',
+      repair: 'Reparatur',
+      inspection: 'Inspektion',
+      tireChange: 'Reifenwechsel',
+      other: 'Sonstiges'
     }
   }
 };

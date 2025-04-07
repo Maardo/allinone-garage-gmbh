@@ -34,7 +34,7 @@ export default function Overview() {
   ];
   
   return (
-    <Layout title={t('pages.overview.title')} subtitle={t('pages.overview.subtitle')}>
+    <Layout>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card className="bg-blue-50 border-blue-100">
           <CardHeader className="pb-2">
