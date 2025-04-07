@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { format } from "date-fns";
-import { Appointment } from "@/lib/types";
+import { Appointment, ServiceType } from "@/lib/types";
 import { SERVICE_TYPES } from "@/lib/serviceTypes";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -39,7 +39,7 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
       vehicleLicense: "",
       vehicleVin: "",
       vehicleCarId: "",
-      serviceType: 1,
+      serviceType: 1 as ServiceType,
       notes: "",
       isPaid: false,
       isCompleted: false,
@@ -64,7 +64,9 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
   };
 
   const handleServiceTypeChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, serviceType: parseInt(value) }));
+    // Convert string to number, then cast to ServiceType
+    const serviceTypeValue = parseInt(value) as ServiceType;
+    setFormData((prev) => ({ ...prev, serviceType: serviceTypeValue }));
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
