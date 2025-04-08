@@ -1,21 +1,21 @@
 
-import { useState } from "react";
-import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useLanguage } from "@/context/LanguageContext";
-import { SERVICE_TYPES } from "@/lib/serviceTypes";
+import { format } from "date-fns";
+import { sv, de, enUS } from "date-fns/locale";
+import { SERVICE_TYPES, ServiceType } from "@/lib/serviceTypes";
+
+type Locale = typeof sv | typeof de | typeof enUS;
 
 interface Appointment {
   id: number;
   date: Date;
   vehicleModel: string;
-  serviceType: 1 | 2 | 3 | 4 | 5;
+  serviceType: ServiceType;
 }
 
 interface GroupedAppointments {
-  [date: string]: Appointment[];
+  [key: string]: Appointment[];
 }
 
 interface UpcomingAppointmentsProps {
@@ -30,81 +30,77 @@ export function UpcomingAppointments({
   filteredJobs, 
   timeView, 
   setTimeView, 
-  jobsByDate,
-  locale
+  jobsByDate, 
+  locale 
 }: UpcomingAppointmentsProps) {
   const { t } = useLanguage();
-
+  
   return (
     <Card>
-      <CardHeader>
-        <div className="flex flex-col items-center text-center">
-          <span className="text-4xl font-bold mb-2">{filteredJobs.length}</span>
-          <CardTitle>{t('overview.upcomingJobs')}</CardTitle>
+      <CardHeader className="text-center pb-0">
+        <div className="flex flex-col items-center justify-center">
+          <div className="text-4xl font-bold">{filteredJobs.length}</div>
+          <CardTitle className="mt-1">{t('overview.upcomingAppointments')}</CardTitle>
         </div>
-        <div className="flex justify-center mt-4 space-x-2">
-          <Button 
-            variant={timeView === "week" ? "default" : "outline"} 
-            size="sm" 
-            onClick={() => setTimeView("week")}
-          >
-            {t('overview.week')}
-          </Button>
-          <Button 
-            variant={timeView === "month" ? "default" : "outline"} 
-            size="sm" 
-            onClick={() => setTimeView("month")}
-          >
-            {t('overview.month')}
-          </Button>
+        <div className="flex justify-center mt-4">
+          <div className="flex gap-2 bg-secondary rounded-lg p-1">
+            <button
+              onClick={() => setTimeView("week")}
+              className={`px-3 py-1 rounded ${
+                timeView === "week" ? "bg-white shadow-sm" : ""
+              }`}
+            >
+              {t('overview.week')}
+            </button>
+            <button
+              onClick={() => setTimeView("month")}
+              className={`px-3 py-1 rounded ${
+                timeView === "month" ? "bg-white shadow-sm" : ""
+              }`}
+            >
+              {t('overview.month')}
+            </button>
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="px-0">
-        {Object.keys(jobsByDate).length > 0 ? (
-          <div className="space-y-6">
-            {Object.entries(jobsByDate).map(([dateStr, jobs]) => {
-              const date = new Date(dateStr);
-              return (
-                <div key={dateStr} className="border-b last:border-b-0">
-                  <div className="px-6 py-2 text-sm font-medium border-b border-muted">
-                    {format(date, 'EEEE d MMMM', { locale })}
-                  </div>
-                  <Table>
-                    <TableBody>
-                      {jobs.map(job => {
-                        const serviceTypeName = SERVICE_TYPES[job.serviceType].name.toLowerCase();
-                        
-                        return (
-                          <TableRow key={job.id}>
-                            <TableCell className="w-20">
-                              {format(job.date, 'HH:mm')}
-                            </TableCell>
-                            <TableCell className="font-medium">
-                              {job.vehicleModel}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div 
-                                className="inline-flex px-2 py-1 rounded-md text-xs font-medium"
-                                style={{ 
-                                  backgroundColor: `${SERVICE_TYPES[job.serviceType].color}20`,
-                                  color: SERVICE_TYPES[job.serviceType].color
-                                }}
-                              >
-                                {t(`serviceTypes.${serviceTypeName}`)}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
-              );
-            })}
+      <CardContent className="pt-4">
+        {filteredJobs.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground">
+            {t('overview.noAppointments')}
           </div>
         ) : (
-          <div className="p-6 text-center text-muted-foreground">
-            {t('overview.noAppointments') + (timeView === "week" ? " " + t('overview.week').toLowerCase() : " " + t('overview.month').toLowerCase())}
+          <div className="space-y-4">
+            {Object.keys(jobsByDate).map((date) => (
+              <div key={date}>
+                <h3 className="font-medium mb-2">
+                  {format(new Date(date), "EEEE, d MMMM", { locale })}
+                </h3>
+                <div className="space-y-2">
+                  {jobsByDate[date].map((job) => (
+                    <div
+                      key={job.id}
+                      className="flex items-center p-2 rounded-md bg-secondary/30"
+                    >
+                      <div
+                        className="w-2 h-6 rounded-full mr-3"
+                        style={{
+                          backgroundColor: SERVICE_TYPES[job.serviceType].color,
+                        }}
+                      ></div>
+                      <div className="flex-1">
+                        <div className="font-medium">{job.vehicleModel}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {t(`serviceTypes.${SERVICE_TYPES[job.serviceType].name.toLowerCase()}`)}
+                        </div>
+                      </div>
+                      <div className="text-sm">
+                        {format(job.date, "HH:mm")}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </CardContent>

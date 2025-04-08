@@ -4,7 +4,7 @@ import { Layout } from "@/components/Layout";
 import { useLanguage } from "@/context/LanguageContext";
 import { format, addDays, addMonths, isAfter, isBefore } from "date-fns";
 import { sv, de, enUS } from "date-fns/locale";
-import { SERVICE_TYPES } from "@/lib/serviceTypes";
+import { SERVICE_TYPES, ServiceType } from "@/lib/serviceTypes";
 import { StatsCards } from "@/components/overview/StatsCards";
 import { UpcomingAppointments } from "@/components/overview/UpcomingAppointments";
 import { AppointmentsChart } from "@/components/overview/AppointmentsChart";
@@ -14,6 +14,19 @@ const dateLocales = {
   de: de,
   en: enUS,
 };
+
+// Define the Appointment type
+interface Appointment {
+  id: number;
+  date: Date;
+  vehicleModel: string;
+  serviceType: ServiceType;
+}
+
+// Define the grouped appointments type
+interface GroupedAppointments {
+  [key: string]: Appointment[];
+}
 
 export default function Overview() {
   const { t, language } = useLanguage();
@@ -34,58 +47,59 @@ export default function Overview() {
     { name: t('serviceTypes.other'), value: 5, fill: SERVICE_TYPES[5].color }
   ];
   
-  const upcomingJobs = [
+  // Type-safe upcomingJobs with ServiceType
+  const upcomingJobs: Appointment[] = [
     { 
       id: 1,
       date: new Date(2025, 3, 8, 9, 0), // April 8, 2025, 09:00
       vehicleModel: "Volvo XC60",
-      serviceType: 1 
+      serviceType: 1 as ServiceType
     },
     { 
       id: 2,
       date: new Date(2025, 3, 9, 13, 30), // April 9, 2025, 13:30
       vehicleModel: "BMW X5",
-      serviceType: 2 
+      serviceType: 2 as ServiceType
     },
     { 
       id: 3,
       date: new Date(2025, 3, 10, 10, 0), // April 10, 2025, 10:00
       vehicleModel: "Audi A4",
-      serviceType: 1 
+      serviceType: 1 as ServiceType 
     },
     { 
       id: 4,
       date: new Date(2025, 3, 13, 14, 0), // April 13, 2025, 14:00
       vehicleModel: "Volvo V70",
-      serviceType: 2 
+      serviceType: 2 as ServiceType
     },
     { 
       id: 5,
       date: new Date(2025, 3, 15, 11, 30), // April 15, 2025, 11:30
       vehicleModel: "Tesla Model 3",
-      serviceType: 1 
+      serviceType: 1 as ServiceType
     },
     { 
       id: 6,
       date: new Date(2025, 3, 22, 10, 0), // April 22, 2025, 10:00
       vehicleModel: "Mercedes E-Class",
-      serviceType: 3 
+      serviceType: 3 as ServiceType
     },
     { 
       id: 7,
       date: new Date(2025, 3, 28, 15, 30), // April 28, 2025, 15:30
       vehicleModel: "Ford Focus",
-      serviceType: 4
+      serviceType: 4 as ServiceType
     },
     { 
       id: 8,
       date: new Date(2025, 4, 5, 9, 0), // May 5, 2025, 09:00
       vehicleModel: "Toyota RAV4",
-      serviceType: 5
+      serviceType: 5 as ServiceType
     }
   ];
   
-  const [filteredJobs, setFilteredJobs] = useState<typeof upcomingJobs>([]);
+  const [filteredJobs, setFilteredJobs] = useState<Appointment[]>([]);
   
   useEffect(() => {
     const now = new Date();
@@ -111,7 +125,7 @@ export default function Overview() {
     }
     acc[dateStr].push(job);
     return acc;
-  }, {} as Record<string, typeof upcomingJobs>);
+  }, {} as GroupedAppointments);
   
   const locale = dateLocales[language as keyof typeof dateLocales] || enUS;
 

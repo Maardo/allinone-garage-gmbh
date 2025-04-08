@@ -19,11 +19,17 @@ interface AppointmentsChartProps {
 
 export function AppointmentsChart({ chartData }: AppointmentsChartProps) {
   const { t } = useLanguage();
+  
+  // Calculate the total number of appointments
+  const totalAppointments = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{t('overview.upcomingJobs')}</CardTitle>
+      <CardHeader className="text-center pb-0">
+        <div className="flex flex-col items-center justify-center">
+          <div className="text-4xl font-bold">{totalAppointments}</div>
+          <CardTitle className="mt-1">{t('overview.upcomingJobs')}</CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="h-[300px]">
