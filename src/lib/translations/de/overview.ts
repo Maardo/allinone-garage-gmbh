@@ -6,7 +6,6 @@ export const overview = {
   completedJobs: 'Abgeschlossene Arbeiten',
   upcomingAppointments: 'Bevorstehende Termine',
   appointments: 'Termine',
-  statistics: 'Statistik',
   upcomingJobs: 'Bevorstehende Aufträge',
   week: 'Woche',
   month: 'Monat',

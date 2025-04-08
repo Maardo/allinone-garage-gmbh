@@ -1,15 +1,13 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Users, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { format } from "date-fns";
+import { format, addDays, addMonths, isAfter, isBefore } from "date-fns";
 import { sv, de, enUS } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { SERVICE_TYPES } from "@/lib/serviceTypes";
 import {
   Bar,
   BarChart,
@@ -20,6 +18,12 @@ import {
   Legend,
   CartesianGrid,
 } from "recharts";
+import { SERVICE_TYPES } from "@/lib/serviceTypes";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent
+} from "@/components/ui/chart";
 
 const dateLocales = {
   sv: sv,
@@ -79,11 +83,49 @@ export default function Overview() {
       date: new Date(2025, 3, 15, 11, 30), // April 15, 2025, 11:30
       vehicleModel: "Tesla Model 3",
       serviceType: 1 
+    },
+    { 
+      id: 6,
+      date: new Date(2025, 3, 22, 10, 0), // April 22, 2025, 10:00
+      vehicleModel: "Mercedes E-Class",
+      serviceType: 3 
+    },
+    { 
+      id: 7,
+      date: new Date(2025, 3, 28, 15, 30), // April 28, 2025, 15:30
+      vehicleModel: "Ford Focus",
+      serviceType: 4
+    },
+    { 
+      id: 8,
+      date: new Date(2025, 4, 5, 9, 0), // May 5, 2025, 09:00
+      vehicleModel: "Toyota RAV4",
+      serviceType: 5
     }
   ];
   
+  // Filter jobs based on selected time view
+  const [filteredJobs, setFilteredJobs] = useState<typeof upcomingJobs>([]);
+  
+  useEffect(() => {
+    const now = new Date();
+    let endDate;
+    
+    if (timeView === "week") {
+      endDate = addDays(now, 7); // One week from now
+    } else {
+      endDate = addMonths(now, 1); // One month from now
+    }
+    
+    const filtered = upcomingJobs.filter(job => 
+      isAfter(job.date, now) && isBefore(job.date, endDate)
+    );
+    
+    setFilteredJobs(filtered);
+  }, [timeView]);
+  
   // Group jobs by date for display
-  const jobsByDate = upcomingJobs.reduce((acc, job) => {
+  const jobsByDate = filteredJobs.reduce((acc, job) => {
     const dateStr = format(job.date, 'yyyy-MM-dd');
     if (!acc[dateStr]) {
       acc[dateStr] = [];
@@ -169,84 +211,101 @@ export default function Overview() {
             </div>
           </CardHeader>
           <CardContent className="px-0">
-            <div className="space-y-6">
-              {Object.entries(jobsByDate).map(([dateStr, jobs]) => {
-                const date = new Date(dateStr);
-                return (
-                  <div key={dateStr} className="border-b last:border-b-0">
-                    <div className="px-6 py-2 text-sm font-medium border-b border-muted">
-                      {format(date, 'EEEE d MMMM', { locale })}
+            {Object.keys(jobsByDate).length > 0 ? (
+              <div className="space-y-6">
+                {Object.entries(jobsByDate).map(([dateStr, jobs]) => {
+                  const date = new Date(dateStr);
+                  return (
+                    <div key={dateStr} className="border-b last:border-b-0">
+                      <div className="px-6 py-2 text-sm font-medium border-b border-muted">
+                        {format(date, 'EEEE d MMMM', { locale })}
+                      </div>
+                      <Table>
+                        <TableBody>
+                          {jobs.map(job => (
+                            <TableRow key={job.id}>
+                              <TableCell className="w-20">
+                                {format(job.date, 'HH:mm')}
+                              </TableCell>
+                              <TableCell className="font-medium">
+                                {job.vehicleModel}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <div 
+                                  className="inline-flex px-2 py-1 rounded-md text-xs font-medium"
+                                  style={{ 
+                                    backgroundColor: `${SERVICE_TYPES[job.serviceType].color}20`,
+                                    color: SERVICE_TYPES[job.serviceType].color
+                                  }}
+                                >
+                                  {t(`serviceTypes.${SERVICE_TYPES[job.serviceType].name.toLowerCase()}`)}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </div>
-                    <Table>
-                      <TableBody>
-                        {jobs.map(job => (
-                          <TableRow key={job.id}>
-                            <TableCell className="w-20">
-                              {format(job.date, 'HH:mm')}
-                            </TableCell>
-                            <TableCell className="font-medium">
-                              {job.vehicleModel}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div 
-                                className="inline-flex px-2 py-1 rounded-md text-xs font-medium"
-                                style={{ 
-                                  backgroundColor: `${SERVICE_TYPES[job.serviceType].color}20`,
-                                  color: SERVICE_TYPES[job.serviceType].color
-                                }}
-                              >
-                                {SERVICE_TYPES[job.serviceType].name}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="p-6 text-center text-muted-foreground">
+                {timeView === "week" 
+                  ? "No upcoming appointments this week" 
+                  : "No upcoming appointments this month"
+                }
+              </div>
+            )}
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader>
-            <CardTitle>{t('overview.statistics')}</CardTitle>
+            <CardTitle>{t('overview.upcomingJobs')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
+              <ChartContainer 
+                config={{
+                  maintenance: { color: SERVICE_TYPES[1].color },
+                  repair: { color: SERVICE_TYPES[2].color },
+                  inspection: { color: SERVICE_TYPES[3].color },
+                  tireChange: { color: SERVICE_TYPES[4].color },
+                  other: { color: SERVICE_TYPES[5].color }
+                }}
+              >
+                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip />
+                  <ChartTooltip
+                    content={<ChartTooltipContent />}
+                  />
                   <Bar 
                     dataKey="value" 
-                    fill="#8884d8" 
                     name={t('overview.appointments')}
-                    // Use the fill property from each data item
                     isAnimationActive={true}
                   >
                     {chartData.map((entry, index) => (
                       <rect 
                         key={index} 
-                        fill={entry.fill} // Use service type colors
+                        fill={entry.fill}
                       />
                     ))}
                   </Bar>
                 </BarChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
-            <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-2">
+            <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
               {chartData.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <div 
-                    className="w-3 h-3 rounded" 
+                    className="w-4 h-4 rounded" 
                     style={{ backgroundColor: item.fill }}
                   ></div>
                   <span className="text-sm">
-                    {item.name}: {item.value} {t('overview.count')}
+                    {item.name}: <span className="font-medium">{item.value}</span> {t('overview.count')}
                   </span>
                 </div>
               ))}
