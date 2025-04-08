@@ -24,6 +24,7 @@ interface Appointment {
   serviceType: ServiceType;
   isCompleted?: boolean;
   customerEmail?: string;
+  customerName?: string;
 }
 
 // Define the grouped appointments type
@@ -36,12 +37,12 @@ export default function Overview() {
   const { toast } = useToast();
   const [timeView, setTimeView] = useState<"week" | "month">("week");
   
-  const stats = {
+  const [stats, setStats] = useState({
     todayAppointments: 3,
     weekAppointments: 15,
     totalCustomers: 275,
     completedJobs: 843
-  };
+  });
   
   const chartData = [
     { name: t('serviceTypes.maintenance'), value: 25, fill: SERVICE_TYPES[1].color },
@@ -59,7 +60,8 @@ export default function Overview() {
       vehicleModel: "Volvo XC60",
       serviceType: 1 as ServiceType,
       isCompleted: false,
-      customerEmail: "johan@example.com"
+      customerEmail: "johan@example.com",
+      customerName: "Johan Andersson"
     },
     { 
       id: 2,
@@ -67,7 +69,8 @@ export default function Overview() {
       vehicleModel: "BMW X5",
       serviceType: 2 as ServiceType,
       isCompleted: false,
-      customerEmail: "customer@example.com"
+      customerEmail: "customer@example.com",
+      customerName: "Maria Johansson"
     },
     { 
       id: 3,
@@ -75,7 +78,8 @@ export default function Overview() {
       vehicleModel: "Audi A4",
       serviceType: 1 as ServiceType,
       isCompleted: false,
-      customerEmail: "customer2@example.com"
+      customerEmail: "customer2@example.com",
+      customerName: "Erik Svensson"
     },
     { 
       id: 4,
@@ -83,7 +87,8 @@ export default function Overview() {
       vehicleModel: "Volvo V70",
       serviceType: 2 as ServiceType,
       isCompleted: false,
-      customerEmail: "customer3@example.com"
+      customerEmail: "customer3@example.com",
+      customerName: "Anna Karlsson"
     },
     { 
       id: 5,
@@ -91,7 +96,8 @@ export default function Overview() {
       vehicleModel: "Tesla Model 3",
       serviceType: 1 as ServiceType,
       isCompleted: false,
-      customerEmail: "customer4@example.com"
+      customerEmail: "customer4@example.com",
+      customerName: "Lars Nilsson"
     },
     { 
       id: 6,
@@ -99,7 +105,8 @@ export default function Overview() {
       vehicleModel: "Mercedes E-Class",
       serviceType: 3 as ServiceType,
       isCompleted: false,
-      customerEmail: "customer5@example.com"
+      customerEmail: "customer5@example.com",
+      customerName: "Eva Lindberg"
     },
     { 
       id: 7,
@@ -107,7 +114,8 @@ export default function Overview() {
       vehicleModel: "Ford Focus",
       serviceType: 4 as ServiceType,
       isCompleted: false,
-      customerEmail: "customer6@example.com"
+      customerEmail: "customer6@example.com",
+      customerName: "Peter Ekström"
     },
     { 
       id: 8,
@@ -115,7 +123,8 @@ export default function Overview() {
       vehicleModel: "Toyota RAV4",
       serviceType: 5 as ServiceType,
       isCompleted: false,
-      customerEmail: "customer7@example.com"
+      customerEmail: "customer7@example.com",
+      customerName: "Sofia Berg"
     }
   ]);
   
@@ -177,6 +186,12 @@ export default function Overview() {
       )
     );
     
+    // Update the completed jobs count in stats
+    setStats(currentStats => ({
+      ...currentStats,
+      completedJobs: currentStats.completedJobs + 1
+    }));
+    
     // Send email notification if enabled
     const emailNotificationsEnabled = localStorage.getItem("emailNotifications") !== "false";
     if (emailNotificationsEnabled && appointment.customerEmail) {
@@ -194,9 +209,6 @@ export default function Overview() {
         description: t('overview.appointmentMarkedComplete'),
       });
     }
-    
-    // Update stats if needed
-    stats.completedJobs++;
   };
 
   return (

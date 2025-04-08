@@ -15,5 +15,6 @@ export const overview = {
   markComplete: 'Markera som klar',
   appointmentCompleted: 'Bokning slutförd',
   appointmentMarkedComplete: 'Bokningen har markerats som slutförd',
-  emailSentToCustomer: 'Ett e-postmeddelande har skickats till kunden.'
+  emailSentToCustomer: 'Ett e-postmeddelande har skickats till kunden.',
+  customerAndVehicle: 'Kund & Fordon'
 };

@@ -15,5 +15,6 @@ export const overview = {
   markComplete: 'Als erledigt markieren',
   appointmentCompleted: 'Termin abgeschlossen',
   appointmentMarkedComplete: 'Der Termin wurde als abgeschlossen markiert',
-  emailSentToCustomer: 'Eine E-Mail wurde an den Kunden gesendet.'
+  emailSentToCustomer: 'Eine E-Mail wurde an den Kunden gesendet.',
+  customerAndVehicle: 'Kunde & Fahrzeug'
 };

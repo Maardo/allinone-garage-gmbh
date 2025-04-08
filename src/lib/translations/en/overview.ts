@@ -15,5 +15,6 @@ export const overview = {
   markComplete: 'Mark as complete',
   appointmentCompleted: 'Appointment completed',
   appointmentMarkedComplete: 'The appointment has been marked as complete',
-  emailSentToCustomer: 'An email has been sent to the customer.'
+  emailSentToCustomer: 'An email has been sent to the customer.',
+  customerAndVehicle: 'Customer & Vehicle'
 };

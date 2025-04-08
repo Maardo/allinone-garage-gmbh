@@ -15,6 +15,7 @@ interface Appointment {
   vehicleModel: string;
   serviceType: ServiceType;
   isCompleted?: boolean;
+  customerName?: string;
 }
 
 interface GroupedAppointments {
@@ -110,12 +111,17 @@ export function UpcomingAppointments({
                         <div className="text-sm text-muted-foreground">
                           {t(getServiceTypeTranslationKey(job.serviceType))}
                         </div>
+                        {job.customerName && (
+                          <div className="text-xs text-muted-foreground mt-1 font-semibold">
+                            {t('overview.customerAndVehicle')}: {job.customerName}
+                          </div>
+                        )}
                       </div>
                       {onMarkComplete && !job.isCompleted && (
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="mr-2 border-green-500 text-green-600 hover:text-green-700 hover:bg-green-50 hover:border-green-600 font-medium"
+                          className="mr-2 bg-green-50 border-green-500 text-green-600 hover:text-green-700 hover:bg-green-100 hover:border-green-600 font-medium"
                           onClick={() => onMarkComplete(job.id)}
                         >
                           <CheckCircle className="h-4 w-4 mr-1" />
