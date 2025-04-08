@@ -5,5 +5,10 @@ export const overview = {
   totalCustomers: 'Gesamtzahl der Kunden',
   completedJobs: 'Abgeschlossene Arbeiten',
   upcomingAppointments: 'Bevorstehende Termine',
-  appointments: 'Termine'
+  appointments: 'Termine',
+  statistics: 'Statistik',
+  upcomingJobs: 'Bevorstehende Aufträge',
+  week: 'Woche',
+  month: 'Monat',
+  count: 'st'
 };

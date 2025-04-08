@@ -1,8 +1,15 @@
 
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Users, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { format } from "date-fns";
+import { sv, de, enUS } from "date-fns/locale";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { SERVICE_TYPES } from "@/lib/serviceTypes";
 import {
   Bar,
   BarChart,
@@ -11,10 +18,18 @@ import {
   YAxis,
   Tooltip,
   Legend,
+  CartesianGrid,
 } from "recharts";
 
+const dateLocales = {
+  sv: sv,
+  de: de,
+  en: enUS,
+};
+
 export default function Overview() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [timeView, setTimeView] = useState<"week" | "month">("week");
   
   // Mock data - in a real app, this would come from your backend
   const stats = {
@@ -25,14 +40,61 @@ export default function Overview() {
   };
   
   // Mock chart data - total upcoming appointments by service type
-  const totalChartData = [
-    { name: t('serviceTypes.maintenance'), value: 28 },
-    { name: t('serviceTypes.repair'), value: 15 },
-    { name: t('serviceTypes.inspection'), value: 12 },
-    { name: t('serviceTypes.tireChange'), value: 18 },
-    { name: t('serviceTypes.other'), value: 7 }
+  const chartData = [
+    { name: t('serviceTypes.maintenance'), value: 25, fill: SERVICE_TYPES[1].color },
+    { name: t('serviceTypes.repair'), value: 20, fill: SERVICE_TYPES[2].color },
+    { name: t('serviceTypes.inspection'), value: 10, fill: SERVICE_TYPES[3].color },
+    { name: t('serviceTypes.tireChange'), value: 15, fill: SERVICE_TYPES[4].color },
+    { name: t('serviceTypes.other'), value: 5, fill: SERVICE_TYPES[5].color }
   ];
   
+  // Mock upcoming jobs data
+  const upcomingJobs = [
+    { 
+      id: 1,
+      date: new Date(2025, 3, 8, 9, 0), // April 8, 2025, 09:00
+      vehicleModel: "Volvo XC60",
+      serviceType: 1 
+    },
+    { 
+      id: 2,
+      date: new Date(2025, 3, 9, 13, 30), // April 9, 2025, 13:30
+      vehicleModel: "BMW X5",
+      serviceType: 2 
+    },
+    { 
+      id: 3,
+      date: new Date(2025, 3, 10, 10, 0), // April 10, 2025, 10:00
+      vehicleModel: "Audi A4",
+      serviceType: 1 
+    },
+    { 
+      id: 4,
+      date: new Date(2025, 3, 13, 14, 0), // April 13, 2025, 14:00
+      vehicleModel: "Volvo V70",
+      serviceType: 2 
+    },
+    { 
+      id: 5,
+      date: new Date(2025, 3, 15, 11, 30), // April 15, 2025, 11:30
+      vehicleModel: "Tesla Model 3",
+      serviceType: 1 
+    }
+  ];
+  
+  // Group jobs by date for display
+  const jobsByDate = upcomingJobs.reduce((acc, job) => {
+    const dateStr = format(job.date, 'yyyy-MM-dd');
+    if (!acc[dateStr]) {
+      acc[dateStr] = [];
+    }
+    acc[dateStr].push(job);
+    return acc;
+  }, {} as Record<string, typeof upcomingJobs>);
+  
+  // Get current locale for date formatting
+  const locale = dateLocales[language as keyof typeof dateLocales] || enUS;
+
   return (
     <Layout>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -85,22 +147,109 @@ export default function Overview() {
         </Card>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>{t('overview.upcomingJobs')}</CardTitle>
+            <div className="flex space-x-2">
+              <Button 
+                variant={timeView === "week" ? "default" : "outline"} 
+                size="sm" 
+                onClick={() => setTimeView("week")}
+              >
+                {t('overview.week')}
+              </Button>
+              <Button 
+                variant={timeView === "month" ? "default" : "outline"} 
+                size="sm" 
+                onClick={() => setTimeView("month")}
+              >
+                {t('overview.month')}
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="px-0">
+            <div className="space-y-6">
+              {Object.entries(jobsByDate).map(([dateStr, jobs]) => {
+                const date = new Date(dateStr);
+                return (
+                  <div key={dateStr} className="border-b last:border-b-0">
+                    <div className="px-6 py-2 text-sm font-medium border-b border-muted">
+                      {format(date, 'EEEE d MMMM', { locale })}
+                    </div>
+                    <Table>
+                      <TableBody>
+                        {jobs.map(job => (
+                          <TableRow key={job.id}>
+                            <TableCell className="w-20">
+                              {format(job.date, 'HH:mm')}
+                            </TableCell>
+                            <TableCell className="font-medium">
+                              {job.vehicleModel}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div 
+                                className="inline-flex px-2 py-1 rounded-md text-xs font-medium"
+                                style={{ 
+                                  backgroundColor: `${SERVICE_TYPES[job.serviceType].color}20`,
+                                  color: SERVICE_TYPES[job.serviceType].color
+                                }}
+                              >
+                                {SERVICE_TYPES[job.serviceType].name}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+        
         <Card>
           <CardHeader>
-            <CardTitle>{t('overview.upcomingAppointments')}</CardTitle>
+            <CardTitle>{t('overview.statistics')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={totalChartData}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Legend />
-                  <Bar dataKey="value" fill="#6366f1" name={t('overview.appointments')} />
+                  <Bar 
+                    dataKey="value" 
+                    fill="#8884d8" 
+                    name={t('overview.appointments')}
+                    // Use the fill property from each data item
+                    isAnimationActive={true}
+                  >
+                    {chartData.map((entry, index) => (
+                      <rect 
+                        key={index} 
+                        fill={entry.fill} // Use service type colors
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
+            </div>
+            <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-2">
+              {chartData.map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div 
+                    className="w-3 h-3 rounded" 
+                    style={{ backgroundColor: item.fill }}
+                  ></div>
+                  <span className="text-sm">
+                    {item.name}: {item.value} {t('overview.count')}
+                  </span>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
