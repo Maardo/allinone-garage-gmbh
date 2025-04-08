@@ -1,16 +1,23 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { SERVICE_TYPES, ServiceType, ServiceTypeInfo } from "@/lib/serviceTypes";
+import { CODE_PREFIXES, COLOR_OPTIONS, SERVICE_TYPES, ServiceType, ServiceTypeInfo } from "@/lib/serviceTypes";
 import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 
 export default function ServiceTypes() {
   const { t } = useLanguage();
@@ -49,15 +56,29 @@ export default function ServiceTypes() {
                     style={{ borderColor: type.color, borderWidth: '2px' }}
                     onClick={() => handleSelectType(type.id)}
                   >
-                    <div 
-                      className="h-8 w-8 flex-shrink-0 rounded mr-4" 
-                      style={{ backgroundColor: type.color }}
-                    ></div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div 
+                            className="h-8 w-8 flex-shrink-0 rounded mr-4 cursor-help" 
+                            style={{ backgroundColor: type.color }}
+                          ></div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{type.color}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                     <div className="overflow-hidden">
                       <h3 className="font-medium text-sm md:text-base">{type.name}</h3>
-                      <p className="text-xs md:text-sm text-muted-foreground truncate">
-                        {type.description}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-xs bg-muted px-2 py-0.5 rounded">
+                          {type.code || type.id}
+                        </span>
+                        <p className="text-xs md:text-sm text-muted-foreground truncate">
+                          {type.description}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -133,16 +154,21 @@ function TypeEditor({
   const [name, setName] = useState(serviceTypes[typeId].name);
   const [description, setDescription] = useState(serviceTypes[typeId].description);
   const [color, setColor] = useState(serviceTypes[typeId].color);
+  const [codePrefix, setCodePrefix] = useState(serviceTypes[typeId].code?.charAt(0) || "S");
+  const [codeNumber, setCodeNumber] = useState(serviceTypes[typeId].code?.substring(1) || "01");
 
   const handleUpdate = () => {
     // Update the service type
+    const code = `${codePrefix}${codeNumber}`;
+    
     const updatedTypes = {
       ...serviceTypes,
       [typeId]: {
         ...serviceTypes[typeId],
         name,
         description,
-        color
+        color,
+        code
       }
     };
     setServiceTypes(updatedTypes);
@@ -165,6 +191,32 @@ function TypeEditor({
         />
       </div>
       <div className="space-y-2">
+        <Label htmlFor="service-code-prefix">{t('serviceTypes.code')}</Label>
+        <div className="flex gap-2">
+          <div className="w-1/2">
+            <Select value={codePrefix} onValueChange={setCodePrefix}>
+              <SelectTrigger>
+                <SelectValue placeholder={t('serviceTypes.codePrefix')} />
+              </SelectTrigger>
+              <SelectContent>
+                {CODE_PREFIXES.map(prefix => (
+                  <SelectItem key={prefix} value={prefix}>{prefix}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-1/2">
+            <Input
+              type="text"
+              placeholder={t('serviceTypes.codeNumber')}
+              value={codeNumber}
+              onChange={(e) => setCodeNumber(e.target.value)}
+              maxLength={2}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="space-y-2">
         <Label htmlFor="service-desc">{t('serviceTypes.desc')}</Label>
         <Textarea 
           id="service-desc" 
@@ -175,68 +227,27 @@ function TypeEditor({
       </div>
       <div className="space-y-2">
         <Label>{t('serviceTypes.calendarColor')}</Label>
-        <RadioGroup defaultValue={color} onValueChange={setColor} className="flex flex-wrap gap-2">
-          <div className="flex items-center">
-            <RadioGroupItem value="#0284c7" id="color-blue" className="sr-only" />
-            <Label
-              htmlFor="color-blue"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#0284c7", borderColor: color === "#0284c7" ? "black" : "#0284c7" }}
-            >
-              {color === "#0284c7" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-          <div className="flex items-center">
-            <RadioGroupItem value="#dc2626" id="color-red" className="sr-only" />
-            <Label
-              htmlFor="color-red"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#dc2626", borderColor: color === "#dc2626" ? "black" : "#dc2626" }}
-            >
-              {color === "#dc2626" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-          <div className="flex items-center">
-            <RadioGroupItem value="#16a34a" id="color-green" className="sr-only" />
-            <Label
-              htmlFor="color-green"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#16a34a", borderColor: color === "#16a34a" ? "black" : "#16a34a" }}
-            >
-              {color === "#16a34a" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-          <div className="flex items-center">
-            <RadioGroupItem value="#9333ea" id="color-purple" className="sr-only" />
-            <Label
-              htmlFor="color-purple"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#9333ea", borderColor: color === "#9333ea" ? "black" : "#9333ea" }}
-            >
-              {color === "#9333ea" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-          <div className="flex items-center">
-            <RadioGroupItem value="#d97706" id="color-amber" className="sr-only" />
-            <Label
-              htmlFor="color-amber"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#d97706", borderColor: color === "#d97706" ? "black" : "#d97706" }}
-            >
-              {color === "#d97706" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-        </RadioGroup>
+        <div className="flex flex-wrap gap-2">
+          {COLOR_OPTIONS.map((colorOption) => (
+            <TooltipProvider key={colorOption.value}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2 transition-transform hover:scale-110"
+                    style={{ backgroundColor: colorOption.value, borderColor: color === colorOption.value ? "black" : colorOption.value }}
+                    onClick={() => setColor(colorOption.value)}
+                  >
+                    {color === colorOption.value && <span className="text-white">✓</span>}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{colorOption.name}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ))}
+        </div>
       </div>
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={onCancel}>
@@ -265,14 +276,19 @@ function NewTypeEditor({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [color, setColor] = useState('#0284c7');
+  const [codePrefix, setCodePrefix] = useState("S");
+  const [codeNumber, setCodeNumber] = useState("01");
 
   const handleCreate = () => {
     // Create a new service type
+    const code = `${codePrefix}${codeNumber}`;
+    
     const newServiceType: ServiceTypeInfo = {
       id: nextId,
       name,
       description,
-      color
+      color,
+      code
     };
 
     const updatedTypes = {
@@ -298,6 +314,32 @@ function NewTypeEditor({
         />
       </div>
       <div className="space-y-2">
+        <Label htmlFor="service-code-prefix">{t('serviceTypes.code')}</Label>
+        <div className="flex gap-2">
+          <div className="w-1/2">
+            <Select value={codePrefix} onValueChange={setCodePrefix}>
+              <SelectTrigger>
+                <SelectValue placeholder={t('serviceTypes.codePrefix')} />
+              </SelectTrigger>
+              <SelectContent>
+                {CODE_PREFIXES.map(prefix => (
+                  <SelectItem key={prefix} value={prefix}>{prefix}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-1/2">
+            <Input
+              type="text"
+              placeholder={t('serviceTypes.codeNumber')}
+              value={codeNumber}
+              onChange={(e) => setCodeNumber(e.target.value)}
+              maxLength={2}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="space-y-2">
         <Label htmlFor="service-desc">{t('serviceTypes.desc')}</Label>
         <Textarea 
           id="service-desc" 
@@ -309,68 +351,27 @@ function NewTypeEditor({
       </div>
       <div className="space-y-2">
         <Label>{t('serviceTypes.calendarColor')}</Label>
-        <RadioGroup value={color} onValueChange={setColor} className="flex flex-wrap gap-2">
-          <div className="flex items-center">
-            <RadioGroupItem value="#0284c7" id="color-blue-new" className="sr-only" />
-            <Label
-              htmlFor="color-blue-new"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#0284c7", borderColor: color === "#0284c7" ? "black" : "#0284c7" }}
-            >
-              {color === "#0284c7" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-          <div className="flex items-center">
-            <RadioGroupItem value="#dc2626" id="color-red-new" className="sr-only" />
-            <Label
-              htmlFor="color-red-new"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#dc2626", borderColor: color === "#dc2626" ? "black" : "#dc2626" }}
-            >
-              {color === "#dc2626" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-          <div className="flex items-center">
-            <RadioGroupItem value="#16a34a" id="color-green-new" className="sr-only" />
-            <Label
-              htmlFor="color-green-new"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#16a34a", borderColor: color === "#16a34a" ? "black" : "#16a34a" }}
-            >
-              {color === "#16a34a" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-          <div className="flex items-center">
-            <RadioGroupItem value="#9333ea" id="color-purple-new" className="sr-only" />
-            <Label
-              htmlFor="color-purple-new"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#9333ea", borderColor: color === "#9333ea" ? "black" : "#9333ea" }}
-            >
-              {color === "#9333ea" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-          <div className="flex items-center">
-            <RadioGroupItem value="#d97706" id="color-amber-new" className="sr-only" />
-            <Label
-              htmlFor="color-amber-new"
-              className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2"
-              style={{ backgroundColor: "#d97706", borderColor: color === "#d97706" ? "black" : "#d97706" }}
-            >
-              {color === "#d97706" && (
-                <span className="text-white">✓</span>
-              )}
-            </Label>
-          </div>
-        </RadioGroup>
+        <div className="flex flex-wrap gap-2">
+          {COLOR_OPTIONS.map((colorOption) => (
+            <TooltipProvider key={colorOption.value}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2 transition-transform hover:scale-110"
+                    style={{ backgroundColor: colorOption.value, borderColor: color === colorOption.value ? "black" : colorOption.value }}
+                    onClick={() => setColor(colorOption.value)}
+                  >
+                    {color === colorOption.value && <span className="text-white">✓</span>}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{colorOption.name}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ))}
+        </div>
       </div>
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={onCancel}>

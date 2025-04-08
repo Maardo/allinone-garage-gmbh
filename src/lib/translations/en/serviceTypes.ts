@@ -22,5 +22,8 @@ export const serviceTypes = {
   updated: 'Service type updated',
   created: 'New service type created',
   namePlaceholder: 'Enter service name',
-  descPlaceholder: 'Enter service description'
+  descPlaceholder: 'Enter service description',
+  codePlaceholder: 'Choose service code',
+  codePrefix: 'Prefix',
+  codeNumber: 'Number'
 };

@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface AppointmentDetailsProps {
   formData: Appointment;
@@ -73,12 +74,21 @@ export function AppointmentDetails({
               {Object.values(SERVICE_TYPES).map((type) => (
                 <SelectItem key={type.id} value={type.id.toString()}>
                   <div className="flex items-center gap-2">
-                    <div 
-                      className="h-2 w-2 rounded-full" 
-                      style={{ backgroundColor: type.color }}
-                    ></div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div 
+                            className="h-2 w-2 rounded-full cursor-help" 
+                            style={{ backgroundColor: type.color }}
+                          ></div>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                          <p>{type.color}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                     <span>
-                      {t(getServiceTypeTranslationKey(type.id))} ({type.id})
+                      {t(getServiceTypeTranslationKey(type.id))} ({type.code || type.id})
                     </span>
                   </div>
                 </SelectItem>

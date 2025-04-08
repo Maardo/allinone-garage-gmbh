@@ -1,6 +1,7 @@
 
 import { SERVICE_TYPES } from "@/lib/serviceTypes";
 import { useLanguage } from "@/context/LanguageContext";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function ServiceTypeLegend() {
   const { t } = useLanguage();
@@ -26,12 +27,21 @@ export function ServiceTypeLegend() {
             key={type.id} 
             className="flex items-center p-1.5 rounded-md text-xs"
           >
-            <div 
-              className="h-3 w-3 rounded-full mr-1.5"
-              style={{ backgroundColor: type.color }}
-            ></div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div 
+                    className="h-3 w-3 rounded-full mr-1.5 cursor-help"
+                    style={{ backgroundColor: type.color }}
+                  ></div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{type.color}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <span>
-              {t(getServiceTypeTranslationKey(type.id))} ({type.id})
+              {t(getServiceTypeTranslationKey(type.id))} ({type.code || type.id})
             </span>
           </div>
         ))}

@@ -22,5 +22,8 @@ export const serviceTypes = {
   updated: 'Servicetyp uppdaterad',
   created: 'Ny servicetyp skapad',
   namePlaceholder: 'Ange servicenamn',
-  descPlaceholder: 'Ange servicebeskrivning'
+  descPlaceholder: 'Ange servicebeskrivning',
+  codePlaceholder: 'Välj servicekod',
+  codePrefix: 'Prefix',
+  codeNumber: 'Nummer'
 };
