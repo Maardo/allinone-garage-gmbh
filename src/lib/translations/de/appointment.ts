@@ -20,5 +20,11 @@ export const appointment = {
   vehicleCarId: 'Fahrzeug-ID',
   notes: 'Anmerkungen',
   create: 'Termin erstellen',
-  update: 'Termin aktualisieren'
+  update: 'Termin aktualisieren',
+  status: 'Status',
+  completed: 'Abgeschlossen',
+  vehicleReady: 'Fahrzeug ist abholbereit',
+  vehicleInProgress: 'Service wird durchgeführt',
+  ready: 'Fertig',
+  ongoing: 'In Bearbeitung'
 };

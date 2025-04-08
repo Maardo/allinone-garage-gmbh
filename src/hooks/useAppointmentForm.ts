@@ -58,11 +58,16 @@ export function useAppointmentForm(initialData?: Appointment) {
     const dateObj = new Date(`${date}T${time || '09:00'}`);
     setFormData((prev) => ({ ...prev, date: dateObj }));
   };
+  
+  const handleSwitchChange = (name: string, checked: boolean) => {
+    setFormData((prev) => ({ ...prev, [name]: checked }));
+  };
 
   return {
     formData,
     handleChange,
     handleServiceTypeChange,
     handleDateChange,
+    handleSwitchChange,
   };
 }

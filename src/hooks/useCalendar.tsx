@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { addDays, addMonths, addWeeks, startOfDay, startOfMonth, startOfWeek, subDays, subMonths, subWeeks } from "date-fns";
 import { Appointment } from "@/lib/types";
@@ -82,7 +81,7 @@ export function useCalendar() {
   const [appointments, setAppointments] = useState<Appointment[]>(MOCK_APPOINTMENTS);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('month');
+  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('week');
 
   const handleNavigatePrev = () => {
     switch (viewMode) {

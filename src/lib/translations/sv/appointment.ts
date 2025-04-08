@@ -20,5 +20,11 @@ export const appointment = {
   vehicleCarId: 'Fordons-ID',
   notes: 'Anteckningar',
   create: 'Skapa Bokning',
-  update: 'Uppdatera Bokning'
+  update: 'Uppdatera Bokning',
+  status: 'Status',
+  completed: 'Färdig',
+  vehicleReady: 'Fordonet är redo för avhämtning',
+  vehicleInProgress: 'Service pågår',
+  ready: 'Färdig',
+  ongoing: 'Pågående'
 };

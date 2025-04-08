@@ -20,19 +20,19 @@ export function ServiceTypeLegend() {
   };
   
   return (
-    <div className="mt-6 p-4 bg-card rounded-lg shadow-sm">
-      <h3 className="font-medium mb-2 text-sm">{t('appointment.serviceType')}</h3>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+    <div className="mt-3 p-3 bg-card rounded-lg shadow-sm">
+      <h3 className="font-medium mb-1.5 text-xs">{t('appointment.serviceType')}</h3>
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5">
         {Object.values(SERVICE_TYPES).map((type) => (
           <div 
             key={type.id} 
-            className="flex items-center p-1.5 rounded-md text-xs"
+            className="flex items-center p-1 rounded-md text-xs"
           >
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div 
-                    className="h-3 w-3 rounded-full mr-1.5 cursor-help"
+                    className="h-3 w-3 rounded-full mr-1 cursor-help"
                     style={{ backgroundColor: type.color }}
                   ></div>
                 </TooltipTrigger>
