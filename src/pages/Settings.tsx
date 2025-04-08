@@ -7,12 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Settings() {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(false);
+  const [completionEmailTemplate, setCompletionEmailTemplate] = useState(
+    "Dear customer,\n\nWe are pleased to inform you that your vehicle service has been completed. Your vehicle is now ready for pickup.\n\nThank you for choosing our services.\n\nBest regards,\nAuto Service Center"
+  );
   
   const handleSaveGeneralSettings = () => {
     toast({
@@ -22,6 +28,11 @@ export default function Settings() {
   };
   
   const handleSaveNotificationSettings = () => {
+    // Save notification settings to local storage for demo purposes
+    localStorage.setItem("emailNotifications", emailNotifications.toString());
+    localStorage.setItem("smsNotifications", smsNotifications.toString());
+    localStorage.setItem("completionEmailTemplate", completionEmailTemplate);
+    
     toast({
       title: "Notification preferences updated",
       description: "Your notification settings have been saved.",
@@ -87,6 +98,21 @@ export default function Settings() {
                 <Switch 
                   checked={smsNotifications} 
                   onCheckedChange={setSmsNotifications} 
+                />
+              </div>
+              
+              <div className="space-y-2 border-t pt-4 mt-4">
+                <Label htmlFor="completion-email-template">
+                  Service Completion Email Template
+                </Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  This email will be sent to customers when their service is marked as complete
+                </p>
+                <Textarea 
+                  id="completion-email-template" 
+                  className="min-h-[200px]"
+                  value={completionEmailTemplate}
+                  onChange={(e) => setCompletionEmailTemplate(e.target.value)}
                 />
               </div>
               

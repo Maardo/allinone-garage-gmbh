@@ -14,5 +14,6 @@ export const overview = {
   noAppointments: 'Keine Termine',
   markComplete: 'Als erledigt markieren',
   appointmentCompleted: 'Termin abgeschlossen',
-  appointmentMarkedComplete: 'Der Termin wurde als abgeschlossen markiert'
+  appointmentMarkedComplete: 'Der Termin wurde als abgeschlossen markiert',
+  emailSentToCustomer: 'Eine E-Mail wurde an den Kunden gesendet.'
 };

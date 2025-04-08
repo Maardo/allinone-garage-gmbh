@@ -113,9 +113,9 @@ export function UpcomingAppointments({
                       </div>
                       {onMarkComplete && !job.isCompleted && (
                         <Button 
-                          variant="ghost" 
+                          variant="outline" 
                           size="sm" 
-                          className="mr-2 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          className="mr-2 border-green-500 text-green-600 hover:text-green-700 hover:bg-green-50 hover:border-green-600 font-medium"
                           onClick={() => onMarkComplete(job.id)}
                         >
                           <CheckCircle className="h-4 w-4 mr-1" />
