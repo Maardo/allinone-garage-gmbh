@@ -7,24 +7,24 @@ export function LoanerCarsLegend() {
   
   return (
     <div className="text-sm text-muted-foreground">
-      <p>
+      <div className="flex items-center gap-2 mb-1">
         <Badge 
           variant="outline"
-          className="mr-2 border-green-500 text-green-700 bg-green-100 font-bold"
+          className="border-green-500 text-green-700 bg-green-100 font-bold"
         >
           {t('loanerCar.available')}
         </Badge>
-        {t('loanerCar.readyToBeAssigned')}
-      </p>
-      <p className="mt-1">
+        <span>{t('loanerCar.readyToBeAssigned')}</span>
+      </div>
+      <div className="flex items-center gap-2">
         <Badge 
           variant="outline"
-          className="mr-2 border-amber-500 text-amber-700 bg-amber-100 font-bold"
+          className="border-amber-500 text-amber-700 bg-amber-100 font-bold"
         >
           {t('loanerCar.loanedOut')}
         </Badge>
-        {t('loanerCar.currentlyAssigned')}
-      </p>
+        <span>{t('loanerCar.currentlyAssigned')}</span>
+      </div>
     </div>
   );
 }
