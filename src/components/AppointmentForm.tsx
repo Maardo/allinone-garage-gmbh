@@ -23,17 +23,25 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 pt-4">
-      <AppointmentDetails
-        formData={formData}
-        handleDateChange={handleDateChange}
-        handleServiceTypeChange={handleServiceTypeChange}
-        handleChange={handleChange}
-      />
+    <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl mx-auto">
+      <Card className="p-6">
+        <AppointmentDetails
+          formData={formData}
+          handleDateChange={handleDateChange}
+          handleServiceTypeChange={handleServiceTypeChange}
+          handleChange={handleChange}
+        />
+      </Card>
 
-      <CustomerDetails formData={formData} handleChange={handleChange} />
+      <Card className="p-6">
+        <h2 className="text-lg font-medium mb-4">{t('appointment.customerDetails')}</h2>
+        <CustomerDetails formData={formData} handleChange={handleChange} />
+      </Card>
       
-      <VehicleDetails formData={formData} handleChange={handleChange} />
+      <Card className="p-6">
+        <h2 className="text-lg font-medium mb-4">{t('appointment.vehicleDetails')}</h2>
+        <VehicleDetails formData={formData} handleChange={handleChange} />
+      </Card>
 
       <div className="flex justify-end pt-4">
         <Button 

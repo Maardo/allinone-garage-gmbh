@@ -30,7 +30,9 @@ export function ServiceTypeLegend() {
               className="h-3 w-3 rounded-full mr-1.5"
               style={{ backgroundColor: type.color }}
             ></div>
-            <span>{t(getServiceTypeTranslationKey(type.id))}</span>
+            <span>
+              {t(getServiceTypeTranslationKey(type.id))} ({type.id})
+            </span>
           </div>
         ))}
       </div>
