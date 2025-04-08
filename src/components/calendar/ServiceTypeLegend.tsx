@@ -36,6 +36,7 @@ export function ServiceTypeLegend() {
                   ></div>
                 </TooltipTrigger>
                 <TooltipContent>
+                  {/* Find the color name from COLOR_OPTIONS */}
                   <p>{type.color}</p>
                 </TooltipContent>
               </Tooltip>

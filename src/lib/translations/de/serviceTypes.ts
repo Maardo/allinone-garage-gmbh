@@ -25,5 +25,26 @@ export const serviceTypes = {
   descPlaceholder: 'Servicebeschreibung eingeben',
   codePlaceholder: 'Servicecode auswählen',
   codePrefix: 'Präfix',
-  codeNumber: 'Nummer'
+  codeNumber: 'Nummer',
+  // Color names
+  blue: 'Blau',
+  red: 'Rot',
+  green: 'Grün',
+  purple: 'Lila',
+  amber: 'Bernstein',
+  skyBlue: 'Himmelblau',
+  orange: 'Orange',
+  indigo: 'Indigo',
+  rose: 'Rosa',
+  teal: 'Türkis',
+  lime: 'Limette',
+  violet: 'Violett',
+  pink: 'Pink',
+  cyan: 'Cyan',
+  yellow: 'Gelb',
+  emerald: 'Smaragd',
+  fuchsia: 'Fuchsia',
+  slate: 'Schiefer',
+  brown: 'Braun',
+  coral: 'Koralle'
 };

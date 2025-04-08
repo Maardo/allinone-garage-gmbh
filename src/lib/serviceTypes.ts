@@ -1,5 +1,5 @@
 
-export type ServiceType = 1 | 2 | 3 | 4 | 5;
+export type ServiceType = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface ServiceTypeInfo {
   id: ServiceType;
@@ -47,20 +47,28 @@ export const SERVICE_TYPES: Record<ServiceType, ServiceTypeInfo> = {
   }
 };
 
-// Available color options
+// Available color options - expanded to 20 colors
 export const COLOR_OPTIONS = [
-  { value: '#0284c7', name: 'Blue' },
-  { value: '#dc2626', name: 'Red' },
-  { value: '#16a34a', name: 'Green' },
-  { value: '#9333ea', name: 'Purple' },
-  { value: '#d97706', name: 'Amber' },
-  { value: '#0ea5e9', name: 'Sky Blue' },
-  { value: '#ea580c', name: 'Orange' },
-  { value: '#4338ca', name: 'Indigo' },
-  { value: '#be123c', name: 'Rose' },
-  { value: '#0f766e', name: 'Teal' },
-  { value: '#4d7c0f', name: 'Lime' },
-  { value: '#7e22ce', name: 'Violet' }
+  { value: '#0284c7', name: 'blue' },       // Blue
+  { value: '#dc2626', name: 'red' },        // Red
+  { value: '#16a34a', name: 'green' },      // Green
+  { value: '#9333ea', name: 'purple' },     // Purple
+  { value: '#d97706', name: 'amber' },      // Amber
+  { value: '#0ea5e9', name: 'skyBlue' },    // Sky Blue
+  { value: '#ea580c', name: 'orange' },     // Orange
+  { value: '#4338ca', name: 'indigo' },     // Indigo
+  { value: '#be123c', name: 'rose' },       // Rose
+  { value: '#0f766e', name: 'teal' },       // Teal
+  { value: '#4d7c0f', name: 'lime' },       // Lime
+  { value: '#7e22ce', name: 'violet' },     // Violet
+  { value: '#db2777', name: 'pink' },       // Pink
+  { value: '#06b6d4', name: 'cyan' },       // Cyan
+  { value: '#eab308', name: 'yellow' },     // Yellow
+  { value: '#10b981', name: 'emerald' },    // Emerald
+  { value: '#d946ef', name: 'fuchsia' },    // Fuchsia
+  { value: '#64748b', name: 'slate' },      // Slate
+  { value: '#92400e', name: 'brown' },      // Brown
+  { value: '#f97316', name: 'coral' }       // Coral
 ];
 
 // Available service code prefixes

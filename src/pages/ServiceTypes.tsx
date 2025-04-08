@@ -242,7 +242,7 @@ function TypeEditor({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{colorOption.name}</p>
+                  <p>{t(`serviceTypes.${colorOption.name}`)}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -366,7 +366,7 @@ function NewTypeEditor({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{colorOption.name}</p>
+                  <p>{t(`serviceTypes.${colorOption.name}`)}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

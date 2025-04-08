@@ -25,5 +25,26 @@ export const serviceTypes = {
   descPlaceholder: 'Ange servicebeskrivning',
   codePlaceholder: 'Välj servicekod',
   codePrefix: 'Prefix',
-  codeNumber: 'Nummer'
+  codeNumber: 'Nummer',
+  // Color names
+  blue: 'Blå',
+  red: 'Röd',
+  green: 'Grön',
+  purple: 'Lila',
+  amber: 'Bärnsten',
+  skyBlue: 'Himmelsblå',
+  orange: 'Orange',
+  indigo: 'Indigo',
+  rose: 'Rosa',
+  teal: 'Blågrön',
+  lime: 'Lime',
+  violet: 'Violett',
+  pink: 'Rosa',
+  cyan: 'Cyan',
+  yellow: 'Gul',
+  emerald: 'Smaragd',
+  fuchsia: 'Fuchsia',
+  slate: 'Skiffergrå',
+  brown: 'Brun',
+  coral: 'Korall'
 };
