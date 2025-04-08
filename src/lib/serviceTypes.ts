@@ -44,6 +44,13 @@ export const SERVICE_TYPES: Record<ServiceType, ServiceTypeInfo> = {
     description: 'Body repair',
     color: '#d97706', // bright amber, accessible
     code: 'B01'
+  },
+  6: {
+    id: 6,
+    name: 'Other',
+    description: 'Other services',
+    color: '#0ea5e9', // sky blue, accessible
+    code: 'O01'
   }
 };
 

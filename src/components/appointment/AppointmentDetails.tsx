@@ -38,6 +38,7 @@ export function AppointmentDetails({
       case 3: return 'serviceTypes.inspection';
       case 4: return 'serviceTypes.tireChange';
       case 5: return 'serviceTypes.other';
+      case 6: return 'serviceTypes.other';
       default: return 'serviceTypes.other';
     }
   };
@@ -83,7 +84,7 @@ export function AppointmentDetails({
                           ></div>
                         </TooltipTrigger>
                         <TooltipContent side="right">
-                          <p>{type.color}</p>
+                          <p>{t(`serviceTypes.${type.color.substring(1)}`)}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>

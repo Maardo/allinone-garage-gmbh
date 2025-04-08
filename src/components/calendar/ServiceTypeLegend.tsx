@@ -14,6 +14,7 @@ export function ServiceTypeLegend() {
       case 3: return 'serviceTypes.inspection';
       case 4: return 'serviceTypes.tireChange';
       case 5: return 'serviceTypes.other';
+      case 6: return 'serviceTypes.other';
       default: return 'serviceTypes.other';
     }
   };
@@ -36,8 +37,8 @@ export function ServiceTypeLegend() {
                   ></div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {/* Find the color name from COLOR_OPTIONS */}
-                  <p>{type.color}</p>
+                  {/* Use the translation function for the color name */}
+                  <p>{t(`serviceTypes.${type.color.substring(1)}`)}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

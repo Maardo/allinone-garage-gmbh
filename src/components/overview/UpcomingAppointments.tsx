@@ -43,6 +43,7 @@ export function UpcomingAppointments({
       case 3: return 'serviceTypes.inspection';
       case 4: return 'serviceTypes.tireChange';
       case 5: return 'serviceTypes.other';
+      case 6: return 'serviceTypes.other';
       default: return 'serviceTypes.other';
     }
   };
