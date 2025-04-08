@@ -2,12 +2,14 @@
 export const overview = {
   todayAppointments: 'Heutige Termine',
   weekAppointments: 'Termine dieser Woche',
-  totalCustomers: 'Gesamtzahl der Kunden',
-  completedJobs: 'Abgeschlossene Arbeiten',
-  upcomingAppointments: 'Bevorstehende Termine',
+  totalCustomers: 'Gesamtkunden',
+  completedJobs: 'Abgeschlossene Aufträge',
+  upcomingAppointments: 'Anstehende Termine',
   appointments: 'Termine',
-  upcomingJobs: 'Bevorstehende Aufträge',
+  upcomingJobs: 'Anstehende Arbeiten',
   week: 'Woche',
   month: 'Monat',
-  count: 'st'
+  count: 'Stk',
+  noAppointmentsWeek: 'Keine anstehenden Termine in dieser Woche',
+  noAppointmentsMonth: 'Keine anstehenden Termine in diesem Monat'
 };

@@ -125,10 +125,10 @@ export function UpcomingJobsList({ jobs }: UpcomingJobsListProps) {
           </div>
         ) : (
           <div className="p-6 text-center text-muted-foreground">
-            {timeView === "week" 
-              ? "No upcoming appointments this week" 
-              : "No upcoming appointments this month"
-            }
+            {t(timeView === "week" 
+              ? "overview.noAppointmentsWeek" 
+              : "overview.noAppointmentsMonth"
+            )}
           </div>
         )}
       </CardContent>
