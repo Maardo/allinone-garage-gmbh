@@ -11,7 +11,7 @@ interface StatsCardProps {
 
 export function StatsCard({ title, value, icon: Icon, colorClass }: StatsCardProps) {
   return (
-    <Card className={`bg-${colorClass}-50 border-${colorClass}-100`}>
+    <Card className={`${colorClass}-50 border-${colorClass}-100`}>
       <CardHeader className="pb-2">
         <CardTitle className={`text-sm font-medium text-${colorClass}-700`}>{title}</CardTitle>
       </CardHeader>

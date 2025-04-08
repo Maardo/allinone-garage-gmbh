@@ -9,7 +9,5 @@ export const overview = {
   upcomingJobs: 'Upcoming Jobs',
   week: 'Week',
   month: 'Month',
-  count: 'pcs',
-  noAppointmentsWeek: 'No upcoming appointments this week',
-  noAppointmentsMonth: 'No upcoming appointments this month'
+  count: 'pcs'
 };

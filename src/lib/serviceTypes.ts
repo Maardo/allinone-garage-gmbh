@@ -11,31 +11,31 @@ export interface ServiceTypeInfo {
 export const SERVICE_TYPES: Record<ServiceType, ServiceTypeInfo> = {
   1: {
     id: 1,
-    name: 'service',
+    name: 'Service',
     description: 'Regular maintenance service',
     color: '#0284c7' // bright blue, accessible
   },
   2: {
     id: 2,
-    name: 'repair',
+    name: 'Repair',
     description: 'Mechanical repair',
     color: '#dc2626' // bright red, accessible
   },
   3: {
     id: 3,
-    name: 'inspection',
+    name: 'Inspection',
     description: 'Vehicle inspection',
     color: '#16a34a' // bright green, accessible
   },
   4: {
     id: 4,
-    name: 'diagnostic',
+    name: 'Diagnostic',
     description: 'Computer diagnostic',
     color: '#9333ea' // bright purple, accessible
   },
   5: {
     id: 5,
-    name: 'bodywork',
+    name: 'Bodywork',
     description: 'Body repair',
     color: '#d97706' // bright amber, accessible
   }

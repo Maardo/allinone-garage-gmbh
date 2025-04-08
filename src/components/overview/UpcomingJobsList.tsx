@@ -5,7 +5,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { format, addDays, addMonths, isAfter, isBefore } from "date-fns";
-import { sv, de, enUS } from 'date-fns/locale';
 import { SERVICE_TYPES } from "@/lib/serviceTypes";
 
 interface Job {
@@ -27,9 +26,9 @@ export function UpcomingJobsList({ jobs }: UpcomingJobsListProps) {
   // Get locale for date formatting
   const getLocale = () => {
     switch (language) {
-      case 'sv': return sv;
-      case 'de': return de;
-      default: return enUS;
+      case 'sv': return require('date-fns/locale').sv;
+      case 'de': return require('date-fns/locale').de;
+      default: return require('date-fns/locale').enUS;
     }
   };
 
@@ -125,10 +124,10 @@ export function UpcomingJobsList({ jobs }: UpcomingJobsListProps) {
           </div>
         ) : (
           <div className="p-6 text-center text-muted-foreground">
-            {t(timeView === "week" 
-              ? "overview.noAppointmentsWeek" 
-              : "overview.noAppointmentsMonth"
-            )}
+            {timeView === "week" 
+              ? "No upcoming appointments this week" 
+              : "No upcoming appointments this month"
+            }
           </div>
         )}
       </CardContent>
