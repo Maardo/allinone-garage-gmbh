@@ -1,6 +1,6 @@
 
 import { format } from "date-fns";
-import { Appointment } from "@/lib/types";
+import { Appointment } from "@/hooks/useOverviewAppointments";
 
 // Define the grouped appointments type
 export interface GroupedAppointments {

@@ -3,21 +3,40 @@ import { useState, useEffect } from 'react';
 import { addDays, addMonths, isAfter, isBefore } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
-import { Appointment, ServiceType } from '@/lib/types';
+import { ServiceType } from '@/lib/serviceTypes';
+
+// Define the appointment type specifically for this component
+export interface Appointment {
+  id: number;
+  date: Date;
+  vehicleModel: string;
+  serviceType: ServiceType;
+  isCompleted?: boolean;
+  customerEmail?: string;
+  customerName?: string;
+  licensePlate?: string;
+}
 
 // Define the grouped appointments type
-interface GroupedAppointments {
+export interface GroupedAppointments {
   [key: string]: Appointment[];
 }
 
 type TimeViewType = "week" | "month";
+
+export interface Stats {
+  todayAppointments: number;
+  weekAppointments: number;
+  totalCustomers: number;
+  completedJobs: number;
+}
 
 export function useOverviewAppointments() {
   const { t } = useLanguage();
   const { toast } = useToast();
   const [timeView, setTimeView] = useState<TimeViewType>("week");
   
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<Stats>({
     todayAppointments: 3,
     weekAppointments: 15,
     totalCustomers: 275,
@@ -33,7 +52,8 @@ export function useOverviewAppointments() {
       serviceType: 1 as ServiceType,
       isCompleted: false,
       customerEmail: "johan@example.com",
-      customerName: "Johan Andersson"
+      customerName: "Johan Andersson",
+      licensePlate: "ABC123"
     },
     { 
       id: 2,
@@ -42,7 +62,8 @@ export function useOverviewAppointments() {
       serviceType: 2 as ServiceType,
       isCompleted: false,
       customerEmail: "customer@example.com",
-      customerName: "Maria Johansson"
+      customerName: "Maria Johansson",
+      licensePlate: "DEF456"
     },
     { 
       id: 3,
@@ -51,7 +72,8 @@ export function useOverviewAppointments() {
       serviceType: 1 as ServiceType,
       isCompleted: false,
       customerEmail: "customer2@example.com",
-      customerName: "Erik Svensson"
+      customerName: "Erik Svensson",
+      licensePlate: "GHI789"
     },
     { 
       id: 4,
@@ -60,7 +82,8 @@ export function useOverviewAppointments() {
       serviceType: 2 as ServiceType,
       isCompleted: false,
       customerEmail: "customer3@example.com",
-      customerName: "Anna Karlsson"
+      customerName: "Anna Karlsson",
+      licensePlate: "JKL012"
     },
     { 
       id: 5,
@@ -69,7 +92,8 @@ export function useOverviewAppointments() {
       serviceType: 1 as ServiceType,
       isCompleted: false,
       customerEmail: "customer4@example.com",
-      customerName: "Lars Nilsson"
+      customerName: "Lars Nilsson",
+      licensePlate: "MNO345"
     },
     { 
       id: 6,
@@ -78,7 +102,8 @@ export function useOverviewAppointments() {
       serviceType: 3 as ServiceType,
       isCompleted: false,
       customerEmail: "customer5@example.com",
-      customerName: "Eva Lindberg"
+      customerName: "Eva Lindberg",
+      licensePlate: "PQR678"
     },
     { 
       id: 7,
@@ -87,7 +112,8 @@ export function useOverviewAppointments() {
       serviceType: 4 as ServiceType,
       isCompleted: false,
       customerEmail: "customer6@example.com",
-      customerName: "Peter Ekström"
+      customerName: "Peter Ekström",
+      licensePlate: "STU901"
     },
     { 
       id: 8,
@@ -96,7 +122,8 @@ export function useOverviewAppointments() {
       serviceType: 5 as ServiceType,
       isCompleted: false,
       customerEmail: "customer7@example.com",
-      customerName: "Sofia Berg"
+      customerName: "Sofia Berg",
+      licensePlate: "VWX234"
     }
   ]);
   
@@ -117,6 +144,31 @@ export function useOverviewAppointments() {
     );
     
     setFilteredJobs(filtered);
+    
+    // Update the stats based on the filtered appointments
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const todayAppointments = upcomingJobs.filter(job => 
+      !job.isCompleted && 
+      job.date >= today && 
+      job.date < tomorrow
+    ).length;
+    
+    const weekEndDate = addDays(today, 7);
+    const weekAppointments = upcomingJobs.filter(job => 
+      !job.isCompleted && 
+      job.date >= today && 
+      job.date < weekEndDate
+    ).length;
+    
+    setStats(prevStats => ({
+      ...prevStats,
+      todayAppointments,
+      weekAppointments
+    }));
   }, [timeView, upcomingJobs]);
   
   // Function to send email notification

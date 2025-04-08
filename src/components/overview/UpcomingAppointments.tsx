@@ -6,21 +6,9 @@ import { sv, de, enUS } from "date-fns/locale";
 import { SERVICE_TYPES, ServiceType } from "@/lib/serviceTypes";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
+import { Appointment, GroupedAppointments } from "@/hooks/useOverviewAppointments";
 
 type Locale = typeof sv | typeof de | typeof enUS;
-
-interface Appointment {
-  id: number;
-  date: Date;
-  vehicleModel: string;
-  serviceType: ServiceType;
-  isCompleted?: boolean;
-  customerName?: string;
-}
-
-interface GroupedAppointments {
-  [key: string]: Appointment[];
-}
 
 interface UpcomingAppointmentsProps {
   filteredJobs: Appointment[];
@@ -111,11 +99,9 @@ export function UpcomingAppointments({
                         <div className="text-sm text-muted-foreground">
                           {t(getServiceTypeTranslationKey(job.serviceType))}
                         </div>
-                        {job.customerName && (
-                          <div className="text-xs text-muted-foreground mt-1 font-semibold">
-                            {t('overview.customerAndVehicle')}: {job.customerName}
-                          </div>
-                        )}
+                        <div className="text-xs text-muted-foreground mt-1 font-semibold">
+                          {job.customerName} {job.licensePlate && `• ${job.licensePlate}`}
+                        </div>
                       </div>
                       {onMarkComplete && !job.isCompleted && (
                         <Button 
