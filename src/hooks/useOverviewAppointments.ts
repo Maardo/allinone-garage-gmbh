@@ -224,6 +224,14 @@ export function useOverviewAppointments() {
     }
   };
 
+  // Function to update total customers count
+  const updateTotalCustomers = (change: number) => {
+    setStats(currentStats => ({
+      ...currentStats,
+      totalCustomers: currentStats.totalCustomers + change
+    }));
+  };
+
   return {
     timeView,
     setTimeView,
@@ -231,6 +239,7 @@ export function useOverviewAppointments() {
     setStats,
     filteredJobs,
     upcomingJobs,
-    handleMarkComplete
+    handleMarkComplete,
+    updateTotalCustomers
   };
 }

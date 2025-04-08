@@ -130,7 +130,10 @@ export default function LoanerCarsPage() {
         isOpen={isAssignDialogOpen && selectedCar !== null}
         selectedCar={selectedCar}
         onOpenChange={(open) => setIsAssignDialogOpen(open)}
-        onAssign={handleAssign}
+        onAssign={() => {
+          handleAssign();
+          setIsAssignDialogOpen(false); // Close the dialog on confirmation
+        }}
         assignData={assignData}
         setAssignData={setAssignData}
       />

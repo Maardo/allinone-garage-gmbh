@@ -22,9 +22,10 @@ export default function Overview() {
     setTimeView, 
     stats, 
     filteredJobs, 
+    upcomingJobs,
     handleMarkComplete 
   } = useOverviewAppointments();
-  const { chartData } = useChartData();
+  const { chartData } = useChartData(upcomingJobs);
   
   const locale = dateLocales[language as keyof typeof dateLocales] || enUS;
   const jobsByDate = groupAppointmentsByDate(filteredJobs);

@@ -1,8 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Customer, Vehicle } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/LanguageContext";
+import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
 
 const MOCK_CUSTOMERS: Customer[] = [
   {
@@ -91,6 +92,7 @@ export function useCustomers() {
   const [customers, setCustomers] = useState<Customer[]>(MOCK_CUSTOMERS);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const { updateTotalCustomers } = useOverviewAppointments();
   const [newCustomer, setNewCustomer] = useState<Partial<Customer>>({
     name: "",
     email: "",
@@ -131,6 +133,9 @@ export function useCustomers() {
     };
     
     setCustomers([...customers, customer]);
+    // Update total customers count
+    updateTotalCustomers(1);
+    
     setNewCustomer({
       name: "",
       email: "",
@@ -174,6 +179,9 @@ export function useCustomers() {
     
     const updatedCustomers = customers.filter(c => c.id !== selectedCustomer.id);
     setCustomers(updatedCustomers);
+    
+    // Update total customers count
+    updateTotalCustomers(-1);
     
     toast({
       title: t('customer.deletedTitle'),
