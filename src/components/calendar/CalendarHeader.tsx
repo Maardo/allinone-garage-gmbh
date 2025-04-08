@@ -8,6 +8,7 @@ import { Appointment } from "@/lib/types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/context/LanguageContext";
+import { sv, de, enUS } from "date-fns/locale";
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -37,12 +38,23 @@ export function CalendarHeader({
   onChangeViewMode,
 }: CalendarHeaderProps) {
   const isMobile = useIsMobile();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  
+  // Select locale based on current language
+  const getLocale = () => {
+    switch (language) {
+      case 'sv': return sv;
+      case 'de': return de;
+      default: return enUS;
+    }
+  };
   
   const getViewTitle = () => {
+    const locale = getLocale();
+    
     switch (viewMode) {
       case 'day':
-        return format(currentDate, 'd MMMM yyyy');
+        return format(currentDate, 'd MMMM yyyy', { locale });
       case 'week':
         const startOfWeek = new Date(currentDate);
         startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1)); // Start from Monday
@@ -50,17 +62,17 @@ export function CalendarHeader({
         endOfWeek.setDate(startOfWeek.getDate() + 6); // End on Sunday
         
         if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
-          return `${format(startOfWeek, 'd')}–${format(endOfWeek, 'd MMM yyyy')}`;
+          return `${format(startOfWeek, 'd', { locale })}–${format(endOfWeek, 'd MMM yyyy', { locale })}`;
         }
         else if (startOfWeek.getFullYear() === endOfWeek.getFullYear()) {
-          return `${format(startOfWeek, 'd MMM')}–${format(endOfWeek, 'd MMM yyyy')}`;
+          return `${format(startOfWeek, 'd MMM', { locale })}–${format(endOfWeek, 'd MMM yyyy', { locale })}`;
         }
         else {
-          return `${format(startOfWeek, 'd MMM yyyy')}–${format(endOfWeek, 'd MMM yyyy')}`;
+          return `${format(startOfWeek, 'd MMM yyyy', { locale })}–${format(endOfWeek, 'd MMM yyyy', { locale })}`;
         }
       case 'month':
       default:
-        return format(currentDate, 'MMMM yyyy');
+        return format(currentDate, 'MMMM yyyy', { locale });
     }
   };
 

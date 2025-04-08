@@ -27,6 +27,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Save language to localStorage whenever it changes
     localStorage.setItem('language', language);
+    document.documentElement.setAttribute('lang', language);
   }, [language]);
 
   // Translation function that navigates the nested TRANSLATIONS object
