@@ -23,7 +23,6 @@ export const loanerCar = {
   licensePlatePlaceholder: 't.ex. ABC123',
   assignLoanerCar: 'Tilldela Lånebil',
   car: 'Bil',
-  cars: 'Bilar',
   customer: 'Kund',
   selectCustomer: 'Välj en kund',
   assignCar: 'Tilldela Bil',
@@ -44,18 +43,5 @@ export const loanerCar = {
   assign: 'Tilldela',
   status: 'Status',
   noAvailableCars: 'Inga tillgängliga bilar',
-  noAvailableCarsDescription: 'Det finns inga tillgängliga lånebilar för tillfället',
-  // New sorting and filtering translations
-  sortBy: 'Sortera efter',
-  filterBy: 'Filtrera',
-  sort: {
-    name: 'Bilmodell',
-    license: 'Registreringsnummer',
-    availability: 'Tillgänglighet'
-  },
-  filter: {
-    all: 'Alla Bilar',
-    available: 'Endast Tillgängliga',
-    loaned: 'Endast Utlånade'
-  }
+  noAvailableCarsDescription: 'Det finns inga tillgängliga lånebilar för tillfället'
 };

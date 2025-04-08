@@ -23,7 +23,6 @@ export const loanerCar = {
   licensePlatePlaceholder: 'e.g. ABC123',
   assignLoanerCar: 'Assign Loaner Car',
   car: 'Car',
-  cars: 'Cars',
   customer: 'Customer',
   selectCustomer: 'Select a customer',
   assignCar: 'Assign Car',
@@ -44,18 +43,5 @@ export const loanerCar = {
   assign: 'Assign',
   status: 'Status',
   noAvailableCars: 'No available cars',
-  noAvailableCarsDescription: 'There are no available loaner cars at the moment',
-  // New sorting and filtering translations
-  sortBy: 'Sort by',
-  filterBy: 'Filter',
-  sort: {
-    name: 'Car Model',
-    license: 'License Plate',
-    availability: 'Availability'
-  },
-  filter: {
-    all: 'All Cars',
-    available: 'Available Only',
-    loaned: 'Loaned Out Only'
-  }
+  noAvailableCarsDescription: 'There are no available loaner cars at the moment'
 };

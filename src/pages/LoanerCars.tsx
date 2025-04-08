@@ -1,5 +1,5 @@
 
-import { Car, ChevronDown, ChevronUp } from "lucide-react";
+import { Car } from "lucide-react";
 import { format } from "date-fns";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -13,9 +13,6 @@ import { useLoanerCars } from "@/components/loaner-cars/useLoanerCars";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SortOption, FilterOption } from "@/components/loaner-cars/useLoanerCarManagement";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function LoanerCarsPage() {
   const { t } = useLanguage();
@@ -42,25 +39,8 @@ export default function LoanerCarsPage() {
     handleAddCar,
     handleUpdateCar,
     handleDeleteCar,
-    handleAssignToAppointment,
-    sortBy,
-    sortOrder,
-    filterBy,
-    handleSort,
-    handleFilter
+    handleAssignToAppointment
   } = useLoanerCars();
-
-  // Helper function to render sort icon
-  const renderSortIcon = (column: SortOption) => {
-    if (sortBy === column) {
-      return sortOrder === 'asc' ? (
-        <ChevronUp className="h-4 w-4" />
-      ) : (
-        <ChevronDown className="h-4 w-4" />
-      );
-    }
-    return null;
-  };
 
   return (
     <Layout>
@@ -105,51 +85,6 @@ export default function LoanerCarsPage() {
         </div>
 
         <TabsContent value="cars" className="mt-0">
-          <div className="flex justify-between mb-4 items-center">
-            <div className="flex items-center space-x-4">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="flex items-center">
-                    {t('loanerCar.sortBy')}: {t(`loanerCar.sort.${sortBy}`)}
-                    {renderSortIcon(sortBy)}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <DropdownMenuItem onClick={() => handleSort('name')} className="flex justify-between">
-                    {t('loanerCar.sort.name')}
-                    {renderSortIcon('name')}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleSort('license')} className="flex justify-between">
-                    {t('loanerCar.sort.license')}
-                    {renderSortIcon('license')}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleSort('availability')} className="flex justify-between">
-                    {t('loanerCar.sort.availability')}
-                    {renderSortIcon('availability')}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <Select
-                value={filterBy}
-                onValueChange={(value) => handleFilter(value as FilterOption)}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder={t('loanerCar.filterBy')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('loanerCar.filter.all')}</SelectItem>
-                  <SelectItem value="available">{t('loanerCar.filter.available')}</SelectItem>
-                  <SelectItem value="loaned">{t('loanerCar.filter.loaned')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="text-sm text-muted-foreground">
-              {loanerCars.length} {loanerCars.length === 1 ? t('loanerCar.car') : t('loanerCar.cars')}
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {loanerCars.map((car) => (
               <LoanerCarCard
