@@ -44,10 +44,10 @@ export function AppointmentDetails({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
-        <div className="space-y-2">
-          <Label htmlFor="date" className="text-sm font-medium">
+    <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="date">
             {t('appointment.date')}
           </Label>
           <Input
@@ -56,19 +56,18 @@ export function AppointmentDetails({
             value={formData.date ? format(formData.date, "yyyy-MM-dd'T'HH:mm") : ''}
             onChange={handleDateChange}
             required
-            className="w-full"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="serviceType" className="text-sm font-medium">
+        <div className="space-y-1.5">
+          <Label htmlFor="serviceType">
             {t('appointment.serviceType')}
           </Label>
           <Select 
             value={formData.serviceType.toString()} 
             onValueChange={handleServiceTypeChange}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger>
               <SelectValue placeholder={t('serviceTypes.select')} />
             </SelectTrigger>
             <SelectContent>
@@ -99,8 +98,8 @@ export function AppointmentDetails({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="notes" className="text-sm font-medium">
+      <div className="space-y-1.5">
+        <Label htmlFor="notes">
           {t('appointment.notes')}
         </Label>
         <Textarea
@@ -108,8 +107,8 @@ export function AppointmentDetails({
           name="notes"
           value={formData.notes}
           onChange={handleChange}
-          rows={3}
-          className="w-full resize-none"
+          rows={2}
+          className="resize-none"
           placeholder={t('appointment.notes')}
         />
       </div>

@@ -9,6 +9,7 @@ import { VehicleDetails } from "./appointment/VehicleDetails";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface AppointmentFormProps {
   initialData?: Appointment;
@@ -35,15 +36,24 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
         />
       </Card>
 
-      <Card className="p-4">
-        <h2 className="text-base font-medium mb-3">{t('appointment.customerDetails')}</h2>
-        <CustomerDetails formData={formData} handleChange={handleChange} />
-      </Card>
-      
-      <Card className="p-4">
-        <h2 className="text-base font-medium mb-3">{t('appointment.vehicleDetails')}</h2>
-        <VehicleDetails formData={formData} handleChange={handleChange} />
-      </Card>
+      <Tabs defaultValue="customer" className="w-full">
+        <TabsList className="grid grid-cols-2 mb-2">
+          <TabsTrigger value="customer">{t('appointment.customerDetails')}</TabsTrigger>
+          <TabsTrigger value="vehicle">{t('appointment.vehicleDetails')}</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="customer" className="mt-0">
+          <Card className="p-4">
+            <CustomerDetails formData={formData} handleChange={handleChange} />
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="vehicle" className="mt-0">
+          <Card className="p-4">
+            <VehicleDetails formData={formData} handleChange={handleChange} />
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       <Card className="p-4 flex flex-col space-y-3">
         <h2 className="text-base font-medium">{t('appointment.status')}</h2>

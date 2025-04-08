@@ -13,11 +13,9 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
   const { t } = useLanguage();
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium">{t('appointment.customerDetails')}</h3>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
+    <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-1.5">
           <Label htmlFor="customerName">{t('appointment.customerName')}</Label>
           <Input
             id="customerName"
@@ -28,7 +26,7 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <Label htmlFor="customerPhone">{t('appointment.customerPhone')}</Label>
           <Input
             id="customerPhone"
@@ -38,20 +36,20 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
             required
           />
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="customerEmail">{t('appointment.customerEmail')}</Label>
-          <Input
-            id="customerEmail"
-            name="customerEmail"
-            type="email"
-            value={formData.customerEmail}
-            onChange={handleChange}
-          />
-        </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
+        <Label htmlFor="customerEmail">{t('appointment.customerEmail')}</Label>
+        <Input
+          id="customerEmail"
+          name="customerEmail"
+          type="email"
+          value={formData.customerEmail}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="space-y-1.5">
         <Label htmlFor="customerAddress.street">{t('appointment.customerAddress')}</Label>
         <Input
           id="customerAddress.street"
@@ -62,8 +60,8 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-1.5">
           <Label htmlFor="customerAddress.zipCode">{t('appointment.zipCode')}</Label>
           <Input
             id="customerAddress.zipCode"
@@ -73,7 +71,7 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <Label htmlFor="customerAddress.city">{t('appointment.city')}</Label>
           <Input
             id="customerAddress.city"
