@@ -11,5 +11,8 @@ export const overview = {
   month: 'Månad',
   count: 'st',
   jobsCount: '{count} bokningar',
-  noAppointments: 'Inga bokningar'
+  noAppointments: 'Inga bokningar',
+  markComplete: 'Markera som klar',
+  appointmentCompleted: 'Bokning slutförd',
+  appointmentMarkedComplete: 'Bokningen har markerats som slutförd'
 };

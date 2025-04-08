@@ -11,5 +11,8 @@ export const overview = {
   month: 'Monat',
   count: 'st',
   jobsCount: '{count} Termine',
-  noAppointments: 'Keine Termine'
+  noAppointments: 'Keine Termine',
+  markComplete: 'Als erledigt markieren',
+  appointmentCompleted: 'Termin abgeschlossen',
+  appointmentMarkedComplete: 'Der Termin wurde als abgeschlossen markiert'
 };

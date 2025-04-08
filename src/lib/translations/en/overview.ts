@@ -11,5 +11,8 @@ export const overview = {
   month: 'Month',
   count: 'pcs',
   jobsCount: '{count} appointments',
-  noAppointments: 'No appointments'
+  noAppointments: 'No appointments',
+  markComplete: 'Mark as complete',
+  appointmentCompleted: 'Appointment completed',
+  appointmentMarkedComplete: 'The appointment has been marked as complete'
 };

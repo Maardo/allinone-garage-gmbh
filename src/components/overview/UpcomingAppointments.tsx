@@ -4,6 +4,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { format } from "date-fns";
 import { sv, de, enUS } from "date-fns/locale";
 import { SERVICE_TYPES, ServiceType } from "@/lib/serviceTypes";
+import { Button } from "@/components/ui/button";
+import { CheckCircle } from "lucide-react";
 
 type Locale = typeof sv | typeof de | typeof enUS;
 
@@ -12,6 +14,7 @@ interface Appointment {
   date: Date;
   vehicleModel: string;
   serviceType: ServiceType;
+  isCompleted?: boolean;
 }
 
 interface GroupedAppointments {
@@ -24,6 +27,7 @@ interface UpcomingAppointmentsProps {
   setTimeView: (view: "week" | "month") => void;
   jobsByDate: GroupedAppointments;
   locale: Locale;
+  onMarkComplete?: (appointmentId: number) => void;
 }
 
 export function UpcomingAppointments({ 
@@ -31,7 +35,8 @@ export function UpcomingAppointments({
   timeView, 
   setTimeView, 
   jobsByDate, 
-  locale 
+  locale,
+  onMarkComplete
 }: UpcomingAppointmentsProps) {
   const { t } = useLanguage();
   
@@ -92,7 +97,7 @@ export function UpcomingAppointments({
                   {jobsByDate[date].map((job) => (
                     <div
                       key={job.id}
-                      className="flex items-center p-2 rounded-md bg-secondary/30"
+                      className={`flex items-center p-2 rounded-md ${job.isCompleted ? 'bg-green-50' : 'bg-secondary/30'}`}
                     >
                       <div
                         className="w-2 h-6 rounded-full mr-3"
@@ -106,6 +111,17 @@ export function UpcomingAppointments({
                           {t(getServiceTypeTranslationKey(job.serviceType))}
                         </div>
                       </div>
+                      {onMarkComplete && !job.isCompleted && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="mr-2 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          onClick={() => onMarkComplete(job.id)}
+                        >
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          {t('overview.markComplete')}
+                        </Button>
+                      )}
                       <div className="text-sm">
                         {format(job.date, "HH:mm")}
                       </div>

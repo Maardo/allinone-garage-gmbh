@@ -25,6 +25,11 @@ export function DeleteCarDialog({
 }: DeleteCarDialogProps) {
   const { t } = useLanguage();
   
+  const handleDelete = () => {
+    onDelete();
+    onOpenChange(false); // This will close the dialog automatically after deletion
+  };
+  
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -39,7 +44,7 @@ export function DeleteCarDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('actions.cancel')}
           </Button>
-          <Button variant="destructive" onClick={onDelete}>
+          <Button variant="destructive" onClick={handleDelete}>
             {t('actions.confirmDelete')}
           </Button>
         </DialogFooter>
