@@ -37,5 +37,7 @@ export const customer = {
   vehicle: 'Fahrzeug',
   noVehicles: 'Noch keine Fahrzeuge hinzugefügt',
   notProvided: 'Nicht angegeben',
-  noNotes: 'Keine Notizen verfügbar'
+  noNotes: 'Keine Notizen verfügbar',
+  addedVehicles: 'Hinzugefügte Fahrzeuge',
+  addVehicle: 'Fahrzeug hinzufügen'
 };

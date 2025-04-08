@@ -5,5 +5,6 @@ export const actions = {
   edit: 'Edit',
   delete: 'Delete',
   confirmDelete: 'Yes, Delete',
-  actions: 'Actions'
+  actions: 'Actions',
+  remove: 'Remove'
 };

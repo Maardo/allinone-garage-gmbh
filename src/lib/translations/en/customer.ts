@@ -37,5 +37,7 @@ export const customer = {
   vehicle: 'Vehicle',
   noVehicles: 'No vehicles added yet',
   notProvided: 'Not provided',
-  noNotes: 'No notes available'
+  noNotes: 'No notes available',
+  addedVehicles: 'Added Vehicles',
+  addVehicle: 'Add Vehicle'
 };

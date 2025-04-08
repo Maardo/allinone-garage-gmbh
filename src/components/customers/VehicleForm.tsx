@@ -42,7 +42,7 @@ export function VehicleForm({
                   </p>
                 </div>
                 <Button
-                  variant="ghost"
+                  variant="destructive"
                   size="sm"
                   onClick={() => onRemoveVehicle(vehicle.id)}
                 >
