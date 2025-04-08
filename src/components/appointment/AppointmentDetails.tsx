@@ -23,6 +23,18 @@ export function AppointmentDetails({
 }: AppointmentDetailsProps) {
   const { t } = useLanguage();
 
+  // Helper function to get the translation key for a service type
+  const getServiceTypeTranslationKey = (typeId: number): string => {
+    switch (typeId) {
+      case 1: return 'serviceTypes.maintenance';
+      case 2: return 'serviceTypes.repair';
+      case 3: return 'serviceTypes.inspection';
+      case 4: return 'serviceTypes.tireChange';
+      case 5: return 'serviceTypes.other';
+      default: return 'serviceTypes.other';
+    }
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -47,7 +59,9 @@ export function AppointmentDetails({
             {Object.values(SERVICE_TYPES).map((type) => (
               <div key={type.id} className="flex items-center space-x-2">
                 <RadioGroupItem value={type.id.toString()} id={`service-${type.id}`} />
-                <Label htmlFor={`service-${type.id}`}>{type.name}</Label>
+                <Label htmlFor={`service-${type.id}`}>
+                  {t(getServiceTypeTranslationKey(type.id))}
+                </Label>
               </div>
             ))}
           </RadioGroup>

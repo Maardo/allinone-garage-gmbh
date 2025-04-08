@@ -5,6 +5,18 @@ import { useLanguage } from "@/context/LanguageContext";
 export function ServiceTypeLegend() {
   const { t } = useLanguage();
   
+  // Helper function to get the translation key for a service type
+  const getServiceTypeTranslationKey = (typeId: number): string => {
+    switch (typeId) {
+      case 1: return 'serviceTypes.maintenance';
+      case 2: return 'serviceTypes.repair';
+      case 3: return 'serviceTypes.inspection';
+      case 4: return 'serviceTypes.tireChange';
+      case 5: return 'serviceTypes.other';
+      default: return 'serviceTypes.other';
+    }
+  };
+  
   return (
     <div className="mt-6 p-4 bg-card rounded-lg shadow-sm">
       <h3 className="font-medium mb-2 text-sm">{t('appointment.serviceType')}</h3>
@@ -18,7 +30,7 @@ export function ServiceTypeLegend() {
               className="h-3 w-3 rounded-full mr-1.5"
               style={{ backgroundColor: type.color }}
             ></div>
-            <span>{type.name}</span>
+            <span>{t(getServiceTypeTranslationKey(type.id))}</span>
           </div>
         ))}
       </div>

@@ -35,6 +35,18 @@ export function UpcomingAppointments({
 }: UpcomingAppointmentsProps) {
   const { t } = useLanguage();
   
+  // Helper function to get the translation key for a service type
+  const getServiceTypeTranslationKey = (typeId: number): string => {
+    switch (typeId) {
+      case 1: return 'serviceTypes.maintenance';
+      case 2: return 'serviceTypes.repair';
+      case 3: return 'serviceTypes.inspection';
+      case 4: return 'serviceTypes.tireChange';
+      case 5: return 'serviceTypes.other';
+      default: return 'serviceTypes.other';
+    }
+  };
+  
   return (
     <Card>
       <CardHeader className="text-center pb-0">
@@ -90,10 +102,7 @@ export function UpcomingAppointments({
                       <div className="flex-1">
                         <div className="font-medium">{job.vehicleModel}</div>
                         <div className="text-sm text-muted-foreground">
-                          {t(`serviceTypes.${job.serviceType === 1 ? 'maintenance' : 
-                             job.serviceType === 2 ? 'repair' : 
-                             job.serviceType === 3 ? 'inspection' : 
-                             job.serviceType === 4 ? 'tireChange' : 'other'}`)}
+                          {t(getServiceTypeTranslationKey(job.serviceType))}
                         </div>
                       </div>
                       <div className="text-sm">
