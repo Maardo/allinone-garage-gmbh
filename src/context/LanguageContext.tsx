@@ -12,9 +12,9 @@ type LanguageContextType = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const languageOptions = [
-  { value: 'en', label: 'English' },
   { value: 'sv', label: 'Svenska' },
-  { value: 'de', label: 'Deutsch' }
+  { value: 'de', label: 'Deutsch' },
+  { value: 'en', label: 'English' }
 ];
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {

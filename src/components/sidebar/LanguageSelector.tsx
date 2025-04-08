@@ -11,10 +11,17 @@ export function LanguageSelector() {
     setLanguage(lang);
   };
 
+  // Define languages in desired order
+  const orderedLanguages: [Language, string][] = [
+    ['sv', LANGUAGES.sv],
+    ['de', LANGUAGES.de],
+    ['en', LANGUAGES.en]
+  ];
+
   return (
     <div className="px-3 py-4 border-b border-sidebar-border">
       <div className="flex gap-2">
-        {Object.entries(LANGUAGES).map(([code, name]) => (
+        {orderedLanguages.map(([code, name]) => (
           <button
             key={code}
             onClick={() => handleLanguageChange(code as Language)}
