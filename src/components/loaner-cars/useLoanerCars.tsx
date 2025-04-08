@@ -5,7 +5,7 @@ import { LoanerCar } from '@/lib/types';
 import { useCalendar } from '@/hooks/useCalendar';
 import { INITIAL_LOANER_CARS } from './mockLoanerData';
 import { useLoanerCarOperations } from './useLoanerCarOperations';
-import { useLoanerCarManagement } from './useLoanerCarManagement';
+import { useLoanerCarManagement, SortOption, FilterOption } from './useLoanerCarManagement';
 
 export function useLoanerCars() {
   const [loanerCars, setLoanerCars] = useState<LoanerCar[]>(INITIAL_LOANER_CARS);
@@ -42,7 +42,13 @@ export function useLoanerCars() {
     handleAddCar,
     handleUpdateCar,
     handleDeleteCar,
-    getAvailableLoanerCars
+    getAvailableLoanerCars,
+    sortBy,
+    sortOrder,
+    filterBy,
+    handleSort,
+    handleFilter,
+    getSortedAndFilteredCars
   } = useLoanerCarManagement(loanerCars, setLoanerCars);
 
   // Fetch appointments that need loaner cars from local storage or API
@@ -57,7 +63,7 @@ export function useLoanerCars() {
   const handleDeleteCarWrapper = () => handleDeleteCar(selectedCar);
 
   return {
-    loanerCars,
+    loanerCars: getSortedAndFilteredCars(),
     selectedCar,
     setSelectedCar,
     isAssignDialogOpen,
@@ -77,6 +83,12 @@ export function useLoanerCars() {
     handleUpdateCar: handleUpdateCarWrapper,
     handleDeleteCar: handleDeleteCarWrapper,
     getAvailableLoanerCars,
-    handleAssignToAppointment
+    handleAssignToAppointment,
+    // Sorting and filtering
+    sortBy,
+    sortOrder,
+    filterBy,
+    handleSort,
+    handleFilter
   };
 }

@@ -22,11 +22,13 @@ export const loanerCar = {
   licensePlatePlaceholder: 'z.B. ABC123',
   assignLoanerCar: 'Leihwagen zuweisen',
   car: 'Auto',
+  cars: 'Autos',
   customer: 'Kunde',
   selectCustomer: 'Wählen Sie einen Kunden',
   assignCar: 'Auto zuweisen',
   assigned: 'Auto zugewiesen',
   assignedDescription: 'Das Auto wurde erfolgreich dem Kunden zugewiesen',
+  assignedToAppointmentDescription: 'Das Auto wurde dem Termin des Kunden zugewiesen',
   returned: 'Auto zurückgegeben',
   returnedDescription: 'Das Auto wurde als zurückgegeben markiert und ist jetzt verfügbar',
   added: 'Auto hinzugefügt',
@@ -34,5 +36,26 @@ export const loanerCar = {
   updated: 'Auto aktualisiert',
   updatedDescription: 'Die Autodaten wurden aktualisiert',
   deleted: 'Auto gelöscht',
-  deletedDescription: 'Das Auto wurde aus Ihrer Flotte entfernt'
+  deletedDescription: 'Das Auto wurde aus Ihrer Flotte entfernt',
+  management: 'Leihwagen-Management',
+  requestedCars: 'Angeforderte Autos',
+  noRequests: 'Keine Anfragen für Leihwagen im Moment',
+  requested: 'Angefordert',
+  assign: 'Zuweisen',
+  status: 'Status',
+  noAvailableCars: 'Keine verfügbaren Autos',
+  noAvailableCarsDescription: 'Es gibt derzeit keine verfügbaren Leihwagen',
+  // New sorting and filtering translations
+  sortBy: 'Sortieren nach',
+  filterBy: 'Filtern',
+  sort: {
+    name: 'Automodell',
+    license: 'Kennzeichen',
+    availability: 'Verfügbarkeit'
+  },
+  filter: {
+    all: 'Alle Autos',
+    available: 'Nur Verfügbare',
+    loaned: 'Nur Ausgeliehene'
+  }
 };
