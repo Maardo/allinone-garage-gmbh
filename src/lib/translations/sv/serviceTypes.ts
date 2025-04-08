@@ -1,0 +1,26 @@
+
+export const serviceTypes = {
+  title: 'Servicetyper',
+  subtitle: 'Konfigurera dina serviceerbjudanden',
+  maintenance: 'Underhåll',
+  repair: 'Reparation',
+  inspection: 'Inspektion',
+  tireChange: 'Däckbyte',
+  other: 'Övrigt',
+  edit: 'Redigera Servicetyp',
+  new: 'Ny Servicetyp',
+  select: 'Välj Servicetyp',
+  description: 'Tillgängliga Servicetyper',
+  createNew: 'Skapa Ny Servicetyp',
+  about: 'Lägg till en ny servicetyp att erbjuda dina kunder',
+  create: 'Skapa Servicetyp',
+  update: 'Uppdatera Servicetyp',
+  code: 'Servicekod',
+  name: 'Servicenamn',
+  desc: 'Beskrivning',
+  calendarColor: 'Kalenderfärg',
+  updated: 'Servicetyp uppdaterad',
+  created: 'Ny servicetyp skapad',
+  namePlaceholder: 'Ange servicenamn',
+  descPlaceholder: 'Ange servicebeskrivning'
+};

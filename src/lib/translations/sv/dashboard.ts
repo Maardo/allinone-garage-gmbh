@@ -1,0 +1,25 @@
+
+export const dashboard = {
+  welcome: 'Välkommen tillbaka',
+  summary: 'Här är en sammanfattning av din verkstad',
+  todayAppointments: 'Dagens Bokningar',
+  upcomingServices: 'Kommande Service',
+  quickActions: 'Snabbåtgärder',
+  createAppointment: 'Skapa Bokning',
+  addCustomer: 'Lägg till Kund',
+  viewCalendar: 'Visa Kalender',
+  recentCustomers: 'Senaste Kunderna',
+  statistics: 'Statistik',
+  appointmentsCompleted: 'Utförda bokningar denna månad',
+  averageServiceTime: 'Genomsnittlig servicetid',
+  pendingPayments: 'Väntande Betalningar',
+  availableLoanerCars: 'Tillgängliga Lånebilar',
+  completedToday: 'Slutförda Idag',
+  todaySchedule: 'Dagens Schema',
+  upcomingAppointmentsToday: 'Kommande bokningar för idag',
+  fullCalendar: 'Fullständig Kalender',
+  noAppointments: 'Inga bokningar schemalagda för idag',
+  schedule: 'Schema',
+  paymentRecords: 'Betalningshistorik',
+  commonTasks: 'Vanliga uppgifter och genvägar'
+};

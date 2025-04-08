@@ -1,0 +1,25 @@
+
+export const dashboard = {
+  welcome: 'Willkommen zurück',
+  summary: 'Hier ist eine Zusammenfassung Ihrer Werkstatt',
+  todayAppointments: 'Heutige Termine',
+  upcomingServices: 'Bevorstehende Services',
+  quickActions: 'Schnellaktionen',
+  createAppointment: 'Termin erstellen',
+  addCustomer: 'Kunde hinzufügen',
+  viewCalendar: 'Kalender anzeigen',
+  recentCustomers: 'Neueste Kunden',
+  statistics: 'Statistiken',
+  appointmentsCompleted: 'Erledigte Termine diesen Monat',
+  averageServiceTime: 'Durchschnittliche Servicezeit',
+  pendingPayments: 'Ausstehende Zahlungen',
+  availableLoanerCars: 'Verfügbare Leihwagen',
+  completedToday: 'Heute Abgeschlossen',
+  todaySchedule: 'Heutiger Zeitplan',
+  upcomingAppointmentsToday: 'Bevorstehende Termine für heute',
+  fullCalendar: 'Vollständiger Kalender',
+  noAppointments: 'Keine Termine für heute geplant',
+  schedule: 'Zeitplan',
+  paymentRecords: 'Zahlungsbelege',
+  commonTasks: 'Häufige Aufgaben und Verknüpfungen'
+};
