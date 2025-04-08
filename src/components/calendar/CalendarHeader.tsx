@@ -1,4 +1,3 @@
-
 import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, ChevronRight, PlusCircle, CalendarDays, CalendarCheck, Calendar as CalendarIcon2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,6 +21,7 @@ interface CalendarHeaderProps {
   setSelectedAppointment: (appointment: Appointment | null) => void;
   viewMode: 'day' | 'week' | 'month';
   onChangeViewMode: (mode: 'day' | 'week' | 'month') => void;
+  existingAppointments?: Appointment[];
 }
 
 export function CalendarHeader({
@@ -36,11 +36,11 @@ export function CalendarHeader({
   setSelectedAppointment,
   viewMode,
   onChangeViewMode,
+  existingAppointments,
 }: CalendarHeaderProps) {
   const isMobile = useIsMobile();
   const { t, language } = useLanguage();
   
-  // Select locale based on current language
   const getLocale = () => {
     switch (language) {
       case 'sv': return sv;

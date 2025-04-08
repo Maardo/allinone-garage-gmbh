@@ -50,4 +50,5 @@ export interface Appointment {
   isPaid: boolean;
   isCompleted: boolean;
   loanerCarId?: string;
+  needsLoanerCar?: boolean;
 }
