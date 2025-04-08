@@ -6,6 +6,7 @@ import { useAppointmentForm } from "@/hooks/useAppointmentForm";
 import { AppointmentDetails } from "./appointment/AppointmentDetails";
 import { CustomerDetails } from "./appointment/CustomerDetails";
 import { VehicleDetails } from "./appointment/VehicleDetails";
+import { Card } from "@/components/ui/card";
 
 interface AppointmentFormProps {
   initialData?: Appointment;
@@ -22,7 +23,7 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 pt-4">
+    <form onSubmit={handleSubmit} className="space-y-6 pt-4">
       <AppointmentDetails
         formData={formData}
         handleDateChange={handleDateChange}
@@ -35,7 +36,10 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
       <VehicleDetails formData={formData} handleChange={handleChange} />
 
       <div className="flex justify-end pt-4">
-        <Button type="submit">
+        <Button 
+          type="submit"
+          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md"
+        >
           {initialData ? t('appointment.update') : t('appointment.create')}
         </Button>
       </div>

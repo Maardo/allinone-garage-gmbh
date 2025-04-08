@@ -20,7 +20,7 @@ export function useAppointmentForm(initialData?: Appointment) {
       },
       vehicleInfo: "",
       vehicleMake: "",
-      vehicleModel: "",
+      vehicleModel: "", // Keeping this for backward compatibility with data structure
       vehicleLicense: "",
       vehicleVin: "",
       vehicleCarId: "",
