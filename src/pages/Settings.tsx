@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
@@ -38,7 +37,7 @@ export default function Settings() {
   };
 
   return (
-    <Layout title={t('pages.settings')} subtitle={t('common.manageSettings')}>
+    <Layout title={t('pages.settings.title')} subtitle={t('pages.settings.subtitle')}>
       <Tabs defaultValue="general" className="w-full">
         <TabsList className="mb-6">
           <TabsTrigger value="general">{t('common.general')}</TabsTrigger>
