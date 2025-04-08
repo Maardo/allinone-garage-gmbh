@@ -10,18 +10,32 @@ import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 
 interface AppointmentFormProps {
   initialData?: Appointment;
   onSubmit: (data: Appointment) => void;
+  existingAppointments?: Appointment[];
 }
 
-export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps) {
+export function AppointmentForm({ initialData, onSubmit, existingAppointments = [] }: AppointmentFormProps) {
   const { t } = useLanguage();
-  const { formData, handleChange, handleServiceTypeChange, handleDateChange, handleSwitchChange } = useAppointmentForm(initialData);
+  const { toast } = useToast();
+  const { formData, handleChange, handleServiceTypeChange, handleDateChange, handleSwitchChange, validateDateAvailability } = useAppointmentForm(initialData);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check for overlapping appointments
+    if (!validateDateAvailability(existingAppointments)) {
+      toast({
+        title: t('appointment.timeConflict'),
+        description: t('appointment.timeConflictDescription'),
+        variant: "destructive"
+      });
+      return;
+    }
+    
     onSubmit(formData);
   };
 
@@ -50,7 +64,7 @@ export function AppointmentForm({ initialData, onSubmit }: AppointmentFormProps)
         
         <TabsContent value="vehicle" className="mt-0">
           <Card className="p-4">
-            <VehicleDetails formData={formData} handleChange={handleChange} />
+            <VehicleDetails formData={formData} handleChange={handleChange} handleSwitchChange={handleSwitchChange} />
           </Card>
         </TabsContent>
       </Tabs>

@@ -26,5 +26,8 @@ export const appointment = {
   vehicleReady: 'Fahrzeug ist abholbereit',
   vehicleInProgress: 'Service wird durchgeführt',
   ready: 'Fertig',
-  ongoing: 'In Bearbeitung'
+  ongoing: 'In Bearbeitung',
+  needsLoanerCar: 'Kunde benötigt ein Leihfahrzeug',
+  timeConflict: 'Zeitkonflikt',
+  timeConflictDescription: 'Dieser Zeitraum ist bereits gebucht. Bitte wählen Sie eine andere Zeit.'
 };

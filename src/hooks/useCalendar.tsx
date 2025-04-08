@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { addDays, addMonths, addWeeks, startOfDay, startOfMonth, startOfWeek, subDays, subMonths, subWeeks } from "date-fns";
 import { Appointment } from "@/lib/types";
@@ -25,7 +26,8 @@ const MOCK_APPOINTMENTS: Appointment[] = [
     serviceType: 1,
     notes: "Annual service",
     isPaid: false,
-    isCompleted: false
+    isCompleted: false,
+    needsLoanerCar: false
   },
   {
     id: "2",
@@ -48,7 +50,8 @@ const MOCK_APPOINTMENTS: Appointment[] = [
     serviceType: 2,
     notes: "Engine repair",
     isPaid: true,
-    isCompleted: true
+    isCompleted: true,
+    needsLoanerCar: false
   },
   {
     id: "3",
@@ -72,7 +75,8 @@ const MOCK_APPOINTMENTS: Appointment[] = [
     notes: "Pre-purchase inspection",
     loanerCarId: "car1",
     isPaid: false,
-    isCompleted: false
+    isCompleted: false,
+    needsLoanerCar: true
   }
 ];
 
@@ -173,7 +177,8 @@ export function useCalendar() {
       serviceType: 1,
       notes: "",
       isPaid: false,
-      isCompleted: false
+      isCompleted: false,
+      needsLoanerCar: false
     });
     setIsDialogOpen(true);
   };

@@ -47,6 +47,7 @@ export default function CalendarPage() {
         setSelectedAppointment={setSelectedAppointment}
         viewMode={viewMode}
         onChangeViewMode={handleChangeViewMode}
+        existingAppointments={appointments}
       />
 
       <CalendarGrid 

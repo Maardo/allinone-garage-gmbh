@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Appointment, ServiceType } from "@/lib/types";
+import { addHours, areIntervalsOverlapping } from "date-fns";
 
 export function useAppointmentForm(initialData?: Appointment) {
   const [formData, setFormData] = useState<Appointment>(() => {
@@ -28,6 +29,8 @@ export function useAppointmentForm(initialData?: Appointment) {
       notes: "",
       isPaid: false,
       isCompleted: false,
+      needsLoanerCar: false,
+      loanerCarId: undefined,
     };
   });
 
@@ -63,11 +66,37 @@ export function useAppointmentForm(initialData?: Appointment) {
     setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
+  // Validate that the appointment time doesn't conflict with other appointments
+  const validateDateAvailability = (existingAppointments: Appointment[]) => {
+    // Skip validation if it's updating the same appointment
+    const appointmentsToCheck = existingAppointments.filter(
+      appointment => appointment.id !== formData.id
+    );
+
+    // Default appointment duration is 1 hour
+    const appointmentStart = formData.date;
+    const appointmentEnd = addHours(appointmentStart, 1);
+    
+    // Check for overlapping appointments
+    const hasConflict = appointmentsToCheck.some(existing => {
+      const existingStart = new Date(existing.date);
+      const existingEnd = addHours(existingStart, 1);
+      
+      return areIntervalsOverlapping(
+        { start: appointmentStart, end: appointmentEnd },
+        { start: existingStart, end: existingEnd }
+      );
+    });
+    
+    return !hasConflict;
+  };
+
   return {
     formData,
     handleChange,
     handleServiceTypeChange,
     handleDateChange,
     handleSwitchChange,
+    validateDateAvailability,
   };
 }

@@ -26,5 +26,8 @@ export const appointment = {
   vehicleReady: 'Vehicle is ready for pickup',
   vehicleInProgress: 'Service is in progress',
   ready: 'Ready',
-  ongoing: 'Ongoing'
+  ongoing: 'Ongoing',
+  needsLoanerCar: 'Customer needs a loaner car',
+  timeConflict: 'Time Conflict',
+  timeConflictDescription: 'This time slot is already booked. Please choose a different time.'
 };

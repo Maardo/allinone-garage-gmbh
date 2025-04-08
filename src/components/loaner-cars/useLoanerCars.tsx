@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { LoanerCar } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
@@ -11,7 +11,10 @@ const INITIAL_LOANER_CARS: LoanerCar[] = [
     id: "car1",
     name: "Volvo V60",
     license: "ABC123",
-    isAvailable: true
+    isAvailable: false,
+    assignedTo: "Erik Svensson", // Preassigned to match appointment with ID "3"
+    assignedFrom: new Date(new Date().setDate(new Date().getDate() + 3)),
+    assignedUntil: new Date(new Date().setDate(new Date().getDate() + 4))
   },
   {
     id: "car2",
@@ -21,6 +24,12 @@ const INITIAL_LOANER_CARS: LoanerCar[] = [
     assignedTo: "Johan Andersson",
     assignedFrom: new Date(new Date().setDate(new Date().getDate() - 2)),
     assignedUntil: new Date(new Date().setDate(new Date().getDate() + 2))
+  },
+  {
+    id: "car3",
+    name: "Volvo XC60",
+    license: "GHI456",
+    isAvailable: true
   }
 ];
 
@@ -51,6 +60,12 @@ export function useLoanerCars() {
     license: "",
     isAvailable: true
   });
+
+  // Fetch appointments that need loaner cars from local storage or API
+  useEffect(() => {
+    // This would be replaced with an actual API call in a real application
+    // For now we're working with the mocked data
+  }, []);
 
   const handleAssign = () => {
     if (!selectedCar || !assignData.customerId) return;
@@ -155,6 +170,11 @@ export function useLoanerCars() {
     });
   };
 
+  // Get available loaner cars (for appointment form)
+  const getAvailableLoanerCars = () => {
+    return loanerCars.filter(car => car.isAvailable);
+  };
+
   return {
     loanerCars,
     selectedCar,
@@ -173,6 +193,7 @@ export function useLoanerCars() {
     handleReturn,
     handleAddCar,
     handleUpdateCar,
-    handleDeleteCar
+    handleDeleteCar,
+    getAvailableLoanerCars
   };
 }

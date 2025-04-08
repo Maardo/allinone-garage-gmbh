@@ -3,13 +3,15 @@ import { Appointment } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface VehicleDetailsProps {
   formData: Appointment;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleSwitchChange: (name: string, checked: boolean) => void;
 }
 
-export function VehicleDetails({ formData, handleChange }: VehicleDetailsProps) {
+export function VehicleDetails({ formData, handleChange, handleSwitchChange }: VehicleDetailsProps) {
   const { t } = useLanguage();
 
   return (
@@ -60,6 +62,17 @@ export function VehicleDetails({ formData, handleChange }: VehicleDetailsProps) 
           onChange={handleChange}
           placeholder={t('vehicle.carIdPlaceholder')}
         />
+      </div>
+
+      <div className="flex items-center space-x-2 pt-2">
+        <Checkbox 
+          id="needsLoanerCar" 
+          checked={formData.needsLoanerCar || false}
+          onCheckedChange={(checked) => handleSwitchChange('needsLoanerCar', checked === true)}
+        />
+        <Label htmlFor="needsLoanerCar" className="text-sm font-medium cursor-pointer">
+          {t('appointment.needsLoanerCar')}
+        </Label>
       </div>
     </div>
   );

@@ -7,4 +7,5 @@ export interface LoanerCar {
   assignedTo?: string;
   assignedUntil?: Date;
   assignedFrom?: Date;
+  appointmentId?: string;
 }

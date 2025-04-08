@@ -26,5 +26,8 @@ export const appointment = {
   vehicleReady: 'Fordonet är redo för avhämtning',
   vehicleInProgress: 'Service pågår',
   ready: 'Färdig',
-  ongoing: 'Pågående'
+  ongoing: 'Pågående',
+  needsLoanerCar: 'Kunden behöver en lånebil',
+  timeConflict: 'Tidskonfikt',
+  timeConflictDescription: 'Denna tid är redan bokad. Välj en annan tid.'
 };
