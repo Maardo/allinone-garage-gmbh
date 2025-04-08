@@ -64,15 +64,18 @@ export function VehicleDetails({ formData, handleChange, handleSwitchChange }: V
         />
       </div>
 
-      <div className="flex items-center space-x-2 pt-2">
-        <Checkbox 
-          id="needsLoanerCar" 
-          checked={formData.needsLoanerCar || false}
-          onCheckedChange={(checked) => handleSwitchChange('needsLoanerCar', checked === true)}
-        />
-        <Label htmlFor="needsLoanerCar" className="text-sm font-medium cursor-pointer">
-          {t('appointment.needsLoanerCar')}
-        </Label>
+      <div className="mt-4 p-3 border rounded-md bg-blue-50">
+        <div className="flex items-center space-x-3">
+          <Checkbox 
+            id="needsLoanerCar" 
+            checked={formData.needsLoanerCar || false}
+            onCheckedChange={(checked) => handleSwitchChange('needsLoanerCar', checked === true)}
+            className="h-5 w-5"
+          />
+          <Label htmlFor="needsLoanerCar" className="text-base font-medium cursor-pointer">
+            {t('appointment.needsLoanerCar')}
+          </Label>
+        </div>
       </div>
     </div>
   );

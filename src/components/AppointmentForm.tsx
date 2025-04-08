@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 interface AppointmentFormProps {
   initialData?: Appointment;
@@ -90,6 +91,17 @@ export function AppointmentForm({ initialData, onSubmit, existingAppointments = 
             <span className="text-sm">{formData.isCompleted ? t('appointment.ready') : t('appointment.ongoing')}</span>
           </div>
         </div>
+
+        {formData.needsLoanerCar && (
+          <div className="mt-2 pt-2 border-t">
+            <div className="flex items-center space-x-2">
+              <Badge variant="outline" className="bg-blue-50 text-blue-700">
+                {formData.loanerCarId ? t('loanerCar.assigned') : t('loanerCar.requested')}
+              </Badge>
+              <span className="text-sm">{t('appointment.needsLoanerCar')}</span>
+            </div>
+          </div>
+        )}
       </Card>
 
       <div className="flex justify-end pt-2">

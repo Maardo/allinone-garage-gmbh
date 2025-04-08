@@ -2,6 +2,7 @@
 export const loanerCar = {
   manageSubtitle: 'Hantera din flotta av lånebilar',
   availableCars: 'Tillgängliga Bilar',
+  requestedCars: 'Önskade Lånebilar',
   addNew: 'Lägg Till Bil',
   available: 'Tillgänglig',
   readyToBeAssigned: 'Redo att tilldelas till en kund',
@@ -27,6 +28,7 @@ export const loanerCar = {
   assignCar: 'Tilldela Bil',
   assigned: 'Bil Tilldelad',
   assignedDescription: 'Bilen har framgångsrikt tilldelats kunden',
+  assignedToAppointmentDescription: 'Bilen har tilldelats kundens bokning',
   returned: 'Bil Återlämnad',
   returnedDescription: 'Bilen har markerats som återlämnad och är nu tillgänglig',
   added: 'Bil Tillagd',
@@ -34,5 +36,12 @@ export const loanerCar = {
   updated: 'Bil Uppdaterad',
   updatedDescription: 'Bilens uppgifter har uppdaterats',
   deleted: 'Bil Borttagen',
-  deletedDescription: 'Bilen har tagits bort från din flotta'
+  deletedDescription: 'Bilen har tagits bort från din flotta',
+  management: 'Hantering av Lånebilar',
+  noRequests: 'Inga förfrågningar om lånebilar just nu',
+  requested: 'Begärd',
+  assign: 'Tilldela',
+  status: 'Status',
+  noAvailableCars: 'Inga tillgängliga bilar',
+  noAvailableCarsDescription: 'Det finns inga tillgängliga lånebilar för tillfället'
 };

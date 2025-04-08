@@ -1,9 +1,10 @@
 
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { LoanerCar } from '@/lib/types';
+import { LoanerCar, Appointment } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from '@/context/LanguageContext';
+import { useCalendar } from '@/hooks/useCalendar';
 
 // Mock data for demo purposes
 const INITIAL_LOANER_CARS: LoanerCar[] = [
@@ -44,6 +45,7 @@ const MOCK_CUSTOMERS = [
 export function useLoanerCars() {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const { appointments, handleAddAppointment } = useCalendar();
   const [loanerCars, setLoanerCars] = useState<LoanerCar[]>(INITIAL_LOANER_CARS);
   const [selectedCar, setSelectedCar] = useState<LoanerCar | null>(null);
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
@@ -60,6 +62,11 @@ export function useLoanerCars() {
     license: "",
     isAvailable: true
   });
+
+  // Filter appointments that need loaner cars but don't have one assigned yet
+  const appointmentsNeedingCars = appointments.filter(
+    appointment => appointment.needsLoanerCar && !appointment.loanerCarId
+  );
 
   // Fetch appointments that need loaner cars from local storage or API
   useEffect(() => {
@@ -95,21 +102,101 @@ export function useLoanerCars() {
     });
   };
 
-  const handleReturn = (carId: string) => {
+  const handleAssignToAppointment = (appointmentId: string) => {
+    // Find the appointment
+    const appointment = appointments.find(app => app.id === appointmentId);
+    if (!appointment) return;
+    
+    // Find an available car
+    const availableCar = loanerCars.find(car => car.isAvailable);
+    if (!availableCar) {
+      toast({
+        title: t('loanerCar.noAvailableCars'),
+        description: t('loanerCar.noAvailableCarsDescription'),
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Update the car to assign it to the customer
     const updatedCars = loanerCars.map(car => {
-      if (car.id === carId) {
+      if (car.id === availableCar.id) {
         return {
           ...car,
-          isAvailable: true,
-          assignedTo: undefined,
-          assignedFrom: undefined,
-          assignedUntil: undefined
+          isAvailable: false,
+          assignedTo: appointment.customerName,
+          appointmentId: appointment.id,
+          assignedFrom: new Date(),
+          assignedUntil: new Date(new Date().setDate(new Date().getDate() + 3))
         };
       }
       return car;
     });
     
     setLoanerCars(updatedCars);
+    
+    // Update the appointment with the loaner car info
+    const updatedAppointment = {
+      ...appointment,
+      loanerCarId: availableCar.id
+    };
+    
+    handleAddAppointment(updatedAppointment);
+    
+    toast({
+      title: t('loanerCar.assigned'),
+      description: t('loanerCar.assignedToAppointmentDescription'),
+    });
+  };
+
+  const handleReturn = (carId: string) => {
+    // Get the car
+    const car = loanerCars.find(c => c.id === carId);
+    if (!car || !car.appointmentId) {
+      // Car is not linked to an appointment, just mark it as available
+      const updatedCars = loanerCars.map(c => {
+        if (c.id === carId) {
+          return {
+            ...c,
+            isAvailable: true,
+            assignedTo: undefined,
+            appointmentId: undefined,
+            assignedFrom: undefined,
+            assignedUntil: undefined
+          };
+        }
+        return c;
+      });
+      
+      setLoanerCars(updatedCars);
+    } else {
+      // Car is linked to an appointment, update both
+      const appointment = appointments.find(a => a.id === car.appointmentId);
+      if (appointment) {
+        const updatedAppointment = {
+          ...appointment,
+          loanerCarId: undefined
+        };
+        
+        handleAddAppointment(updatedAppointment);
+      }
+      
+      const updatedCars = loanerCars.map(c => {
+        if (c.id === carId) {
+          return {
+            ...c,
+            isAvailable: true,
+            assignedTo: undefined,
+            appointmentId: undefined,
+            assignedFrom: undefined,
+            assignedUntil: undefined
+          };
+        }
+        return c;
+      });
+      
+      setLoanerCars(updatedCars);
+    }
     
     toast({
       title: t('loanerCar.returned'),
@@ -185,6 +272,7 @@ export function useLoanerCars() {
     setIsEditDialogOpen,
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
+    appointmentsNeedingCars,
     assignData,
     setAssignData,
     newCar,
@@ -194,6 +282,7 @@ export function useLoanerCars() {
     handleAddCar,
     handleUpdateCar,
     handleDeleteCar,
-    getAvailableLoanerCars
+    getAvailableLoanerCars,
+    handleAssignToAppointment
   };
 }
