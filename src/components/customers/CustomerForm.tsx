@@ -81,7 +81,7 @@ export function CustomerForm({ customer, setCustomer, isEdit }: CustomerFormProp
     <Tabs defaultValue="details" className="mt-4">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="details">{t('customer.details')}</TabsTrigger>
-        <TabsTrigger value="vehicles">{t('customer.vehiclesTab')}</TabsTrigger>
+        <TabsTrigger value="vehiclesTab">{t('customer.vehiclesTab')}</TabsTrigger>
       </TabsList>
       
       <TabsContent value="details" className="space-y-4 py-4">
@@ -188,7 +188,7 @@ export function CustomerForm({ customer, setCustomer, isEdit }: CustomerFormProp
         </div>
       </TabsContent>
       
-      <TabsContent value="vehicles" className="space-y-4 py-4">
+      <TabsContent value="vehiclesTab" className="space-y-4 py-4">
         <VehicleForm 
           vehicles={customer.vehicles || []}
           newVehicle={newVehicle}

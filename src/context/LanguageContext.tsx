@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/lib/translations';
@@ -18,7 +19,7 @@ export const languageOptions = [
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
-    // Default language is Swedish
+    // Default language is now Swedish
     const savedLang = localStorage.getItem('language');
     return (savedLang as Language) || 'sv';
   });
