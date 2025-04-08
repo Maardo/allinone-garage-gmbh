@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
@@ -34,11 +33,21 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
         subtitle: subtitle 
       };
     }
+
+    const normalizedPageKey = pageKey.replace(/-/g, '');
     
-    return {
-      title: t(`pages.${pageKey}.title`),
-      subtitle: t(`pages.${pageKey}.subtitle`)
-    };
+    try {
+      return {
+        title: t(`pages.${pageKey}.title`) || t(`pages.${normalizedPageKey}.title`),
+        subtitle: t(`pages.${pageKey}.subtitle`) || t(`pages.${normalizedPageKey}.subtitle`)
+      };
+    } catch (e) {
+      console.error(`Translation missing for page: ${pageKey}`, e);
+      return {
+        title: pageKey,
+        subtitle: ''
+      };
+    }
   };
 
   const pageInfo = getPageInfo();

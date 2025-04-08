@@ -16,6 +16,10 @@ export const pages = {
     title: 'Leihwagen',
     subtitle: 'Verwalten Sie Ihre Leihwagenflotte'
   },
+  'loaner-cars': {
+    title: 'Leihwagen',
+    subtitle: 'Verwalten Sie Ihre Leihwagenflotte'
+  },
   serviceTypes: {
     title: 'Servicetypen',
     subtitle: 'Serviceangebote und Preise konfigurieren'

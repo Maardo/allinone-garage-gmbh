@@ -16,6 +16,10 @@ export const pages = {
     title: 'Lånebilar',
     subtitle: 'Hantera din flotta av lånebilar'
   },
+  'loaner-cars': {
+    title: 'Lånebilar',
+    subtitle: 'Hantera din flotta av lånebilar'
+  },
   serviceTypes: {
     title: 'Servicetyper',
     subtitle: 'Konfigurera serviceerbjudanden och prissättning'

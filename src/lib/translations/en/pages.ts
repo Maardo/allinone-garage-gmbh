@@ -16,6 +16,10 @@ export const pages = {
     title: 'Loaner Cars',
     subtitle: 'Manage your fleet of loaner vehicles'
   },
+  'loaner-cars': {
+    title: 'Loaner Cars',
+    subtitle: 'Manage your fleet of loaner vehicles'
+  },
   serviceTypes: {
     title: 'Service Types',
     subtitle: 'Configure service offerings and pricing'

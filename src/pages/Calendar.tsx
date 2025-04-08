@@ -6,6 +6,7 @@ import { CalendarGrid } from "@/components/calendar/CalendarGrid";
 import { ServiceTypeLegend } from "@/components/calendar/ServiceTypeLegend";
 import { Appointment } from "@/lib/types";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Mock data for demo purposes
 const MOCK_APPOINTMENTS: Appointment[] = [
@@ -82,6 +83,7 @@ const MOCK_APPOINTMENTS: Appointment[] = [
 ];
 
 export default function CalendarPage() {
+  const { t } = useLanguage();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>(MOCK_APPOINTMENTS);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
@@ -210,7 +212,7 @@ export default function CalendarPage() {
   };
 
   return (
-    <Layout title="Calendar" subtitle="Schedule and manage appointments">
+    <Layout>
       <CalendarHeader 
         currentDate={currentDate}
         onPrevMonth={handleNavigatePrev}
