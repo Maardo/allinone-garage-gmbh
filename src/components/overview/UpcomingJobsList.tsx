@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { format, addDays, addMonths, isAfter, isBefore } from "date-fns";
+import { sv, de, enUS } from 'date-fns/locale';
 import { SERVICE_TYPES } from "@/lib/serviceTypes";
 
 interface Job {
@@ -26,9 +27,9 @@ export function UpcomingJobsList({ jobs }: UpcomingJobsListProps) {
   // Get locale for date formatting
   const getLocale = () => {
     switch (language) {
-      case 'sv': return require('date-fns/locale').sv;
-      case 'de': return require('date-fns/locale').de;
-      default: return require('date-fns/locale').enUS;
+      case 'sv': return sv;
+      case 'de': return de;
+      default: return enUS;
     }
   };
 
