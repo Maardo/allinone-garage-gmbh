@@ -15,4 +15,3 @@ export type Language = 'en' | 'sv' | 'de';
 export * from './serviceTypes';
 export * from './customerTypes';
 export * from './loanerCarTypes';
-export * from './translations';
