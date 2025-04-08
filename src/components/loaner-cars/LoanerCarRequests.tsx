@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
 import { Appointment } from "@/lib/types";
+import { Calendar, Clock, Car } from "lucide-react";
 
 interface LoanerCarRequestsProps {
   appointments: Appointment[];
@@ -16,8 +17,9 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
   
   if (appointments.length === 0) {
     return (
-      <div className="text-center py-6 text-muted-foreground">
-        {t('loanerCar.noRequests')}
+      <div className="text-center py-12 text-muted-foreground">
+        <Car className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-20" />
+        <p className="text-lg">{t('loanerCar.noRequests')}</p>
       </div>
     );
   }
@@ -26,26 +28,33 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{t('appointment.customerName')}</TableHead>
-          <TableHead>{t('appointment.date')}</TableHead>
-          <TableHead>{t('appointment.vehicleInfo')}</TableHead>
-          <TableHead>{t('loanerCar.status')}</TableHead>
+          <TableHead className="font-semibold">{t('appointment.customerName')}</TableHead>
+          <TableHead className="font-semibold">{t('appointment.date')}</TableHead>
+          <TableHead className="font-semibold">{t('appointment.vehicleInfo')}</TableHead>
+          <TableHead className="font-semibold">{t('loanerCar.status')}</TableHead>
           <TableHead className="w-[100px]"></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {appointments.map((appointment) => (
-          <TableRow key={appointment.id}>
+          <TableRow key={appointment.id} className="hover:bg-blue-50/50">
             <TableCell className="font-medium">{appointment.customerName}</TableCell>
-            <TableCell>{format(new Date(appointment.date), "yyyy-MM-dd HH:mm")}</TableCell>
+            <TableCell>
+              <div className="flex items-center gap-1">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span>{format(new Date(appointment.date), "yyyy-MM-dd")}</span>
+                <Clock className="h-4 w-4 ml-2 text-muted-foreground" />
+                <span>{format(new Date(appointment.date), "HH:mm")}</span>
+              </div>
+            </TableCell>
             <TableCell>{appointment.vehicleInfo || `${appointment.vehicleMake} ${appointment.vehicleLicense || ''}`}</TableCell>
             <TableCell>
               {appointment.loanerCarId ? (
-                <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50">
+                <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50 border-green-200">
                   {t('loanerCar.assigned')}
                 </Badge>
               ) : (
-                <Badge variant="outline" className="bg-amber-50 text-amber-700 hover:bg-amber-50">
+                <Badge variant="outline" className="bg-amber-50 text-amber-700 hover:bg-amber-50 border-amber-200">
                   {t('loanerCar.requested')}
                 </Badge>
               )}
@@ -54,7 +63,7 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
               {!appointment.loanerCarId && (
                 <Button 
                   size="sm" 
-                  variant="outline"
+                  className="bg-blue-600 hover:bg-blue-700"
                   onClick={() => onAssign(appointment.id)}
                 >
                   {t('loanerCar.assign')}

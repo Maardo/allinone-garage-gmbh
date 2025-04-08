@@ -4,6 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Car } from "lucide-react";
 
 interface VehicleDetailsProps {
   formData: Appointment;
@@ -64,15 +65,16 @@ export function VehicleDetails({ formData, handleChange, handleSwitchChange }: V
         />
       </div>
 
-      <div className="mt-4 p-3 border rounded-md bg-blue-50">
+      <div className="mt-6 p-4 border-2 border-blue-200 rounded-lg bg-blue-50 shadow-sm">
         <div className="flex items-center space-x-3">
           <Checkbox 
             id="needsLoanerCar" 
             checked={formData.needsLoanerCar || false}
             onCheckedChange={(checked) => handleSwitchChange('needsLoanerCar', checked === true)}
-            className="h-5 w-5"
+            className="h-6 w-6 border-2 border-blue-400"
           />
-          <Label htmlFor="needsLoanerCar" className="text-base font-medium cursor-pointer">
+          <Label htmlFor="needsLoanerCar" className="text-lg font-medium cursor-pointer flex items-center gap-2">
+            <Car className="h-5 w-5 text-blue-600" />
             {t('appointment.needsLoanerCar')}
           </Label>
         </div>

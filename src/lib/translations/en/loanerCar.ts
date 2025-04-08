@@ -2,6 +2,7 @@
 export const loanerCar = {
   manageSubtitle: 'Manage your fleet of loaner vehicles',
   availableCars: 'Available Cars',
+  requestedCars: 'Requested Cars',
   addNew: 'Add New Car',
   available: 'Available',
   readyToBeAssigned: 'Ready to be assigned to a customer',
@@ -27,6 +28,7 @@ export const loanerCar = {
   assignCar: 'Assign Car',
   assigned: 'Car Assigned',
   assignedDescription: 'The car has been successfully assigned to the customer',
+  assignedToAppointmentDescription: 'The car has been assigned to the customer\'s appointment',
   returned: 'Car Returned',
   returnedDescription: 'The car has been marked as returned and is now available',
   added: 'Car Added',
@@ -34,5 +36,12 @@ export const loanerCar = {
   updated: 'Car Updated',
   updatedDescription: 'The car details have been updated',
   deleted: 'Car Deleted',
-  deletedDescription: 'The car has been removed from your fleet'
+  deletedDescription: 'The car has been removed from your fleet',
+  management: 'Loaner Car Management',
+  noRequests: 'No loaner car requests at the moment',
+  requested: 'Requested',
+  assign: 'Assign',
+  status: 'Status',
+  noAvailableCars: 'No available cars',
+  noAvailableCarsDescription: 'There are no available loaner cars at the moment'
 };

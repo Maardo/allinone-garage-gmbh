@@ -8,7 +8,6 @@ import { LoanerCarCard } from "@/components/loaner-cars/LoanerCarCard";
 import { AssignDialog } from "@/components/loaner-cars/AssignDialog";
 import { EditCarDialog } from "@/components/loaner-cars/EditCarDialog";
 import { DeleteCarDialog } from "@/components/loaner-cars/DeleteCarDialog";
-import { LoanerCarsLegend } from "@/components/loaner-cars/LoanerCarsLegend";
 import { LoanerCarRequests } from "@/components/loaner-cars/LoanerCarRequests";
 import { useLoanerCars } from "@/components/loaner-cars/useLoanerCars";
 import { useLanguage } from "@/context/LanguageContext";
@@ -113,10 +112,6 @@ export default function LoanerCarsPage() {
                 isAdmin={isAdmin}
               />
             ))}
-          </div>
-
-          <div className="flex justify-between items-center">
-            <LoanerCarsLegend />
           </div>
         </TabsContent>
 
