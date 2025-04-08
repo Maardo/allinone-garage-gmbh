@@ -90,7 +90,10 @@ export function UpcomingAppointments({
                       <div className="flex-1">
                         <div className="font-medium">{job.vehicleModel}</div>
                         <div className="text-sm text-muted-foreground">
-                          {t(`serviceTypes.${SERVICE_TYPES[job.serviceType].name.toLowerCase()}`)}
+                          {t(`serviceTypes.${job.serviceType === 1 ? 'maintenance' : 
+                             job.serviceType === 2 ? 'repair' : 
+                             job.serviceType === 3 ? 'inspection' : 
+                             job.serviceType === 4 ? 'tireChange' : 'other'}`)}
                         </div>
                       </div>
                       <div className="text-sm">
