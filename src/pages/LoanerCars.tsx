@@ -12,7 +12,6 @@ import { LoanerCarRequests } from "@/components/loaner-cars/LoanerCarRequests";
 import { useLoanerCars } from "@/components/loaner-cars/useLoanerCars";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function LoanerCarsPage() {
   const { t } = useLanguage();
@@ -44,15 +43,9 @@ export default function LoanerCarsPage() {
 
   return (
     <Layout>
-      <Tabs defaultValue="cars">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center space-x-4">
-            <h2 className="text-xl font-medium">{t('loanerCar.management')}</h2>
-            <TabsList>
-              <TabsTrigger value="cars">{t('loanerCar.availableCars')}</TabsTrigger>
-              <TabsTrigger value="requests">{t('loanerCar.requestedCars')}</TabsTrigger>
-            </TabsList>
-          </div>
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-medium">{t('loanerCar.management')}</h2>
           
           {isAdmin && (
             <Dialog open={isEditDialogOpen && !selectedCar} onOpenChange={(open) => {
@@ -84,7 +77,9 @@ export default function LoanerCarsPage() {
           )}
         </div>
 
-        <TabsContent value="cars" className="mt-0">
+        {/* Available and Loaned Cars Grid */}
+        <div>
+          <h3 className="text-lg font-medium mb-4">{t('loanerCar.availableCars')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {loanerCars.map((car) => (
               <LoanerCarCard
@@ -113,17 +108,22 @@ export default function LoanerCarsPage() {
               />
             ))}
           </div>
-        </TabsContent>
+        </div>
 
-        <TabsContent value="requests" className="mt-0">
-          <div className="border rounded-md">
+        {/* Requested Loaner Cars Section */}
+        {appointmentsNeedingCars.length > 0 && (
+          <div className="border rounded-md bg-blue-50/50 p-4">
+            <h3 className="text-lg font-medium mb-4 flex items-center text-blue-800">
+              <Car className="h-5 w-5 mr-2 text-blue-600" />
+              {t('loanerCar.requestedCars')}
+            </h3>
             <LoanerCarRequests 
               appointments={appointmentsNeedingCars} 
               onAssign={handleAssignToAppointment} 
             />
           </div>
-        </TabsContent>
-      </Tabs>
+        )}
+      </div>
 
       {/* Dialogs */}
       <AssignDialog 

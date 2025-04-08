@@ -31,12 +31,12 @@ export function LoanerCarCard({
     <Card 
       className={cn(
         "overflow-hidden transition-all duration-300 hover:shadow-md border-2",
-        car.isAvailable ? "border-green-500" : "border-amber-500"
+        car.isAvailable ? "border-green-500" : "border-amber-600"
       )}
     >
       <CardHeader className={cn(
         "pb-2",
-        car.isAvailable ? "bg-green-100" : "bg-amber-100"
+        car.isAvailable ? "bg-green-100" : "bg-amber-200"
       )}>
         <CardTitle className="flex justify-between items-center">
           <div className="flex items-center">
@@ -48,14 +48,17 @@ export function LoanerCarCard({
             className={cn(
               car.isAvailable 
                 ? "border-green-500 text-green-700 bg-green-50 font-bold" 
-                : "border-amber-500 text-amber-700 bg-amber-50 font-bold"
+                : "border-amber-600 text-amber-900 bg-amber-100 font-bold"
             )}
           >
             {car.isAvailable ? t('loanerCar.available') : t('loanerCar.loanedOut')}
           </Badge>
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-4">
+      <CardContent className={cn(
+        "pt-4",
+        !car.isAvailable && "bg-amber-50"
+      )}>
         <div className="flex flex-col space-y-2">
           <div className="flex items-center text-sm">
             <span className="font-medium min-w-24">{t('loanerCar.licensePlate')}:</span>
@@ -67,8 +70,8 @@ export function LoanerCarCard({
               <div className="flex items-center text-sm">
                 <span className="font-medium min-w-24">{t('loanerCar.assignedTo')}:</span>
                 <div className="flex items-center">
-                  <User className="h-4 w-4 mr-1 text-muted-foreground" />
-                  {car.assignedTo}
+                  <User className="h-4 w-4 mr-1 text-amber-700" />
+                  <span className="font-medium text-amber-900">{car.assignedTo}</span>
                 </div>
               </div>
               
@@ -76,7 +79,7 @@ export function LoanerCarCard({
                 <div className="flex items-center text-sm">
                   <span className="font-medium min-w-24">{t('loanerCar.startDate')}:</span>
                   <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-1 text-muted-foreground" />
+                    <Calendar className="h-4 w-4 mr-1 text-amber-700" />
                     {format(new Date(car.assignedFrom), "PPP")}
                   </div>
                 </div>
@@ -86,7 +89,7 @@ export function LoanerCarCard({
                 <div className="flex items-center text-sm">
                   <span className="font-medium min-w-24">{t('loanerCar.returnDate')}:</span>
                   <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-1 text-muted-foreground" />
+                    <Calendar className="h-4 w-4 mr-1 text-amber-700" />
                     {format(new Date(car.assignedUntil), "PPP")}
                   </div>
                 </div>
@@ -113,6 +116,7 @@ export function LoanerCarCard({
               <Button 
                 size="sm" 
                 variant="outline" 
+                className="border-amber-600 text-amber-700 hover:bg-amber-100"
                 onClick={() => onReturn(car.id)}
               >
                 {t('loanerCar.markAsReturned')}

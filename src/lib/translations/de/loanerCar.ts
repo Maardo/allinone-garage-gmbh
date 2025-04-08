@@ -2,6 +2,7 @@
 export const loanerCar = {
   manageSubtitle: 'Verwalten Sie Ihre Leihwagenflotte',
   availableCars: 'Verfügbare Autos',
+  requestedCars: 'Angeforderte Autos',
   addNew: 'Auto Hinzufügen',
   available: 'Verfügbar',
   readyToBeAssigned: 'Bereit für die Zuweisung an einen Kunden',
@@ -27,6 +28,7 @@ export const loanerCar = {
   assignCar: 'Auto zuweisen',
   assigned: 'Auto zugewiesen',
   assignedDescription: 'Das Auto wurde erfolgreich dem Kunden zugewiesen',
+  assignedToAppointmentDescription: 'Das Auto wurde dem Termin des Kunden zugewiesen',
   returned: 'Auto zurückgegeben',
   returnedDescription: 'Das Auto wurde als zurückgegeben markiert und ist jetzt verfügbar',
   added: 'Auto hinzugefügt',
@@ -34,5 +36,12 @@ export const loanerCar = {
   updated: 'Auto aktualisiert',
   updatedDescription: 'Die Autodaten wurden aktualisiert',
   deleted: 'Auto gelöscht',
-  deletedDescription: 'Das Auto wurde aus Ihrer Flotte entfernt'
+  deletedDescription: 'Das Auto wurde aus Ihrer Flotte entfernt',
+  management: 'Leihwagenmanagement',
+  noRequests: 'Keine Anfragen für Leihwagen im Moment',
+  requested: 'Angefordert',
+  assign: 'Zuweisen',
+  status: 'Status',
+  noAvailableCars: 'Keine verfügbaren Autos',
+  noAvailableCarsDescription: 'Es gibt derzeit keine verfügbaren Leihwagen'
 };
