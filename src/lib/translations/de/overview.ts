@@ -6,10 +6,10 @@ export const overview = {
   completedJobs: 'Abgeschlossene Arbeiten',
   upcomingAppointments: 'Bevorstehende Termine',
   appointments: 'Termine',
-  upcomingJobs: 'Bevorstehende Aufträge',
+  upcomingJobs: 'Bevorstehende Termine',
   week: 'Woche',
   month: 'Monat',
   count: 'st',
-  jobsCount: '{count} Aufträge',
+  jobsCount: '{count} Termine',
   noAppointments: 'Keine Termine'
 };

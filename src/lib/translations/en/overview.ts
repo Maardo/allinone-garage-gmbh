@@ -6,10 +6,10 @@ export const overview = {
   completedJobs: 'Completed Jobs',
   upcomingAppointments: 'Upcoming Appointments',
   appointments: 'Appointments',
-  upcomingJobs: 'Upcoming Jobs',
+  upcomingJobs: 'Upcoming Appointments',
   week: 'Week',
   month: 'Month',
   count: 'pcs',
-  jobsCount: '{count} jobs',
+  jobsCount: '{count} appointments',
   noAppointments: 'No appointments'
 };

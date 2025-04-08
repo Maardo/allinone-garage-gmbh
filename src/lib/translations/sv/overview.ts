@@ -6,10 +6,10 @@ export const overview = {
   completedJobs: 'Utförda Arbeten',
   upcomingAppointments: 'Kommande Bokningar',
   appointments: 'Bokningar',
-  upcomingJobs: 'Kommande Jobb',
+  upcomingJobs: 'Kommande Bokningar',
   week: 'Vecka',
   month: 'Månad',
   count: 'st',
-  jobsCount: '{count} jobb',
+  jobsCount: '{count} bokningar',
   noAppointments: 'Inga bokningar'
 };

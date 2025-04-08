@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,7 +34,6 @@ export default function Overview() {
   const { t, language } = useLanguage();
   const [timeView, setTimeView] = useState<"week" | "month">("week");
   
-  // Mock data - in a real app, this would come from your backend
   const stats = {
     todayAppointments: 3,
     weekAppointments: 15,
@@ -43,7 +41,6 @@ export default function Overview() {
     completedJobs: 843
   };
   
-  // Mock chart data - total upcoming appointments by service type
   const chartData = [
     { name: t('serviceTypes.maintenance'), value: 25, fill: SERVICE_TYPES[1].color },
     { name: t('serviceTypes.repair'), value: 20, fill: SERVICE_TYPES[2].color },
@@ -52,7 +49,6 @@ export default function Overview() {
     { name: t('serviceTypes.other'), value: 5, fill: SERVICE_TYPES[5].color }
   ];
   
-  // Mock upcoming jobs data
   const upcomingJobs = [
     { 
       id: 1,
@@ -104,7 +100,6 @@ export default function Overview() {
     }
   ];
   
-  // Filter jobs based on selected time view
   const [filteredJobs, setFilteredJobs] = useState<typeof upcomingJobs>([]);
   
   useEffect(() => {
@@ -124,7 +119,6 @@ export default function Overview() {
     setFilteredJobs(filtered);
   }, [timeView]);
   
-  // Group jobs by date for display
   const jobsByDate = filteredJobs.reduce((acc, job) => {
     const dateStr = format(job.date, 'yyyy-MM-dd');
     if (!acc[dateStr]) {
@@ -134,7 +128,6 @@ export default function Overview() {
     return acc;
   }, {} as Record<string, typeof upcomingJobs>);
   
-  // Get current locale for date formatting
   const locale = dateLocales[language as keyof typeof dateLocales] || enUS;
 
   return (
@@ -191,14 +184,12 @@ export default function Overview() {
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div className="flex flex-col">
+          <CardHeader>
+            <div className="flex flex-col items-center text-center">
+              <span className="text-4xl font-bold mb-2">{filteredJobs.length}</span>
               <CardTitle>{t('overview.upcomingJobs')}</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">
-                {t('overview.jobsCount').replace('{count}', filteredJobs.length.toString())}
-              </p>
             </div>
-            <div className="flex space-x-2">
+            <div className="flex justify-center mt-4 space-x-2">
               <Button 
                 variant={timeView === "week" ? "default" : "outline"} 
                 size="sm" 
@@ -228,7 +219,6 @@ export default function Overview() {
                       <Table>
                         <TableBody>
                           {jobs.map(job => {
-                            // Get the service type name in lowercase
                             const serviceTypeName = SERVICE_TYPES[job.serviceType].name.toLowerCase();
                             
                             return (
