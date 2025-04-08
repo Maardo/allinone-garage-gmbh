@@ -9,5 +9,7 @@ export const overview = {
   upcomingJobs: 'Bevorstehende Aufträge',
   week: 'Woche',
   month: 'Monat',
-  count: 'st'
+  count: 'st',
+  jobsCount: '{count} Aufträge',
+  noAppointments: 'Keine Termine'
 };

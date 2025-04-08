@@ -192,7 +192,12 @@ export default function Overview() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>{t('overview.upcomingJobs')}</CardTitle>
+            <div className="flex flex-col">
+              <CardTitle>{t('overview.upcomingJobs')}</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                {t('overview.jobsCount').replace('{count}', filteredJobs.length.toString())}
+              </p>
+            </div>
             <div className="flex space-x-2">
               <Button 
                 variant={timeView === "week" ? "default" : "outline"} 
@@ -222,27 +227,32 @@ export default function Overview() {
                       </div>
                       <Table>
                         <TableBody>
-                          {jobs.map(job => (
-                            <TableRow key={job.id}>
-                              <TableCell className="w-20">
-                                {format(job.date, 'HH:mm')}
-                              </TableCell>
-                              <TableCell className="font-medium">
-                                {job.vehicleModel}
-                              </TableCell>
-                              <TableCell className="text-right">
-                                <div 
-                                  className="inline-flex px-2 py-1 rounded-md text-xs font-medium"
-                                  style={{ 
-                                    backgroundColor: `${SERVICE_TYPES[job.serviceType].color}20`,
-                                    color: SERVICE_TYPES[job.serviceType].color
-                                  }}
-                                >
-                                  {t(`serviceTypes.${SERVICE_TYPES[job.serviceType].name.toLowerCase()}`)}
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                          {jobs.map(job => {
+                            // Get the service type name in lowercase
+                            const serviceTypeName = SERVICE_TYPES[job.serviceType].name.toLowerCase();
+                            
+                            return (
+                              <TableRow key={job.id}>
+                                <TableCell className="w-20">
+                                  {format(job.date, 'HH:mm')}
+                                </TableCell>
+                                <TableCell className="font-medium">
+                                  {job.vehicleModel}
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  <div 
+                                    className="inline-flex px-2 py-1 rounded-md text-xs font-medium"
+                                    style={{ 
+                                      backgroundColor: `${SERVICE_TYPES[job.serviceType].color}20`,
+                                      color: SERVICE_TYPES[job.serviceType].color
+                                    }}
+                                  >
+                                    {t(`serviceTypes.${serviceTypeName}`)}
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                         </TableBody>
                       </Table>
                     </div>
@@ -251,10 +261,7 @@ export default function Overview() {
               </div>
             ) : (
               <div className="p-6 text-center text-muted-foreground">
-                {timeView === "week" 
-                  ? "No upcoming appointments this week" 
-                  : "No upcoming appointments this month"
-                }
+                {t('overview.noAppointments') + (timeView === "week" ? " " + t('overview.week').toLowerCase() : " " + t('overview.month').toLowerCase())}
               </div>
             )}
           </CardContent>

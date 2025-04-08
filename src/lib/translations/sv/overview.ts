@@ -9,5 +9,7 @@ export const overview = {
   upcomingJobs: 'Kommande Jobb',
   week: 'Vecka',
   month: 'Månad',
-  count: 'st'
+  count: 'st',
+  jobsCount: '{count} jobb',
+  noAppointments: 'Inga bokningar'
 };
