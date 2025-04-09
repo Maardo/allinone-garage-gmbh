@@ -6,5 +6,8 @@ export const actions = {
   delete: 'Delete',
   confirmDelete: 'Yes, Delete',
   actions: 'Actions',
-  remove: 'Remove'
+  remove: 'Remove',
+  undo: 'Undo',
+  undone: 'Undone',
+  changesReverted: 'Changes have been reverted'
 };

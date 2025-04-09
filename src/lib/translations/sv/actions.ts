@@ -6,5 +6,8 @@ export const actions = {
   delete: 'Ta Bort',
   confirmDelete: 'Ja, Ta Bort',
   actions: 'Åtgärder',
-  remove: 'Ta Bort'
+  remove: 'Ta Bort',
+  undo: 'Ångra',
+  undone: 'Ångrad',
+  changesReverted: 'Ändringar har återställts'
 };

@@ -31,30 +31,30 @@ export function CustomerTable({ customers, isAdmin, onEdit, onDelete }: Customer
     return (
       <div className="divide-y">
         {customers.map((customer) => (
-          <div key={customer.id} className="p-4">
-            <div className="flex justify-between items-start mb-2">
-              <div className="font-medium flex items-center">
-                <User className="h-4 w-4 mr-2 text-muted-foreground" />
+          <div key={customer.id} className="p-2">
+            <div className="flex justify-between items-start mb-1">
+              <div className="font-medium flex items-center text-sm">
+                <User className="h-3 w-3 mr-1 text-muted-foreground" />
                 {customer.name}
               </div>
               
               {isAdmin && (
                 <div className="flex gap-1">
-                  <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => onEdit(customer)}>
-                    <Edit className="h-4 w-4" />
+                  <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => onEdit(customer)}>
+                    <Edit className="h-3 w-3" />
                   </Button>
-                  <Button variant="destructive" size="icon" className="h-8 w-8" onClick={() => onDelete(customer)}>
-                    <Trash2 className="h-4 w-4" />
+                  <Button variant="destructive" size="icon" className="h-6 w-6" onClick={() => onDelete(customer)}>
+                    <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
               )}
             </div>
             
-            <div className="space-y-2 text-sm">
+            <div className="grid grid-cols-2 gap-1 text-xs">
               {customer.email && (
                 <div className="flex items-center">
-                  <Mail className="h-3 w-3 mr-2 text-muted-foreground" />
-                  <a href={`mailto:${customer.email}`} className="text-primary hover:underline">
+                  <Mail className="h-3 w-3 mr-1 text-muted-foreground" />
+                  <a href={`mailto:${customer.email}`} className="text-primary hover:underline truncate">
                     {customer.email}
                   </a>
                 </div>
@@ -62,34 +62,25 @@ export function CustomerTable({ customers, isAdmin, onEdit, onDelete }: Customer
               
               {customer.phone && (
                 <div className="flex items-center">
-                  <Phone className="h-3 w-3 mr-2 text-muted-foreground" />
+                  <Phone className="h-3 w-3 mr-1 text-muted-foreground" />
                   <a href={`tel:${customer.phone}`} className="text-primary hover:underline">
                     {customer.phone}
                   </a>
                 </div>
               )}
-              
-              {customer.address?.street && (
-                <div className="text-muted-foreground">
-                  {customer.address.street}, {customer.address.zipCode} {customer.address.city}
-                </div>
-              )}
             </div>
             
             {customer.vehicles.length > 0 && (
-              <div className="mt-3">
-                <div className="text-xs font-medium text-muted-foreground mb-1">
-                  {t('customer.vehicles')}:
-                </div>
+              <div className="mt-1">
                 <div className="flex flex-wrap gap-1">
                   {customer.vehicles.map((vehicle) => (
                     <Badge 
                       key={vehicle.id} 
                       variant="outline"
-                      className="flex items-center bg-secondary/50 text-xs"
+                      className="flex items-center bg-secondary/50 text-xs py-0 px-1.5"
                     >
-                      <Car className="h-3 w-3 mr-1" />
-                      {vehicle.make} {vehicle.model} ({vehicle.license})
+                      <Car className="h-2 w-2 mr-0.5" />
+                      {vehicle.make} {vehicle.model}
                     </Badge>
                   ))}
                 </div>
@@ -105,27 +96,31 @@ export function CustomerTable({ customers, isAdmin, onEdit, onDelete }: Customer
   return (
     <Table>
       <TableHeader>
-        <TableRow>
-          <TableHead>{t('customer.name')}</TableHead>
-          <TableHead>{t('customer.contact')}</TableHead>
-          <TableHead>{t('customer.address')}</TableHead>
-          <TableHead>{t('customer.vehicles')}</TableHead>
-          {isAdmin && <TableHead className="text-right">{t('actions.actions')}</TableHead>}
+        <TableRow className="hover:bg-transparent">
+          <TableHead className="h-8 py-1">{t('customer.name')}</TableHead>
+          <TableHead className="h-8 py-1">{t('customer.contact')}</TableHead>
+          <TableHead className="h-8 py-1">{t('customer.vehicles')}</TableHead>
+          {isAdmin && <TableHead className="text-right h-8 py-1">{t('actions.actions')}</TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
         {customers.map((customer) => (
-          <TableRow key={customer.id}>
-            <TableCell className="font-medium">
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4 text-muted-foreground" />
-                {customer.name}
+          <TableRow key={customer.id} className="h-10">
+            <TableCell className="font-medium py-1">
+              <div className="flex items-center gap-1">
+                <User className="h-3 w-3 text-muted-foreground" />
+                <span className="text-sm">{customer.name}</span>
               </div>
+              {customer.address?.street && (
+                <div className="text-xs text-muted-foreground ml-4">
+                  {customer.address.city}
+                </div>
+              )}
             </TableCell>
-            <TableCell>
-              <div className="space-y-1">
+            <TableCell className="py-1">
+              <div className="space-y-0.5">
                 {customer.email && (
-                  <div className="flex items-center text-sm">
+                  <div className="flex items-center text-xs">
                     <Mail className="h-3 w-3 mr-1 text-muted-foreground" />
                     <a href={`mailto:${customer.email}`} className="text-primary hover:underline">
                       {customer.email}
@@ -133,7 +128,7 @@ export function CustomerTable({ customers, isAdmin, onEdit, onDelete }: Customer
                   </div>
                 )}
                 {customer.phone && (
-                  <div className="flex items-center text-sm">
+                  <div className="flex items-center text-xs">
                     <Phone className="h-3 w-3 mr-1 text-muted-foreground" />
                     <a href={`tel:${customer.phone}`} className="text-primary hover:underline">
                       {customer.phone}
@@ -142,37 +137,29 @@ export function CustomerTable({ customers, isAdmin, onEdit, onDelete }: Customer
                 )}
               </div>
             </TableCell>
-            <TableCell>
-              {customer.address?.street && (
-                <div className="text-sm">
-                  <div>{customer.address.street}</div>
-                  <div>{customer.address.zipCode} {customer.address.city}</div>
-                </div>
-              )}
-            </TableCell>
-            <TableCell>
+            <TableCell className="py-1">
               <div className="flex flex-wrap gap-1">
                 {customer.vehicles.map((vehicle) => (
                   <Badge 
                     key={vehicle.id} 
                     variant="outline"
-                    className="flex items-center bg-secondary/50"
+                    className="flex items-center bg-secondary/50 text-xs py-0 px-1.5"
                   >
-                    <Car className="h-3 w-3 mr-1" />
-                    {vehicle.make} {vehicle.model} ({vehicle.license})
+                    <Car className="h-2.5 w-2.5 mr-0.5" />
+                    {vehicle.make} {vehicle.license}
                   </Badge>
                 ))}
               </div>
             </TableCell>
             {isAdmin && (
-              <TableCell className="text-right">
+              <TableCell className="text-right py-1">
                 <div className="flex justify-end gap-2">
-                  <Button variant="outline" size="sm" onClick={() => onEdit(customer)}>
+                  <Button variant="outline" size="sm" onClick={() => onEdit(customer)} className="h-6 px-2 text-xs py-0">
                     <Edit className="h-3 w-3 mr-1" />
                     {t('actions.edit')}
                   </Button>
                   
-                  <Button variant="destructive" size="sm" onClick={() => onDelete(customer)}>
+                  <Button variant="destructive" size="sm" onClick={() => onDelete(customer)} className="h-6 px-2 text-xs py-0">
                     <Trash2 className="h-3 w-3 mr-1" />
                     {t('actions.delete')}
                   </Button>

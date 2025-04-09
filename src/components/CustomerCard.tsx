@@ -20,22 +20,24 @@ export function CustomerCard({ customer }: CustomerCardProps) {
   
   return (
     <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
-      <CardHeader className="pb-3 bg-secondary/50">
-        <CardTitle className="flex justify-between items-start">
+      <CardHeader className="pb-2 bg-secondary/50 py-2">
+        <CardTitle className="flex justify-between items-start text-base">
           <div>
-            <div className="flex items-center">
-              <User className="h-4 w-4 mr-2 text-primary" />
+            <div className="flex items-center text-sm">
+              <User className="h-3 w-3 mr-1 text-primary" />
               {customer.name}
             </div>
-            <div className="text-sm text-muted-foreground mt-1">
-              {customer.vehicles.length} {customer.vehicles.length === 1 ? 
-                t('customer.vehicle') : t('customer.vehicles')}
-            </div>
+            {customer.vehicles.length > 0 && (
+              <div className="text-xs text-muted-foreground mt-0.5">
+                {customer.vehicles.length} {customer.vehicles.length === 1 ? 
+                  t('customer.vehicle') : t('customer.vehicles')}
+              </div>
+            )}
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Edit className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-6 w-6">
+                <Edit className="h-3 w-3" />
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px]">
@@ -121,11 +123,11 @@ export function CustomerCard({ customer }: CustomerCardProps) {
           </Dialog>
         </CardTitle>
       </CardHeader>
-      <CardContent className="py-4">
-        <div className="space-y-2">
+      <CardContent className="py-2">
+        <div className="space-y-1">
           {customer.email && (
-            <div className="flex items-center text-sm">
-              <Mail className="h-4 w-4 mr-2 text-muted-foreground" />
+            <div className="flex items-center text-xs">
+              <Mail className="h-3 w-3 mr-1 text-muted-foreground" />
               <a 
                 href={`mailto:${customer.email}`} 
                 className="text-primary hover:underline"
@@ -136,8 +138,8 @@ export function CustomerCard({ customer }: CustomerCardProps) {
           )}
           
           {customer.phone && (
-            <div className="flex items-center text-sm">
-              <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
+            <div className="flex items-center text-xs">
+              <Phone className="h-3 w-3 mr-1 text-muted-foreground" />
               <a 
                 href={`tel:${customer.phone}`} 
                 className="text-primary hover:underline"
@@ -148,15 +150,15 @@ export function CustomerCard({ customer }: CustomerCardProps) {
           )}
           
           {customer.vehicles.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-3">
+            <div className="flex flex-wrap gap-1 mt-1">
               {customer.vehicles.map((vehicle) => (
                 <Badge 
                   key={vehicle.id} 
                   variant="outline"
-                  className="flex items-center bg-secondary/50"
+                  className="flex items-center bg-secondary/50 text-xs py-0 px-1.5"
                 >
-                  <Car className="h-3 w-3 mr-1" />
-                  {vehicle.make} {vehicle.model} ({vehicle.license})
+                  <Car className="h-2.5 w-2.5 mr-0.5" />
+                  {vehicle.license}
                 </Badge>
               ))}
             </div>
@@ -164,8 +166,8 @@ export function CustomerCard({ customer }: CustomerCardProps) {
         </div>
       </CardContent>
       {customer.notes && (
-        <CardFooter className="pt-0 pb-4 px-6">
-          <p className="text-sm text-muted-foreground line-clamp-2">
+        <CardFooter className="pt-0 pb-2 px-4">
+          <p className="text-xs text-muted-foreground line-clamp-1">
             {customer.notes}
           </p>
         </CardFooter>

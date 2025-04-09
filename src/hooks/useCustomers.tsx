@@ -11,6 +11,7 @@ export function useCustomers() {
   const { toast } = useToast();
   const { t } = useLanguage();
   const [customers, setCustomers] = useState<Customer[]>(MOCK_CUSTOMERS);
+  const [previousCustomers, setPreviousCustomers] = useState<Customer[]>(MOCK_CUSTOMERS);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const { updateTotalCustomers } = useOverviewAppointments();
@@ -29,9 +30,23 @@ export function useCustomers() {
 
   const filteredCustomers = filterCustomers(customers, searchTerm);
 
+  const saveStateBeforeChange = () => {
+    setPreviousCustomers([...customers]);
+  };
+
+  const undoLastChange = () => {
+    setCustomers([...previousCustomers]);
+    toast({
+      title: t('actions.undone'),
+      description: t('actions.changesReverted'),
+    });
+    return true;
+  };
+
   const handleAddCustomer = () => {
     if (!newCustomer.name) return;
     
+    saveStateBeforeChange();
     const customer = createCustomer(newCustomer);
     
     setCustomers([...customers, customer]);
@@ -51,9 +66,17 @@ export function useCustomers() {
       vehicles: []
     });
     
-    toast({
+    const { id } = toast({
       title: t('customer.addedTitle'),
       description: t('customer.addedDescription'),
+      action: (
+        <button
+          onClick={() => undoLastChange()}
+          className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
+        >
+          {t('actions.undo')}
+        </button>
+      ),
     });
 
     return customer;
@@ -61,6 +84,8 @@ export function useCustomers() {
 
   const handleUpdateCustomer = () => {
     if (!selectedCustomer || !selectedCustomer.name) return;
+    
+    saveStateBeforeChange();
     
     const updatedCustomers = customers.map(c => 
       c.id === selectedCustomer.id ? selectedCustomer : c
@@ -71,6 +96,14 @@ export function useCustomers() {
     toast({
       title: t('customer.updatedTitle'),
       description: t('customer.updatedDescription'),
+      action: (
+        <button
+          onClick={() => undoLastChange()}
+          className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
+        >
+          {t('actions.undo')}
+        </button>
+      ),
     });
 
     return selectedCustomer;
@@ -78,6 +111,8 @@ export function useCustomers() {
 
   const handleDeleteCustomer = () => {
     if (!selectedCustomer) return;
+    
+    saveStateBeforeChange();
     
     const updatedCustomers = customers.filter(c => c.id !== selectedCustomer.id);
     setCustomers(updatedCustomers);
@@ -88,6 +123,14 @@ export function useCustomers() {
     toast({
       title: t('customer.deletedTitle'),
       description: t('customer.deletedDescription'),
+      action: (
+        <button
+          onClick={() => undoLastChange()}
+          className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
+        >
+          {t('actions.undo')}
+        </button>
+      ),
     });
   };
 
