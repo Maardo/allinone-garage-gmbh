@@ -12,7 +12,7 @@ export const overview = {
   count: 'st',
   jobsCount: '{count} bokningar',
   noAppointments: 'Inga bokningar',
-  markComplete: 'Markera som klar',
+  markComplete: 'Klar',
   appointmentCompleted: 'Bokning slutförd',
   appointmentMarkedComplete: 'Bokningen har markerats som slutförd',
   emailSentToCustomer: 'Ett e-postmeddelande har skickats till kunden.',

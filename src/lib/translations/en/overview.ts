@@ -12,7 +12,7 @@ export const overview = {
   count: 'pcs',
   jobsCount: '{count} appointments',
   noAppointments: 'No appointments',
-  markComplete: 'Mark as complete',
+  markComplete: 'Complete',
   appointmentCompleted: 'Appointment completed',
   appointmentMarkedComplete: 'The appointment has been marked as complete',
   emailSentToCustomer: 'An email has been sent to the customer.',

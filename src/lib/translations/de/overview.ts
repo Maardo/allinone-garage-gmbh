@@ -12,7 +12,7 @@ export const overview = {
   count: 'st',
   jobsCount: '{count} Termine',
   noAppointments: 'Keine Termine',
-  markComplete: 'Als erledigt markieren',
+  markComplete: 'Fertig',
   appointmentCompleted: 'Termin abgeschlossen',
   appointmentMarkedComplete: 'Der Termin wurde als abgeschlossen markiert',
   emailSentToCustomer: 'Eine E-Mail wurde an den Kunden gesendet.',

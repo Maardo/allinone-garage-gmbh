@@ -6,6 +6,7 @@ import { sv, de, enUS } from "date-fns/locale";
 import { SERVICE_TYPES, ServiceType } from "@/lib/serviceTypes";
 import { Button } from "@/components/ui/button";
 import { Appointment, GroupedAppointments, TimeViewType } from "@/lib/overview/types";
+import { Check } from "lucide-react";
 
 type Locale = typeof sv | typeof de | typeof enUS;
 
@@ -106,13 +107,13 @@ export function UpcomingAppointments({
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="mr-2 bg-green-50 border-green-500 text-green-600 hover:text-green-700 hover:bg-green-100 hover:border-green-600 font-medium"
+                          className="min-w-0 h-7 px-2 py-0.5 text-xs bg-green-50 border-green-200 text-green-600 hover:text-green-700 hover:bg-green-100 hover:border-green-300"
                           onClick={() => onMarkComplete(job.id)}
                         >
                           {t('overview.markComplete')}
                         </Button>
                       )}
-                      <div className="text-sm">
+                      <div className="text-sm ml-2">
                         {format(job.date, "HH:mm")}
                       </div>
                     </div>
