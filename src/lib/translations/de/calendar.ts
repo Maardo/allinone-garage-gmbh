@@ -8,8 +8,37 @@ export const calendar = {
   new: 'Neuer Termin',
   previous: 'Vorherige',
   next: 'Nächste',
-  // Add date picker translations
+  // Date picker translations
   selectedDate: 'Ausgewähltes Datum',
   selectDate: 'Datum auswählen',
-  close: 'Schließen'
+  close: 'Schließen',
+  // Month names
+  january: 'Januar',
+  february: 'Februar',
+  march: 'März',
+  april: 'April',
+  may: 'Mai',
+  june: 'Juni',
+  july: 'Juli',
+  august: 'August',
+  september: 'September',
+  october: 'Oktober',
+  november: 'November',
+  december: 'Dezember',
+  // Weekday names
+  monday: 'Montag',
+  tuesday: 'Dienstag',
+  wednesday: 'Mittwoch',
+  thursday: 'Donnerstag',
+  friday: 'Freitag',
+  saturday: 'Samstag',
+  sunday: 'Sonntag',
+  // Abbreviated weekday names
+  mon: 'Mo',
+  tue: 'Di',
+  wed: 'Mi',
+  thu: 'Do',
+  fri: 'Fr',
+  sat: 'Sa',
+  sun: 'So'
 };

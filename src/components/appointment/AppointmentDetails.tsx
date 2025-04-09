@@ -29,7 +29,7 @@ export function AppointmentDetails({
   const { t } = useLanguage();
 
   // Format the date for the input value
-  // Using 24-hour time format (HH:mm instead of hh:mm)
+  // Using 24-hour time format (HH:mm)
   const formattedDate = format(new Date(formData.date), "yyyy-MM-dd'T'HH:mm");
 
   return (
@@ -58,11 +58,11 @@ export function AppointmentDetails({
               <SelectValue placeholder={t('appointment.serviceType')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">{t('serviceTypes.1')}</SelectItem>
-              <SelectItem value="2">{t('serviceTypes.2')}</SelectItem>
-              <SelectItem value="3">{t('serviceTypes.3')}</SelectItem>
-              <SelectItem value="4">{t('serviceTypes.4')}</SelectItem>
-              <SelectItem value="5">{t('serviceTypes.5')}</SelectItem>
+              <SelectItem value="1">{t('serviceTypes.maintenance')}</SelectItem>
+              <SelectItem value="2">{t('serviceTypes.repair')}</SelectItem>
+              <SelectItem value="3">{t('serviceTypes.inspection')}</SelectItem>
+              <SelectItem value="4">{t('serviceTypes.tireChange')}</SelectItem>
+              <SelectItem value="5">{t('serviceTypes.other')}</SelectItem>
             </SelectContent>
           </Select>
         </div>

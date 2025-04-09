@@ -7,6 +7,9 @@ import { useLanguage } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
+// Import date-fns locales
+import { sv, de, enUS } from "date-fns/locale";
+
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 function Calendar({
@@ -16,7 +19,20 @@ function Calendar({
   ...props
 }: CalendarProps) {
   // Get the current language
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
+
+  // Map the language string to the correct date-fns locale
+  const getLocale = () => {
+    switch (language) {
+      case 'sv':
+        return sv;
+      case 'de':
+        return de;
+      case 'en':
+      default:
+        return enUS;
+    }
+  };
 
   return (
     <DayPicker
@@ -60,8 +76,13 @@ function Calendar({
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
-      locale={language}
-      // Set locale based on current language
+      locale={getLocale()}
+      // Add localized labels
+      labels={{
+        today: t('calendar.today'),
+        prev: t('calendar.previous'),
+        next: t('calendar.next'),
+      }}
       {...props}
     />
   );
