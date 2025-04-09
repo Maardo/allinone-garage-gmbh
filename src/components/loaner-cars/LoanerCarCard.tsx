@@ -61,25 +61,25 @@ export function LoanerCarCard({
         !car.isAvailable && "bg-amber-50"
       )}>
         <div className="flex flex-col space-y-2">
-          <div className="flex items-center text-sm">
-            <span className="font-medium w-28 sm:w-32 flex-shrink-0">{t('loanerCar.licensePlate')}:</span>
-            <span className="truncate">{car.license}</span>
+          <div className="flex flex-col text-sm">
+            <span className="font-medium mb-1">{t('loanerCar.licensePlate')}:</span>
+            <span className="bg-gray-50 px-2 py-1 rounded-sm border border-gray-200">{car.license}</span>
           </div>
           
           {!car.isAvailable && car.assignedTo && (
             <>
-              <div className="flex items-center text-sm">
-                <span className="font-medium w-28 sm:w-32 flex-shrink-0">{t('loanerCar.assignedTo')}:</span>
-                <div className="flex items-center truncate">
+              <div className="flex flex-col text-sm mt-3">
+                <span className="font-medium mb-1">{t('loanerCar.assignedTo')}:</span>
+                <div className="flex items-center truncate bg-gray-50 px-2 py-1 rounded-sm border border-gray-200">
                   <User className="h-4 w-4 mr-1 text-amber-700 flex-shrink-0" />
                   <span className="font-medium text-amber-900 truncate">{car.assignedTo}</span>
                 </div>
               </div>
               
               {car.assignedFrom && (
-                <div className="flex items-center text-sm">
-                  <span className="font-medium w-28 sm:w-32 flex-shrink-0">{t('loanerCar.startDate')}:</span>
-                  <div className="flex items-center">
+                <div className="flex flex-col text-sm">
+                  <span className="font-medium mb-1">{t('loanerCar.startDate')}:</span>
+                  <div className="flex items-center bg-gray-50 px-2 py-1 rounded-sm border border-gray-200">
                     <Calendar className="h-4 w-4 mr-1 text-amber-700 flex-shrink-0" />
                     <span>{format(new Date(car.assignedFrom), "PPP")}</span>
                   </div>
@@ -87,9 +87,9 @@ export function LoanerCarCard({
               )}
               
               {car.assignedUntil && (
-                <div className="flex items-center text-sm">
-                  <span className="font-medium w-28 sm:w-32 flex-shrink-0">{t('loanerCar.returnDate')}:</span>
-                  <div className="flex items-center">
+                <div className="flex flex-col text-sm">
+                  <span className="font-medium mb-1">{t('loanerCar.returnDate')}:</span>
+                  <div className="flex items-center bg-gray-50 px-2 py-1 rounded-sm border border-gray-200">
                     <Calendar className="h-4 w-4 mr-1 text-amber-700 flex-shrink-0" />
                     <span>{format(new Date(car.assignedUntil), "PPP")}</span>
                   </div>
