@@ -10,7 +10,7 @@ import ServiceTypes from "./pages/ServiceTypes";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Index from "./pages/Index";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 
 const AppRoutes = () => {
   const { currentUser, isLoading } = useAuth();
