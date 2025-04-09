@@ -1,14 +1,10 @@
 
-import { format } from "date-fns";
-import { CalendarIcon, ChevronLeft, ChevronRight, PlusCircle, CalendarDays, CalendarCheck, Calendar as CalendarIcon2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { AppointmentForm } from "@/components/AppointmentForm";
+import { Calendar as CalendarIcon2 } from "lucide-react";
 import { Appointment } from "@/lib/types";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { CalendarViewMode } from "@/lib/calendar/types";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useLanguage } from "@/context/LanguageContext";
-import { sv, de, enUS } from "date-fns/locale";
+import { MobileCalendarHeader } from "./header/MobileCalendarHeader";
+import { DesktopCalendarHeader } from "./header/DesktopCalendarHeader";
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -20,8 +16,8 @@ interface CalendarHeaderProps {
   setIsDialogOpen: (isOpen: boolean) => void;
   selectedAppointment: Appointment | null;
   setSelectedAppointment: (appointment: Appointment | null) => void;
-  viewMode: 'day' | 'week' | 'month';
-  onChangeViewMode: (mode: 'day' | 'week' | 'month') => void;
+  viewMode: CalendarViewMode;
+  onChangeViewMode: (mode: CalendarViewMode) => void;
   existingAppointments?: Appointment[];
 }
 
@@ -37,233 +33,43 @@ export function CalendarHeader({
   setSelectedAppointment,
   viewMode,
   onChangeViewMode,
-  existingAppointments,
+  existingAppointments, // Not used in the current implementation, but keeping for backward compatibility
 }: CalendarHeaderProps) {
   const isMobile = useIsMobile();
-  const { t, language } = useLanguage();
   
-  const getLocale = () => {
-    switch (language) {
-      case 'sv': return sv;
-      case 'de': return de;
-      default: return enUS;
-    }
-  };
-  
-  const getViewTitle = () => {
-    const locale = getLocale();
-    
-    switch (viewMode) {
-      case 'day':
-        return format(currentDate, isMobile ? 'd MMM' : 'd MMMM yyyy', { locale });
-      case 'week':
-        const startOfWeek = new Date(currentDate);
-        startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1)); // Start from Monday
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6); // End on Sunday
-        
-        if (isMobile) {
-          // Kortare format för mobil
-          return `${format(startOfWeek, 'd', { locale })}–${format(endOfWeek, 'd MMM', { locale })}`;
-        }
-        else if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
-          return `${format(startOfWeek, 'd', { locale })}–${format(endOfWeek, 'd MMM yyyy', { locale })}`;
-        }
-        else if (startOfWeek.getFullYear() === endOfWeek.getFullYear()) {
-          return `${format(startOfWeek, 'd MMM', { locale })}–${format(endOfWeek, 'd MMM yyyy', { locale })}`;
-        }
-        else {
-          return `${format(startOfWeek, 'd MMM yyyy', { locale })}–${format(endOfWeek, 'd MMM yyyy', { locale })}`;
-        }
-      case 'month':
-      default:
-        return format(currentDate, isMobile ? 'MMM yyyy' : 'MMMM yyyy', { locale });
-    }
-  };
-
-  const getViewButtonLabel = () => {
-    switch (viewMode) {
-      case 'day':
-        return t('calendar.day');
-      case 'week':
-        return t('calendar.week');
-      case 'month':
-        return t('calendar.month');
-    }
-  };
-
-  const getViewIcon = () => {
-    switch (viewMode) {
-      case 'day':
-        return <CalendarIcon2 className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />;
-      case 'week':
-        return <CalendarCheck className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />;
-      case 'month':
-        return <CalendarDays className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />;
-    }
-  };
-
   // Touch-friendly kompakta kontroller för mobil
   if (isMobile) {
     return (
-      <div className="mb-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={onPrevMonth}
-              aria-label={`${t('calendar.previous')} ${viewMode}`}
-              className="h-7 w-7"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <h2 className="text-sm font-semibold px-1 min-w-20 text-center">
-              {getViewTitle()}
-            </h2>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={onNextMonth}
-              aria-label={`${t('calendar.next')} ${viewMode}`}
-              className="h-7 w-7"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" onClick={onToday} size="sm" className="h-7 text-xs px-2">
-              <CalendarIcon className="h-3.5 w-3.5" />
-            </Button>
-            
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-7 text-xs px-2">
-                  <PlusCircle className="h-3.5 w-3.5" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="w-[calc(100vw-32px)] sm:max-w-[600px] max-h-[90vh] overflow-y-auto mx-auto">
-                <DialogHeader>
-                  <DialogTitle>
-                    {selectedAppointment ? t('appointment.editAppointment') : t('appointment.newAppointment')}
-                  </DialogTitle>
-                </DialogHeader>
-                <AppointmentForm 
-                  initialData={selectedAppointment || undefined} 
-                  onSubmit={onAddAppointment}
-                />
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-        
-        <div className="flex justify-between">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-7 text-xs">
-                {getViewIcon()}
-                {getViewButtonLabel()}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="bg-white">
-              <DropdownMenuItem onClick={() => onChangeViewMode('day')} className="cursor-pointer text-sm">
-                <CalendarIcon2 className="mr-2 h-4 w-4" />
-                <span>{t('calendar.day')}</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onChangeViewMode('week')} className="cursor-pointer text-sm">
-                <CalendarCheck className="mr-2 h-4 w-4" />
-                <span>{t('calendar.week')}</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onChangeViewMode('month')} className="cursor-pointer text-sm">
-                <CalendarDays className="mr-2 h-4 w-4" />
-                <span>{t('calendar.month')}</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+      <MobileCalendarHeader 
+        currentDate={currentDate}
+        onPrevMonth={onPrevMonth}
+        onNextMonth={onNextMonth}
+        onToday={onToday}
+        onAddAppointment={onAddAppointment}
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        selectedAppointment={selectedAppointment}
+        setSelectedAppointment={setSelectedAppointment}
+        viewMode={viewMode}
+        onChangeViewMode={onChangeViewMode}
+      />
     );
   }
 
   // Desktop version
   return (
-    <div className="mb-4 sm:mb-6 flex flex-col space-y-3 sm:space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center space-x-1">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={onPrevMonth}
-            aria-label={`${t('calendar.previous')} ${viewMode}`}
-            className="h-7 w-7 sm:h-8 sm:w-8"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <h2 className="text-base sm:text-lg font-semibold px-1 min-w-28 sm:min-w-32 text-center">
-            {getViewTitle()}
-          </h2>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={onNextMonth}
-            aria-label={`${t('calendar.next')} ${viewMode}`}
-            className="h-7 w-7 sm:h-8 sm:w-8"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
-                {getViewIcon()}
-                {getViewButtonLabel()}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white">
-              <DropdownMenuItem onClick={() => onChangeViewMode('day')} className="cursor-pointer">
-                <CalendarIcon2 className="mr-2 h-4 w-4" />
-                <span>{t('calendar.day')}</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onChangeViewMode('week')} className="cursor-pointer">
-                <CalendarCheck className="mr-2 h-4 w-4" />
-                <span>{t('calendar.week')}</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onChangeViewMode('month')} className="cursor-pointer">
-                <CalendarDays className="mr-2 h-4 w-4" />
-                <span>{t('calendar.month')}</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          
-          <Button variant="outline" onClick={onToday} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
-            <CalendarIcon className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            {t('calendar.today')}
-          </Button>
-          
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
-                <PlusCircle className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                {t('calendar.new')}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>
-                  {selectedAppointment ? t('appointment.editAppointment') : t('appointment.newAppointment')}
-                </DialogTitle>
-              </DialogHeader>
-              <AppointmentForm 
-                initialData={selectedAppointment || undefined} 
-                onSubmit={onAddAppointment}
-              />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-    </div>
+    <DesktopCalendarHeader 
+      currentDate={currentDate}
+      onPrevMonth={onPrevMonth}
+      onNextMonth={onNextMonth}
+      onToday={onToday}
+      onAddAppointment={onAddAppointment}
+      isDialogOpen={isDialogOpen}
+      setIsDialogOpen={setIsDialogOpen}
+      selectedAppointment={selectedAppointment}
+      setSelectedAppointment={setSelectedAppointment}
+      viewMode={viewMode}
+      onChangeViewMode={onChangeViewMode}
+    />
   );
 }
