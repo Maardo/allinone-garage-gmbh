@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Customer } from "@/lib/types";
 import { useCustomerData } from "./useCustomerData";
 import { useCustomerOperations } from "./useCustomerOperations";
@@ -14,6 +14,16 @@ export function useCustomers() {
     setPreviousCustomers
   } = useCustomerData();
 
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  // Create a refresh function that can be called from other components
+  const refreshCustomers = useCallback(async () => {
+    const { refreshData } = useCustomerData();
+    if (refreshData) {
+      await refreshData();
+    }
+  }, []);
+
   const {
     selectedCustomer,
     setSelectedCustomer,
@@ -26,10 +36,10 @@ export function useCustomers() {
     customers,
     setCustomers,
     previousCustomers,
-    setPreviousCustomers
+    setPreviousCustomers,
+    refreshData: refreshCustomers
   });
 
-  const [searchTerm, setSearchTerm] = useState("");
   const filteredCustomers = filterCustomers(customers, searchTerm);
 
   return {
@@ -44,6 +54,7 @@ export function useCustomers() {
     handleAddCustomer,
     handleUpdateCustomer,
     handleDeleteCustomer,
-    isLoading
+    isLoading,
+    refreshCustomers
   };
 }

@@ -6,16 +6,20 @@ import { CalendarGrid } from "@/components/calendar/CalendarGrid";
 import { ServiceTypeLegend } from "@/components/calendar/ServiceTypeLegend";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCalendar } from "@/hooks/useCalendar";
+import { useCustomers } from "@/hooks/useCustomers";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CalendarPage() {
   const isMobile = useIsMobile();
+  const { refreshCustomers } = useCustomers();
   const {
     currentDate,
     appointments,
     selectedAppointment,
     isDialogOpen,
     viewMode,
+    isLoading,
     setIsDialogOpen,
     setSelectedAppointment,
     handleNavigatePrev,
@@ -25,8 +29,29 @@ export default function CalendarPage() {
     handleSelectAppointment,
     handleNewAppointmentAtDate,
     handleDeleteAppointment,
-    handleChangeViewMode
+    handleChangeViewMode,
+    loadAppointments
   } = useCalendar();
+
+  // Ensure data is synchronized by refreshing customers when appointments change
+  useEffect(() => {
+    const syncData = async () => {
+      await refreshCustomers();
+    };
+    
+    syncData();
+  }, [appointments, refreshCustomers]);
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="h-[80vh] flex flex-col items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+          <p className="text-muted-foreground">Loading calendar data...</p>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

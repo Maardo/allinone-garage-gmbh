@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { useLanguage } from "@/context/LanguageContext";
 import { sv, de, enUS } from "date-fns/locale";
@@ -9,6 +10,7 @@ import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
 import { useChartData } from "@/services/chartDataService";
 import { groupAppointmentsByDate } from "@/utils/appointmentUtils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCustomers } from "@/hooks/useCustomers";
 
 const dateLocales = {
   sv: sv,
@@ -18,6 +20,7 @@ const dateLocales = {
 
 export default function Overview() {
   const { language } = useLanguage();
+  const { refreshCustomers } = useCustomers();
   const { 
     timeView, 
     setTimeView, 
@@ -32,6 +35,15 @@ export default function Overview() {
   
   const locale = dateLocales[language as keyof typeof dateLocales] || enUS;
   const jobsByDate = groupAppointmentsByDate(filteredJobs);
+
+  // Ensure data is synchronized
+  useEffect(() => {
+    const syncData = async () => {
+      await refreshCustomers();
+    };
+    
+    syncData();
+  }, [upcomingJobs, refreshCustomers]);
 
   if (isLoading) {
     return (

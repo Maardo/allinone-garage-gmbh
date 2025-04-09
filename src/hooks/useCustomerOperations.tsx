@@ -18,13 +18,15 @@ interface UseCustomerOperationsProps {
   setCustomers: React.Dispatch<React.SetStateAction<Customer[]>>;
   previousCustomers: Customer[];
   setPreviousCustomers: React.Dispatch<React.SetStateAction<Customer[]>>;
+  refreshData?: () => Promise<void>;
 }
 
 export function useCustomerOperations({ 
   customers, 
   setCustomers,
   previousCustomers,
-  setPreviousCustomers 
+  setPreviousCustomers,
+  refreshData 
 }: UseCustomerOperationsProps) {
   const { toast } = useToast();
   const { t } = useLanguage();
@@ -110,6 +112,11 @@ export function useCustomerOperations({
     if (savedCustomer) {
       // Update with saved customer from DB (with proper IDs)
       setCustomers(prev => prev.map(c => c.id === customer.id ? savedCustomer : c));
+      
+      // Refresh related data if needed
+      if (refreshData) {
+        await refreshData();
+      }
     } else {
       // Handle error (optional: could revert state here)
       toast({
@@ -157,7 +164,12 @@ export function useCustomerOperations({
 
     // Then persist to database
     const success = await updateCustomerInDb(selectedCustomer, currentUser.id);
-    if (!success) {
+    if (success) {
+      // Refresh related data if needed
+      if (refreshData) {
+        await refreshData();
+      }
+    } else {
       // Handle error (optional: could revert state here)
       toast({
         title: t('common.error'),
@@ -205,7 +217,12 @@ export function useCustomerOperations({
 
     // Then delete from database
     const success = await deleteCustomerFromDb(selectedCustomer.id);
-    if (!success) {
+    if (success) {
+      // Refresh related data if needed
+      if (refreshData) {
+        await refreshData();
+      }
+    } else {
       // Handle error (optional: could revert state here)
       toast({
         title: t('common.error'),

@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Appointment } from "@/lib/overview/types";
 import { ServiceType } from "@/lib/serviceTypes";
+import { fetchCustomersFromDb } from "@/lib/customers/customerDbService";
 
 // Convert database appointment to frontend appointment
 export const mapDbAppointmentToAppointment = (dbAppointment: any): Appointment => {
@@ -98,14 +99,36 @@ export const createAppointment = async (appointment: Appointment): Promise<Appoi
     throw error;
   }
   
+  // Attempt to create or update customer in database if not already exists
+  if (appointment.customerEmail && appointment.customerName) {
+    try {
+      const { data: customers } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('email', appointment.customerEmail)
+        .eq('user_id', userId);
+      
+      if (!customers || customers.length === 0) {
+        // Create new customer
+        await supabase
+          .from('customers')
+          .insert({
+            name: appointment.customerName,
+            email: appointment.customerEmail,
+            user_id: userId
+          });
+      }
+    } catch (e) {
+      console.error("Error syncing customer data:", e);
+      // Don't throw as this is a secondary operation
+    }
+  }
+  
   return mapDbAppointmentToAppointment(data);
 };
 
 // Update an appointment
 export const updateAppointment = async (appointment: Appointment): Promise<Appointment> => {
-  // Convert ID to string UUID
-  let appointmentId: string;
-  
   // Get the current user's ID
   const { data: session } = await supabase.auth.getSession();
   const userId = session?.session?.user?.id;
@@ -113,6 +136,9 @@ export const updateAppointment = async (appointment: Appointment): Promise<Appoi
   if (!userId) {
     throw new Error("User not authenticated");
   }
+  
+  // Convert ID to string UUID
+  let appointmentId: string;
   
   if (typeof appointment.id === 'number') {
     // Find the original UUID for this appointment by querying first
@@ -161,6 +187,31 @@ export const updateAppointment = async (appointment: Appointment): Promise<Appoi
   if (error) {
     console.error('Error updating appointment:', error);
     throw error;
+  }
+  
+  // Update customer data if available
+  if (appointment.customerEmail && appointment.customerName) {
+    try {
+      const { data: customers } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('email', appointment.customerEmail)
+        .eq('user_id', userId);
+      
+      if (!customers || customers.length === 0) {
+        // Create new customer if doesn't exist
+        await supabase
+          .from('customers')
+          .insert({
+            name: appointment.customerName,
+            email: appointment.customerEmail,
+            user_id: userId
+          });
+      }
+    } catch (e) {
+      console.error("Error syncing customer data:", e);
+      // Don't throw as this is a secondary operation
+    }
   }
   
   return mapDbAppointmentToAppointment(data);

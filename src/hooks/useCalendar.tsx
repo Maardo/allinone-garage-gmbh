@@ -17,6 +17,7 @@ import { fetchAppointments, createAppointment as createAppointmentApi, updateApp
 import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
 import { customerToOverviewAppointment, overviewToCustomerAppointment } from "@/lib/overview/appointmentConverter";
+import { useCustomers } from "@/hooks/useCustomers";
 
 export function useCalendar() {
   const { t } = useLanguage();
@@ -27,24 +28,25 @@ export function useCalendar() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<CalendarViewMode>(isMobile ? 'week' : 'week');
   const [isLoading, setIsLoading] = useState(true);
+  const { handleAddCustomer, customers } = useCustomers();
 
   // Load appointments from the database
+  const loadAppointments = async () => {
+    try {
+      setIsLoading(true);
+      const data = await fetchAppointments();
+      // Convert all overview appointments to customer appointments
+      const customerAppointments = data.map(overviewToCustomerAppointment);
+      setAppointments(customerAppointments);
+    } catch (error) {
+      console.error("Error loading appointments:", error);
+      toast.error(t('common.error'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadAppointments = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchAppointments();
-        // Convert all overview appointments to customer appointments
-        const customerAppointments = data.map(overviewToCustomerAppointment);
-        setAppointments(customerAppointments);
-      } catch (error) {
-        console.error("Error loading appointments:", error);
-        toast.error(t('common.error'));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
     loadAppointments();
   }, [t]);
 
@@ -79,6 +81,19 @@ export function useCalendar() {
         // Convert back to customer appointment
         const updatedCustomerAppointment = overviewToCustomerAppointment(updatedOverviewAppointment);
         setAppointments(updateAppointmentInList(appointments, updatedCustomerAppointment));
+        
+        // Try to add the customer if they don't exist
+        if (appointment.customerName && appointment.customerEmail) {
+          const existingCustomer = customers.find(c => 
+            c.email === appointment.customerEmail || 
+            c.name === appointment.customerName
+          );
+          
+          if (!existingCustomer) {
+            await handleAddCustomer();
+          }
+        }
+        
         toast.success(t('appointment.updated'));
       } else {
         // Add new appointment
@@ -88,10 +103,28 @@ export function useCalendar() {
         // Convert back to customer appointment
         const newCustomerAppointment = overviewToCustomerAppointment(newOverviewAppointment);
         setAppointments([...appointments, newCustomerAppointment]);
+        
+        // Try to add the customer if they don't exist
+        if (appointment.customerName && appointment.customerEmail) {
+          const existingCustomer = customers.find(c => 
+            c.email === appointment.customerEmail || 
+            c.name === appointment.customerName
+          );
+          
+          if (!existingCustomer) {
+            await handleAddCustomer();
+          }
+        }
+        
         toast.success(t('appointment.created'));
       }
+      
       setIsDialogOpen(false);
       setSelectedAppointment(null);
+      
+      // Reload appointments to ensure consistency
+      await loadAppointments();
+      
     } catch (error) {
       console.error("Error saving appointment:", error);
       toast.error(t('common.error'));
@@ -121,6 +154,10 @@ export function useCalendar() {
       setIsDialogOpen(false);
       setSelectedAppointment(null);
       toast.success(t('appointment.deleted'));
+      
+      // Reload appointments to ensure consistency
+      await loadAppointments();
+      
     } catch (error) {
       console.error("Error deleting appointment:", error);
       toast.error(t('common.error'));
@@ -150,6 +187,7 @@ export function useCalendar() {
     handleSelectAppointment,
     handleNewAppointmentAtDate,
     handleDeleteAppointment,
-    handleChangeViewMode
+    handleChangeViewMode,
+    loadAppointments // Expose this for other components to trigger refresh
   };
 }
