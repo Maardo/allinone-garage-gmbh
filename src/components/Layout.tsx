@@ -1,5 +1,4 @@
-
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
@@ -18,9 +17,6 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  
-  // Add a ref to track first render
-  const isFirstRender = useRef(true);
 
   const getPageKey = () => {
     const path = location.pathname.substring(1);
@@ -62,42 +58,17 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   }, [currentUser, isLoading, navigate]);
 
   const toggleSidebar = () => {
-    console.log("Toggle sidebar called in Layout. Current state:", isMobileOpen);
-    setIsMobileOpen(prevState => !prevState);
+    console.log("Toggle sidebar called in Layout");
+    setIsMobileOpen(!isMobileOpen);
   };
 
   // Close sidebar on route change on mobile
   useEffect(() => {
-    console.log("Route changed to:", location.pathname);
-    // Skip the first render to avoid closing immediately on navigation
-    if (!isFirstRender.current && isMobileOpen && window.innerWidth < 768) {
+    if (isMobileOpen && window.innerWidth < 768) {
+      console.log("Closing sidebar on route change");
       setIsMobileOpen(false);
     }
-    isFirstRender.current = false;
-  }, [location.pathname, isMobileOpen]);
-
-  // Handle outside clicks on mobile
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as HTMLElement;
-      const isSidebar = !!target.closest('[data-sidebar="sidebar"]');
-      const isToggle = !!target.closest('[data-toggle="sidebar"]');
-      const isBackdrop = !!target.closest('[data-backdrop="sidebar"]');
-      
-      if (isMobileOpen && window.innerWidth < 768 && !isSidebar && !isToggle && !isBackdrop) {
-        console.log("Outside click detected, closing sidebar");
-        setIsMobileOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleOutsideClick);
-    document.addEventListener('touchstart', handleOutsideClick);
-    
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-      document.removeEventListener('touchstart', handleOutsideClick);
-    };
-  }, [isMobileOpen]);
+  }, [location.pathname]);
 
   // Handle window resize
   useEffect(() => {
@@ -110,6 +81,19 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
+    };
+  }, [isMobileOpen]);
+
+  // Add body class to prevent scrolling when mobile menu is open
+  useEffect(() => {
+    if (isMobileOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    return () => {
+      document.body.classList.remove('overflow-hidden');
     };
   }, [isMobileOpen]);
 

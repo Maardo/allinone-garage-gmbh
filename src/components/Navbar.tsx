@@ -12,11 +12,9 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
   const { currentUser } = useAuth();
   const { t } = useLanguage();
   
-  const handleToggleSidebar = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleSidebar();
+  const handleToggleSidebar = () => {
     console.log("Sidebar toggle clicked from Navbar");
+    toggleSidebar();
   };
   
   return (
@@ -25,12 +23,12 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden"
+          className="md:hidden flex items-center justify-center"
           onClick={handleToggleSidebar}
           aria-label="Toggle menu"
-          data-toggle="sidebar"
         >
           <Menu className="h-5 w-5" />
+          <span className="sr-only">Menu</span>
         </Button>
         <div>
           <h1 className="font-bold text-lg sm:text-xl text-primary">{t('common.appName')}</h1>
