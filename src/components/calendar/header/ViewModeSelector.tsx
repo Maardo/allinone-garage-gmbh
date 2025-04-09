@@ -1,5 +1,4 @@
-
-import { CalendarIcon2, CalendarCheck, CalendarDays } from "lucide-react";
+import { Calendar as CalendarIcon, CalendarCheck, CalendarDays } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
@@ -28,7 +27,7 @@ export function ViewModeSelector({ viewMode, onChangeViewMode, className }: View
   const getViewIcon = () => {
     switch (viewMode) {
       case 'day':
-        return <CalendarIcon2 className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />;
+        return <CalendarIcon className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />;
       case 'week':
         return <CalendarCheck className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />;
       case 'month':
@@ -46,7 +45,7 @@ export function ViewModeSelector({ viewMode, onChangeViewMode, className }: View
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="bg-white">
         <DropdownMenuItem onClick={() => onChangeViewMode('day')} className="cursor-pointer text-sm">
-          <CalendarIcon2 className="mr-2 h-4 w-4" />
+          <CalendarIcon className="mr-2 h-4 w-4" />
           <span>{t('calendar.day')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onChangeViewMode('week')} className="cursor-pointer text-sm">

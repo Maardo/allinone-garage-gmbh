@@ -1,5 +1,5 @@
 
-import { Calendar as CalendarIcon2 } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { Appointment } from "@/lib/types";
 import { CalendarViewMode } from "@/lib/calendar/types";
 import { useIsMobile } from "@/hooks/use-mobile";
