@@ -77,8 +77,6 @@ function Calendar({
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
       locale={getLocale()}
-      // Use IDs instead of direct labels, as DayPicker doesn't support custom label keys
-      // We can leverage the built-in localization features of DayPicker
       {...props}
     />
   );

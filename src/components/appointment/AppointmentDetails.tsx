@@ -28,8 +28,7 @@ export function AppointmentDetails({
 }: AppointmentDetailsProps) {
   const { t } = useLanguage();
 
-  // Format the date for the input value
-  // Using 24-hour time format (HH:mm)
+  // Format the date for the input value using 24-hour time format (HH:mm)
   const formattedDate = format(new Date(formData.date), "yyyy-MM-dd'T'HH:mm");
 
   return (
