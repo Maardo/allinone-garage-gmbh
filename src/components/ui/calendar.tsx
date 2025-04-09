@@ -3,7 +3,6 @@ import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import { useLanguage } from "@/context/LanguageContext";
-import { sv, de, enUS } from "date-fns/locale"; // Import the locale objects
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -18,15 +17,6 @@ function Calendar({
 }: CalendarProps) {
   // Get the current language
   const { language } = useLanguage();
-  
-  // Map language code to proper date-fns locale object
-  const getLocale = () => {
-    switch (language) {
-      case 'sv': return sv;
-      case 'de': return de;
-      default: return enUS;
-    }
-  };
 
   return (
     <DayPicker
@@ -70,7 +60,8 @@ function Calendar({
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
-      locale={getLocale()} // Using the proper Locale object instead of string
+      locale={language}
+      // Set locale based on current language
       {...props}
     />
   );
