@@ -19,5 +19,6 @@ export const overview = {
   emailScheduled: 'E-Mail-Benachrichtigung wird in 30 Sekunden gesendet. Sie können diese Aktion rückgängig machen, um abzubrechen.',
   customerAndVehicle: 'Kunde & Fahrzeug',
   sendEmailConfirmation: 'E-Mail an den Kunden senden?',
-  sendEmailQuestion: 'Möchten Sie eine Benachrichtigungs-E-Mail an den Kunden senden?'
+  sendEmailQuestion: 'Möchten Sie eine Benachrichtigungs-E-Mail an den Kunden senden?',
+  errorLoadingData: 'Daten konnten nicht aus der Datenbank geladen werden. Bitte versuchen Sie es später noch einmal.'
 };

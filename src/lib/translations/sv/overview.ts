@@ -19,5 +19,6 @@ export const overview = {
   emailScheduled: 'E-postmeddelande kommer att skickas om 30 sekunder. Du kan ångra denna åtgärd för att avbryta.',
   customerAndVehicle: 'Kund & Fordon',
   sendEmailConfirmation: 'Skicka e-post till kunden?',
-  sendEmailQuestion: 'Vill du skicka ett meddelande via e-post till kunden?'
+  sendEmailQuestion: 'Vill du skicka ett meddelande via e-post till kunden?',
+  errorLoadingData: 'Kunde inte ladda data från databasen. Försök igen senare.'
 };

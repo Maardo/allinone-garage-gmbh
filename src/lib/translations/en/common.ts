@@ -17,7 +17,7 @@ export const common = {
   emailNotifications: 'Email Notifications',
   receiveUpdatesViaEmail: 'Receive updates via email',
   serviceCompletionEmailTemplate: 'Service Completion Email Template',
-  emailSentWhenServiceComplete: 'This email will be sent to customers when their service is marked as complete',
+  emailSentWhenServiceComplete: 'This email is sent to customers when their service is marked as complete',
   updatePreferences: 'Update Preferences',
   systemSettings: 'System Settings',
   adminOnlySettings: 'These settings are only available to administrators',
@@ -27,6 +27,7 @@ export const common = {
   monthly: 'Monthly',
   resetAllSettings: 'Reset All Settings',
   success: 'Success',
+  error: 'Error',
   settingsSaved: 'Settings have been saved',
   notificationPreferencesSaved: 'Notification preferences have been saved'
 };

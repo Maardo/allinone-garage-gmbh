@@ -27,6 +27,132 @@ export type Database = {
         }
         Relationships: []
       }
+      appointments: {
+        Row: {
+          created_at: string | null
+          customer_email: string | null
+          customer_name: string | null
+          date: string
+          id: string
+          is_completed: boolean | null
+          license_plate: string | null
+          service_type: string
+          updated_at: string | null
+          user_id: string
+          vehicle_model: string
+        }
+        Insert: {
+          created_at?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          date: string
+          id?: string
+          is_completed?: boolean | null
+          license_plate?: string | null
+          service_type: string
+          updated_at?: string | null
+          user_id: string
+          vehicle_model: string
+        }
+        Update: {
+          created_at?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          date?: string
+          id?: string
+          is_completed?: boolean | null
+          license_plate?: string | null
+          service_type?: string
+          updated_at?: string | null
+          user_id?: string
+          vehicle_model?: string
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          street: string | null
+          updated_at: string | null
+          user_id: string
+          zip_code: string | null
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          street?: string | null
+          updated_at?: string | null
+          user_id: string
+          zip_code?: string | null
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          street?: string | null
+          updated_at?: string | null
+          user_id?: string
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
+      loaner_cars: {
+        Row: {
+          appointment_id: string | null
+          assigned_from: string | null
+          assigned_to: string | null
+          assigned_until: string | null
+          created_at: string | null
+          id: string
+          is_available: boolean | null
+          license: string
+          name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          appointment_id?: string | null
+          assigned_from?: string | null
+          assigned_to?: string | null
+          assigned_until?: string | null
+          created_at?: string | null
+          id?: string
+          is_available?: boolean | null
+          license: string
+          name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          appointment_id?: string | null
+          assigned_from?: string | null
+          assigned_to?: string | null
+          assigned_until?: string | null
+          created_at?: string | null
+          id?: string
+          is_available?: boolean | null
+          license?: string
+          name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -47,6 +173,86 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      stats: {
+        Row: {
+          completed_jobs: number
+          created_at: string | null
+          id: string
+          today_appointments: number
+          total_customers: number
+          updated_at: string | null
+          user_id: string
+          week_appointments: number
+        }
+        Insert: {
+          completed_jobs?: number
+          created_at?: string | null
+          id?: string
+          today_appointments?: number
+          total_customers?: number
+          updated_at?: string | null
+          user_id: string
+          week_appointments?: number
+        }
+        Update: {
+          completed_jobs?: number
+          created_at?: string | null
+          id?: string
+          today_appointments?: number
+          total_customers?: number
+          updated_at?: string | null
+          user_id?: string
+          week_appointments?: number
+        }
+        Relationships: []
+      }
+      vehicles: {
+        Row: {
+          car_id: string | null
+          created_at: string | null
+          customer_id: string
+          id: string
+          license: string
+          make: string
+          model: string
+          updated_at: string | null
+          vin: string | null
+          year: number | null
+        }
+        Insert: {
+          car_id?: string | null
+          created_at?: string | null
+          customer_id: string
+          id?: string
+          license: string
+          make: string
+          model: string
+          updated_at?: string | null
+          vin?: string | null
+          year?: number | null
+        }
+        Update: {
+          car_id?: string | null
+          created_at?: string | null
+          customer_id?: string
+          id?: string
+          license?: string
+          make?: string
+          model?: string
+          updated_at?: string | null
+          vin?: string | null
+          year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicles_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -19,5 +19,6 @@ export const overview = {
   emailScheduled: 'Email notification will be sent in 30 seconds. You can undo this action to cancel.',
   customerAndVehicle: 'Customer & Vehicle',
   sendEmailConfirmation: 'Send Email to Customer?',
-  sendEmailQuestion: 'Do you want to send a notification email to the customer?'
+  sendEmailQuestion: 'Do you want to send a notification email to the customer?',
+  errorLoadingData: 'Could not load data from the database. Please try again later.'
 };
