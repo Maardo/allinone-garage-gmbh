@@ -31,7 +31,7 @@ export default function CalendarPage() {
     if (isMobile && viewMode === 'month') {
       handleChangeViewMode('week');
     }
-  }, [isMobile]);
+  }, [isMobile, viewMode, handleChangeViewMode]);
 
   return (
     <Layout>
