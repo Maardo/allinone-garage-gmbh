@@ -26,39 +26,43 @@ export default function CalendarPage() {
     handleChangeViewMode
   } = useCalendar();
   
-  // If on mobile, default to week view for better UX
+  // If on mobile, always default to week view for better UX
   useEffect(() => {
-    if (isMobile) {
+    if (isMobile && viewMode === 'month') {
       handleChangeViewMode('week');
     }
   }, [isMobile]);
 
   return (
     <Layout>
-      <CalendarHeader 
-        currentDate={currentDate}
-        onPrevMonth={handleNavigatePrev}
-        onNextMonth={handleNavigateNext}
-        onToday={goToToday}
-        onAddAppointment={handleAddAppointment}
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        selectedAppointment={selectedAppointment}
-        setSelectedAppointment={setSelectedAppointment}
-        viewMode={viewMode}
-        onChangeViewMode={handleChangeViewMode}
-        existingAppointments={appointments}
-      />
+      <div className="space-y-4">
+        <CalendarHeader 
+          currentDate={currentDate}
+          onPrevMonth={handleNavigatePrev}
+          onNextMonth={handleNavigateNext}
+          onToday={goToToday}
+          onAddAppointment={handleAddAppointment}
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          selectedAppointment={selectedAppointment}
+          setSelectedAppointment={setSelectedAppointment}
+          viewMode={viewMode}
+          onChangeViewMode={handleChangeViewMode}
+          existingAppointments={appointments}
+        />
 
-      <CalendarGrid 
-        currentDate={currentDate}
-        appointments={appointments}
-        onSelectAppointment={handleSelectAppointment}
-        onNewAppointmentAtDate={handleNewAppointmentAtDate}
-        viewMode={viewMode}
-      />
+        <CalendarGrid 
+          currentDate={currentDate}
+          appointments={appointments}
+          onSelectAppointment={handleSelectAppointment}
+          onNewAppointmentAtDate={handleNewAppointmentAtDate}
+          viewMode={viewMode}
+        />
 
-      <ServiceTypeLegend />
+        <div className={isMobile ? "mt-4" : ""}>
+          <ServiceTypeLegend />
+        </div>
+      </div>
     </Layout>
   );
 }

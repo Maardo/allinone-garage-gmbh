@@ -13,10 +13,12 @@ import { CustomerForm } from "@/components/customers/CustomerForm";
 import { CustomerTable } from "@/components/customers/CustomerTable";
 import { EmptySearchResult } from "@/components/customers/EmptySearchResult";
 import { useCustomers } from "@/hooks/useCustomers";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function CustomersPage() {
   const { t } = useLanguage();
   const { currentUser } = useAuth();
+  const isMobile = useIsMobile();
   const { 
     filteredCustomers, 
     searchTerm, 
@@ -48,7 +50,7 @@ export default function CustomersPage() {
 
   return (
     <Layout title={t('navigation.customers')} subtitle={t('customer.manageSubtitle')}>
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="flex flex-col gap-4 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
@@ -59,45 +61,47 @@ export default function CustomersPage() {
           />
         </div>
         
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              {t('customer.addNew')}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>{t('customer.addNew')}</DialogTitle>
-            </DialogHeader>
-            
-            <CustomerForm 
-              customer={newCustomer}
-              setCustomer={setNewCustomer}
-              isEdit={false}
-            />
-            
-            <DialogFooter>
-              <Button 
-                onClick={() => {
-                  handleAddCustomer();
-                  setIsAddDialogOpen(false);
-                }}
-                disabled={!newCustomer.name}
-                className="bg-blue-400 hover:bg-blue-500 text-white"
-              >
-                {t('actions.save')}
+        <div className="flex justify-end">
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="w-full sm:w-auto">
+                <Plus className="h-4 w-4 mr-2" />
+                {t('customer.addNew')}
               </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px] w-[calc(100%-2rem)] mx-auto">
+              <DialogHeader>
+                <DialogTitle>{t('customer.addNew')}</DialogTitle>
+              </DialogHeader>
+              
+              <CustomerForm 
+                customer={newCustomer}
+                setCustomer={setNewCustomer}
+                isEdit={false}
+              />
+              
+              <DialogFooter>
+                <Button 
+                  onClick={() => {
+                    handleAddCustomer();
+                    setIsAddDialogOpen(false);
+                  }}
+                  disabled={!newCustomer.name}
+                  className="bg-blue-400 hover:bg-blue-500 text-white w-full sm:w-auto"
+                >
+                  {t('actions.save')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
       
       {searchTerm && filteredCustomers.length === 0 ? (
         <EmptySearchResult searchTerm={searchTerm} />
       ) : (
         <Card>
-          <CardContent className="p-0">
+          <CardContent className="p-0 overflow-x-auto">
             <CustomerTable 
               customers={filteredCustomers}
               isAdmin={isAdmin}
@@ -110,7 +114,7 @@ export default function CustomersPage() {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] w-[calc(100%-2rem)] mx-auto">
           <DialogHeader>
             <DialogTitle>{t('customer.editTitle')}</DialogTitle>
           </DialogHeader>
@@ -130,6 +134,7 @@ export default function CustomersPage() {
                 setIsEditDialogOpen(false);
               }}
               disabled={!selectedCustomer?.name}
+              className="w-full sm:w-auto"
             >
               {t('actions.save')}
             </Button>
@@ -139,7 +144,7 @@ export default function CustomersPage() {
 
       {/* Delete Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
+        <DialogContent className="w-[calc(100%-2rem)] mx-auto">
           <DialogHeader>
             <DialogTitle>{t('customer.deleteTitle')}</DialogTitle>
           </DialogHeader>
@@ -147,14 +152,14 @@ export default function CustomersPage() {
             <p>{t('customer.deleteConfirmation')}</p>
             <p className="font-medium mt-2">{selectedCustomer?.name}</p>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+          <DialogFooter className="flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}  className="w-full sm:w-auto">
               {t('actions.cancel')}
             </Button>
             <Button variant="destructive" onClick={() => {
               handleDeleteCustomer();
               setIsDeleteDialogOpen(false);
-            }}>
+            }} className="w-full sm:w-auto">
               {t('actions.confirmDelete')}
             </Button>
           </DialogFooter>

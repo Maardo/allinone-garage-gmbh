@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface CustomerTableProps {
   customers: Customer[];
@@ -15,6 +16,7 @@ interface CustomerTableProps {
 
 export function CustomerTable({ customers, isAdmin, onEdit, onDelete }: CustomerTableProps) {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   
   if (customers.length === 0) {
     return (
@@ -25,6 +27,81 @@ export function CustomerTable({ customers, isAdmin, onEdit, onDelete }: Customer
     );
   }
   
+  if (isMobile) {
+    return (
+      <div className="divide-y">
+        {customers.map((customer) => (
+          <div key={customer.id} className="p-4">
+            <div className="flex justify-between items-start mb-2">
+              <div className="font-medium flex items-center">
+                <User className="h-4 w-4 mr-2 text-muted-foreground" />
+                {customer.name}
+              </div>
+              
+              {isAdmin && (
+                <div className="flex gap-1">
+                  <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => onEdit(customer)}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button variant="destructive" size="icon" className="h-8 w-8" onClick={() => onDelete(customer)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+            
+            <div className="space-y-2 text-sm">
+              {customer.email && (
+                <div className="flex items-center">
+                  <Mail className="h-3 w-3 mr-2 text-muted-foreground" />
+                  <a href={`mailto:${customer.email}`} className="text-primary hover:underline">
+                    {customer.email}
+                  </a>
+                </div>
+              )}
+              
+              {customer.phone && (
+                <div className="flex items-center">
+                  <Phone className="h-3 w-3 mr-2 text-muted-foreground" />
+                  <a href={`tel:${customer.phone}`} className="text-primary hover:underline">
+                    {customer.phone}
+                  </a>
+                </div>
+              )}
+              
+              {customer.address?.street && (
+                <div className="text-muted-foreground">
+                  {customer.address.street}, {customer.address.zipCode} {customer.address.city}
+                </div>
+              )}
+            </div>
+            
+            {customer.vehicles.length > 0 && (
+              <div className="mt-3">
+                <div className="text-xs font-medium text-muted-foreground mb-1">
+                  {t('customer.vehicles')}:
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {customer.vehicles.map((vehicle) => (
+                    <Badge 
+                      key={vehicle.id} 
+                      variant="outline"
+                      className="flex items-center bg-secondary/50 text-xs"
+                    >
+                      <Car className="h-3 w-3 mr-1" />
+                      {vehicle.make} {vehicle.model} ({vehicle.license})
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  }
+  
+  // Desktop view
   return (
     <Table>
       <TableHeader>

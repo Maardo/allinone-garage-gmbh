@@ -70,12 +70,12 @@ export function CalendarGrid({
 
   return (
     <div className="overflow-x-auto pb-4">
-      <div className="min-w-full sm:min-w-[640px]">
+      <div className="w-full">
         <div className="grid grid-cols-7 gap-1 mb-2">
           {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
             <div 
               key={day} 
-              className="text-center font-medium text-muted-foreground py-1 sm:py-2 text-xs"
+              className="text-center font-medium text-muted-foreground py-1 text-xs"
             >
               {day}
             </div>
@@ -99,7 +99,7 @@ export function CalendarGrid({
                 <div
                   key={day.toISOString()}
                   className={cn(
-                    "calendar-day min-h-[80px] p-1 border rounded-md bg-card",
+                    "calendar-day min-h-[60px] sm:min-h-[80px] p-1 border rounded-md bg-card",
                     !isSameMonth(day, currentDate) && "opacity-40",
                     isToday(day) && "border-primary shadow-sm"
                   )}
@@ -119,7 +119,7 @@ export function CalendarGrid({
               <div
                 key={day.toISOString()}
                 className={cn(
-                  "calendar-day min-h-[80px] p-1 border rounded-md bg-card",
+                  "calendar-day min-h-[60px] sm:min-h-[80px] p-1 border rounded-md bg-card",
                   !isSameMonth(day, currentDate) && "opacity-40",
                   isToday(day) && "border-primary shadow-sm"
                 )}
@@ -155,6 +155,8 @@ function DayContent({
   onSelectAppointment,
   onNewAppointmentAtDate 
 }: DayContentProps) {
+  const isMobile = useIsMobile();
+  
   return (
     <>
       <div className="flex justify-between items-center mb-1">
@@ -179,28 +181,35 @@ function DayContent({
           </DialogTrigger>
         </Dialog>
       </div>
-      <div className="space-y-0.5 max-h-12 sm:max-h-16 overflow-y-auto text-xs">
-        {appointments.map((appointment) => {
-          const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
-          return (
-            <div
-              key={appointment.id}
-              onClick={() => onSelectAppointment(appointment)}
-              className={cn(
-                "calendar-appointment p-0.5 px-1 rounded cursor-pointer text-white",
-                "bg-blue-600", // Always use blue background for better visibility
-                appointment.isCompleted && "opacity-60 line-through"
-              )}
-            >
-              <div className="font-medium truncate text-xs">
-                {format(new Date(appointment.date), "HH:mm")} {appointment.customerName}
+      <div className="space-y-0.5 max-h-10 sm:max-h-16 overflow-y-auto text-xs">
+        {appointments.length > 0 ? (
+          appointments.map((appointment) => {
+            const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
+            return (
+              <div
+                key={appointment.id}
+                onClick={() => onSelectAppointment(appointment)}
+                className={cn(
+                  "calendar-appointment p-0.5 px-1 rounded cursor-pointer text-white",
+                  "bg-blue-600", 
+                  appointment.isCompleted && "opacity-60 line-through"
+                )}
+              >
+                <div className="font-medium truncate text-xs">
+                  {format(new Date(appointment.date), "HH:mm")} {appointment.customerName.split(' ')[0]}
+                </div>
+                {/* Only show license on larger screens */}
+                <div className="hidden sm:block truncate text-xs">
+                  {appointment.vehicleLicense} {serviceType?.code || ''}
+                </div>
               </div>
-              <div className="truncate text-xs sm:block">
-                {appointment.vehicleLicense} {serviceType?.code || ''}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })
+        ) : (
+          <div className="text-center text-xs text-muted-foreground py-1">
+            {isMobile ? "" : "No appointments"}
+          </div>
+        )}
       </div>
     </>
   );
