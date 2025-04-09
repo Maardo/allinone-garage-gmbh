@@ -35,7 +35,7 @@ export function CalendarTitle({ currentDate, viewMode }: CalendarTitleProps) {
         endOfWeek.setDate(startOfWeek.getDate() + 6); // End on Sunday
         
         if (isMobile) {
-          // Shorter format for mobile
+          // Kortare format för mobil
           return `${format(startOfWeek, 'd', { locale })}–${format(endOfWeek, 'd MMM', { locale })}`;
         }
         else if (startOfWeek.getMonth() === endOfWeek.getMonth()) {

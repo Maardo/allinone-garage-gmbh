@@ -71,11 +71,10 @@ export function MonthView({
             <div
               key={day.toISOString()}
               className={cn(
-                "calendar-day min-h-[60px] sm:min-h-[90px] p-1 border rounded-md",
-                !isSameMonth(day, currentDate) ? "bg-gray-50 opacity-40" : "bg-card",
-                isToday(day) && "border-primary border-2 shadow-sm"
+                "calendar-day min-h-[50px] sm:min-h-[80px] p-1 border rounded-md bg-card",
+                !isSameMonth(day, currentDate) && "opacity-40",
+                isToday(day) && "border-primary shadow-sm"
               )}
-              onClick={() => onNewAppointmentAtDate(day)}
             >
               <DayContent 
                 day={day} 

@@ -4,7 +4,6 @@ import { addDays, addMonths, isAfter, isBefore } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
 import { ServiceType } from '@/lib/serviceTypes';
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 // Define the appointment type specifically for this component
 export interface Appointment {
@@ -36,8 +35,6 @@ export function useOverviewAppointments() {
   const { t } = useLanguage();
   const { toast } = useToast();
   const [timeView, setTimeView] = useState<TimeViewType>("week");
-  const [showEmailConfirmDialog, setShowEmailConfirmDialog] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   
   const [stats, setStats] = useState<Stats>({
     todayAppointments: 3,
@@ -187,25 +184,8 @@ export function useOverviewAppointments() {
     return true;
   };
 
-  // Handle initiating marking an appointment complete
-  const initiateMarkComplete = (appointmentId: number) => {
-    const appointment = upcomingJobs.find(job => job.id === appointmentId);
-    if (!appointment) return;
-    
-    // Check if email notifications are enabled
-    const emailNotificationsEnabled = localStorage.getItem("emailNotifications") !== "false";
-    
-    if (emailNotificationsEnabled && appointment.customerEmail) {
-      setSelectedAppointment(appointment);
-      setShowEmailConfirmDialog(true);
-    } else {
-      // If no email to be sent, just mark as complete directly
-      completeAppointment(appointmentId);
-    }
-  };
-  
-  // Actually mark the appointment as complete and handle notifications
-  const completeAppointment = (appointmentId: number, sendEmail: boolean = false) => {
+  // Handle marking an appointment as complete
+  const handleMarkComplete = (appointmentId: number) => {
     // Find the appointment
     const appointment = upcomingJobs.find(job => job.id === appointmentId);
     if (!appointment) return;
@@ -225,14 +205,15 @@ export function useOverviewAppointments() {
       completedJobs: currentStats.completedJobs + 1
     }));
     
-    // Send email notification if enabled and requested
+    // Send email notification if enabled
     const emailNotificationsEnabled = localStorage.getItem("emailNotifications") !== "false";
-    if (sendEmail && emailNotificationsEnabled && appointment.customerEmail) {
+    if (emailNotificationsEnabled && appointment.customerEmail) {
       const emailSent = sendEmailNotification(appointment);
       if (emailSent) {
         toast({
           title: t('overview.appointmentCompleted'),
-          description: t('overview.appointmentMarkedComplete') + ` ${t('overview.emailSentToCustomer')}`,
+          description: t('overview.appointmentMarkedComplete') + 
+            (emailNotificationsEnabled ? ` ${t('overview.emailSentToCustomer')}` : ''),
         });
       }
     } else {
@@ -241,10 +222,6 @@ export function useOverviewAppointments() {
         description: t('overview.appointmentMarkedComplete'),
       });
     }
-    
-    // Reset the dialog state
-    setShowEmailConfirmDialog(false);
-    setSelectedAppointment(null);
   };
 
   // Function to update total customers count
@@ -262,11 +239,7 @@ export function useOverviewAppointments() {
     setStats,
     filteredJobs,
     upcomingJobs,
-    handleMarkComplete: initiateMarkComplete,
-    completeAppointment,
-    updateTotalCustomers,
-    showEmailConfirmDialog,
-    setShowEmailConfirmDialog,
-    selectedAppointment
+    handleMarkComplete,
+    updateTotalCustomers
   };
 }

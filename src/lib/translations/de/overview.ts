@@ -1,18 +1,20 @@
 
 export const overview = {
-  timeView: 'Zeitansicht',
-  week: 'Woche',
-  month: 'Monat',
   todayAppointments: 'Heutige Termine',
   weekAppointments: 'Termine dieser Woche',
   totalCustomers: 'Gesamtzahl der Kunden',
-  completedJobs: 'Abgeschlossene Aufträge',
-  upcomingAppointments: 'Anstehende Termine',
-  noAppointments: 'Keine anstehenden Termine für diesen Zeitraum',
+  completedJobs: 'Abgeschlossene Arbeiten',
+  upcomingAppointments: 'Bevorstehende Termine',
+  appointments: 'Termine',
+  upcomingJobs: 'Bevorstehende Termine',
+  week: 'Woche',
+  month: 'Monat',
+  count: 'st',
+  jobsCount: '{count} Termine',
+  noAppointments: 'Keine Termine',
   markComplete: 'Als erledigt markieren',
   appointmentCompleted: 'Termin abgeschlossen',
-  appointmentMarkedComplete: 'Der Termin wurde als abgeschlossen markiert.',
-  emailSentToCustomer: 'Eine E-Mail-Benachrichtigung wurde an den Kunden gesendet.',
-  sendEmailConfirmation: 'E-Mail-Benachrichtigung senden?',
-  sendEmailConfirmationDescription: 'Möchten Sie eine Abschlussbenachrichtigung an {customerName} senden?'
+  appointmentMarkedComplete: 'Der Termin wurde als abgeschlossen markiert',
+  emailSentToCustomer: 'Eine E-Mail wurde an den Kunden gesendet.',
+  customerAndVehicle: 'Kunde & Fahrzeug'
 };

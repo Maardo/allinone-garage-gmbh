@@ -1,18 +1,20 @@
 
 export const overview = {
-  timeView: 'Tidsvy',
+  todayAppointments: 'Dagens Bokningar',
+  weekAppointments: 'Veckans Bokningar',
+  totalCustomers: 'Totalt Antal Kunder',
+  completedJobs: 'Utförda Arbeten',
+  upcomingAppointments: 'Kommande Bokningar',
+  appointments: 'Bokningar',
+  upcomingJobs: 'Kommande Bokningar',
   week: 'Vecka',
   month: 'Månad',
-  todayAppointments: 'Dagens bokningar',
-  weekAppointments: 'Veckans bokningar',
-  totalCustomers: 'Totalt antal kunder',
-  completedJobs: 'Slutförda jobb',
-  upcomingAppointments: 'Kommande bokningar',
-  noAppointments: 'Inga kommande bokningar för denna period',
+  count: 'st',
+  jobsCount: '{count} bokningar',
+  noAppointments: 'Inga bokningar',
   markComplete: 'Markera som klar',
   appointmentCompleted: 'Bokning slutförd',
-  appointmentMarkedComplete: 'Bokningen har markerats som slutförd.',
+  appointmentMarkedComplete: 'Bokningen har markerats som slutförd',
   emailSentToCustomer: 'Ett e-postmeddelande har skickats till kunden.',
-  sendEmailConfirmation: 'Skicka e-postmeddelande?',
-  sendEmailConfirmationDescription: 'Vill du skicka ett meddelande om slutförande till {customerName}?'
+  customerAndVehicle: 'Kund & Fordon'
 };
