@@ -77,17 +77,17 @@ function Calendar({
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
       locale={getLocale()}
-      // Fix the type errors by using proper formatters for react-day-picker
+      // Fix the type errors by using the correct approach for formatting
       formatters={{
         formatWeekdayName: (date) => {
+          // Use the weekday names directly instead of trying to use localize.day
           const locale = getLocale();
-          // Cast day index (0-6) to proper format expected by react-day-picker
-          return locale.localize?.day(date.getDay()) || '';
+          return date.toLocaleDateString(locale.code, { weekday: 'short' });
         },
         formatCaption: (date) => {
+          // Use the month names directly instead of trying to use localize.month
           const locale = getLocale();
-          // Cast month index (0-11) to proper format expected by react-day-picker
-          return locale.localize?.month(date.getMonth()) || '';
+          return date.toLocaleDateString(locale.code, { month: 'long', year: 'numeric' });
         }
       }}
       {...props}
