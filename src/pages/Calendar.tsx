@@ -7,6 +7,7 @@ import { ServiceTypeLegend } from "@/components/calendar/ServiceTypeLegend";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCalendar } from "@/hooks/useCalendar";
 import { toast } from "sonner";
+import { customerToOverviewAppointment, overviewToCustomerAppointment } from "@/lib/overview/appointmentConverter";
 
 export default function CalendarPage() {
   const isMobile = useIsMobile();

@@ -1,6 +1,6 @@
 
 import { isSameDay } from "date-fns";
-import { Appointment } from "@/lib/overview/types";
+import { Appointment } from "@/lib/types";
 import { MonthView } from "./grid/MonthView";
 import { WeekView } from "./grid/WeekView";
 import { DayView } from "./grid/DayView";
