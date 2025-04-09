@@ -24,6 +24,7 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
   const handleCloseSidebar = () => {
     if (toggleSidebar) {
       toggleSidebar();
+      console.log("Closing sidebar");
     }
   };
 

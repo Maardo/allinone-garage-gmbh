@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
@@ -58,6 +59,7 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   }, [currentUser, isLoading, navigate]);
 
   const toggleSidebar = () => {
+    console.log("Toggle sidebar called. Current state:", isMobileOpen);
     setIsMobileOpen(prevState => !prevState);
   };
 
@@ -75,13 +77,17 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
       const isBackdrop = !!target.closest('[data-backdrop="sidebar"]');
       
       if (isMobileOpen && window.innerWidth < 768 && !isSidebar && !isToggle && !isBackdrop) {
+        console.log("Outside click detected, closing sidebar");
         setIsMobileOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('touchstart', handleOutsideClick);
+    
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('touchstart', handleOutsideClick);
     };
   }, [isMobileOpen]);
 

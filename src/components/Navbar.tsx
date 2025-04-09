@@ -16,6 +16,7 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
     e.preventDefault();
     e.stopPropagation();
     toggleSidebar();
+    console.log("Sidebar toggle clicked");
   };
   
   return (
