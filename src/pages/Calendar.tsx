@@ -26,7 +26,7 @@ export default function CalendarPage() {
     handleChangeViewMode
   } = useCalendar();
   
-  // If on mobile, always default to week view for better UX
+  // Om på mobil, alltid defaulta till veckovis för bättre upplevelse
   useEffect(() => {
     if (isMobile && viewMode === 'month') {
       handleChangeViewMode('week');
@@ -35,7 +35,7 @@ export default function CalendarPage() {
 
   return (
     <Layout>
-      <div className="space-y-3 sm:space-y-4 px-1 sm:px-0">
+      <div className="space-y-3 sm:space-y-4 px-1 sm:px-0 max-w-full overflow-hidden">
         <CalendarHeader 
           currentDate={currentDate}
           onPrevMonth={handleNavigatePrev}

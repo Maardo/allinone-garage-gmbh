@@ -9,7 +9,6 @@ import {
   isSameDay,
   startOfWeek,
   endOfWeek,
-  addDays
 } from "date-fns";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -42,7 +41,7 @@ export function CalendarGrid({
     );
   };
 
-  // Render different views based on viewMode
+  // Rendera olika vyer baserat på viewMode
   if (viewMode === 'day') {
     return (
       <DayView 
@@ -84,11 +83,11 @@ export function CalendarGrid({
 
         <div className="grid grid-cols-7 gap-1 auto-rows-fr">
           {daysInMonth.map((day, i) => {
-            // Adjust for starting the week on Monday
-            let dayOfWeek = day.getDay(); // 0 = Sunday, 1 = Monday, etc.
-            dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Convert to 0 = Monday, 6 = Sunday
+            // Justera för att börja veckan på måndag
+            let dayOfWeek = day.getDay(); // 0 = söndag, 1 = måndag, etc.
+            dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Konvertera till 0 = måndag, 6 = söndag
             
-            // Create empty cells for days before the 1st of the month
+            // Skapa tomma celler för dagar innan den första i månaden
             const startOffset = dayOfWeek;
             if (i === 0) {
               const emptyCells = Array(startOffset).fill(null);
@@ -183,8 +182,7 @@ function DayContent({
       </div>
       <div className="space-y-0.5 max-h-10 sm:max-h-16 overflow-y-auto text-xs">
         {appointments.length > 0 ? (
-          appointments.slice(0, isMobile ? 2 : 3).map((appointment, index) => {
-            const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
+          appointments.slice(0, isMobile ? 2 : 3).map((appointment) => {
             return (
               <div
                 key={appointment.id}
@@ -226,13 +224,13 @@ interface DayViewProps {
 function DayView({ day, appointments, onSelectAppointment, onNewAppointmentAtDate }: DayViewProps) {
   const isMobile = useIsMobile();
   
-  // Generate hours for the day - adjust based on mobile
+  // Generera timmar för dagen - justera baserat på mobil
   const startHour = 8; // 8 AM
-  const endHour = isMobile ? 18 : 19; // 6 PM or 7 PM
+  const endHour = isMobile ? 18 : 19; // 6 PM eller 7 PM
   const hours = Array.from({ length: endHour - startHour + 1 }, (_, i) => i + startHour);
 
   return (
-    <div className="border rounded-md bg-card overflow-y-auto max-h-[calc(100vh-230px)]">
+    <div className="border rounded-md bg-card overflow-y-auto max-h-[calc(100vh-230px)] w-full">
       <div className="sticky top-0 bg-card z-10 border-b flex justify-between items-center p-2">
         <h3 className="font-medium text-sm sm:text-base">{format(day, "EEEE, MMMM d, yyyy")}</h3>
         <Dialog>
@@ -268,14 +266,13 @@ function DayView({ day, appointments, onSelectAppointment, onNewAppointmentAtDat
               <div className="flex-1">
                 {hourAppointments.length > 0 ? (
                   hourAppointments.map(appointment => {
-                    const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
                     return (
                       <div
                         key={appointment.id}
                         onClick={() => onSelectAppointment(appointment)}
                         className={cn(
                           "p-2 rounded cursor-pointer text-white mb-1",
-                          "bg-blue-600", // Always use blue background for better visibility
+                          "bg-blue-600", // Alltid använd blå bakgrund för bättre synlighet
                           appointment.isCompleted && "line-through opacity-60"
                         )}
                       >
@@ -318,31 +315,29 @@ interface WeekViewProps {
 function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppointmentAtDate }: WeekViewProps) {
   const isMobile = useIsMobile();
   
-  // Get the start of the week (Monday) and end of the week (Sunday)
+  // Få början av veckan (måndag) och slutet av veckan (söndag)
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
   
-  // Generate days of the week
+  // Generera dagarna i veckan
   const daysOfWeek = eachDayOfInterval({ start: weekStart, end: weekEnd });
   
-  // For mobile, show only 3 days at a time, centered around the current date
-  const visibleDays = isMobile
-    ? daysOfWeek.slice(0, 7) // Show all 7 days but with horizontal scroll
-    : daysOfWeek;
+  // För mobil, visa bara 3 dagar åt gången, centrerade kring det aktuella datumet
+  const visibleDays = daysOfWeek;
   
   return (
-    <div className="border rounded-md bg-card overflow-x-auto">
+    <div className="border rounded-md bg-card overflow-x-auto w-full">
       <div className={cn(
-        "grid divide-x",
-        isMobile ? "grid-cols-7" : "grid-cols-7",
-        "min-w-[700px]"
+        "grid divide-x border-b sticky top-0 z-10 bg-card",
+        "grid-cols-7",
+        isMobile ? "min-w-[700px]" : "" // Alltid visa hela veckovyn med horisontell scroll på mobil
       )}>
-        {/* Days of the week header */}
+        {/* Veckodagar header */}
         {visibleDays.map(day => (
           <div 
-            key={day.toISOString()} 
+            key={day.toISOString() + "-header"} 
             className={cn(
-              "p-2 text-center sticky top-0 bg-card z-10",
+              "p-2 text-center",
               isToday(day) && "bg-primary/10"
             )}
           >
@@ -359,9 +354,9 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
       
       {/* Week content */}
       <div className={cn(
-        "grid divide-x min-h-[200px] max-h-[calc(100vh-250px)] overflow-y-auto",
-        isMobile ? "grid-cols-7" : "grid-cols-7",
-        "min-w-[700px]"
+        "grid divide-x min-h-[300px] max-h-[calc(100vh-250px)] overflow-y-auto",
+        "grid-cols-7",
+        isMobile ? "min-w-[700px]" : "" // Alltid visa hela veckovyn med horisontell scroll på mobil
       )}>
         {visibleDays.map(day => {
           const dayAppointments = appointments.filter(appointment => 
@@ -370,7 +365,7 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
           
           return (
             <div 
-              key={day.toISOString()} 
+              key={day.toISOString() + "-content"} 
               className={cn(
                 "p-2 relative",
                 isToday(day) && "bg-primary/5"
@@ -387,7 +382,6 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
               
               <div className="mt-6 space-y-1">
                 {dayAppointments.map(appointment => {
-                  const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
                   return (
                     <div
                       key={appointment.id}
@@ -401,7 +395,7 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
                       <div className="font-medium text-xs">
                         {format(new Date(appointment.date), "HH:mm")}
                       </div>
-                      <div className="text-xs truncate">{appointment.customerName.split(' ')[0]}</div>
+                      <div className="text-xs truncate">{appointment.customerName}</div>
                     </div>
                   );
                 })}

@@ -63,7 +63,7 @@ export function CalendarHeader({
         endOfWeek.setDate(startOfWeek.getDate() + 6); // End on Sunday
         
         if (isMobile) {
-          // Shorter format for mobile
+          // Kortare format för mobil
           return `${format(startOfWeek, 'd', { locale })}–${format(endOfWeek, 'd MMM', { locale })}`;
         }
         else if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
@@ -103,7 +103,7 @@ export function CalendarHeader({
     }
   };
 
-  // Touch-friendly compact controls for mobile
+  // Touch-friendly kompakta kontroller för mobil
   if (isMobile) {
     return (
       <div className="mb-4 space-y-3">
@@ -134,16 +134,16 @@ export function CalendarHeader({
           
           <div className="flex items-center space-x-2">
             <Button variant="outline" onClick={onToday} size="sm" className="h-7 text-xs px-2">
-              <CalendarIcon className="h-3 w-3" />
+              <CalendarIcon className="h-3.5 w-3.5" />
             </Button>
             
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-7 text-xs px-2">
-                  <PlusCircle className="h-3 w-3" />
+                  <PlusCircle className="h-3.5 w-3.5" />
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+              <DialogContent className="w-[calc(100vw-32px)] sm:max-w-[600px] max-h-[90vh] overflow-y-auto mx-auto">
                 <DialogHeader>
                   <DialogTitle>
                     {selectedAppointment ? t('appointment.editAppointment') : t('appointment.newAppointment')}
