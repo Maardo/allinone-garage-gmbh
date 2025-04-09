@@ -2,31 +2,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '@/lib/types';
 import { useNavigate } from 'react-router-dom';
-
-// Demo users for this prototype
-const DEMO_USERS = [
-  {
-    id: '1',
-    name: 'Admin User',
-    email: 'admin@workshop.com',
-    password: 'admin123',
-    role: 'admin' as UserRole
-  },
-  {
-    id: '2',
-    name: 'Mechanic 1',
-    email: 'mechanic1@workshop.com',
-    password: 'mechanic123',
-    role: 'mechanic' as UserRole
-  },
-  {
-    id: '3',
-    name: 'Mechanic 2',
-    email: 'mechanic2@workshop.com',
-    password: 'mechanic123',
-    role: 'mechanic' as UserRole
-  }
-];
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -41,88 +18,118 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [users, setUsers] = useState<typeof DEMO_USERS>(() => {
-    const savedUsers = localStorage.getItem('workshop-users');
-    return savedUsers ? JSON.parse(savedUsers) : DEMO_USERS;
-  });
 
-  // Check if user is already logged in
+  // Initialize auth state
   useEffect(() => {
-    const storedUser = localStorage.getItem('workshop-user');
-    if (storedUser) {
-      try {
-        setCurrentUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error('Failed to parse user from storage');
+    // Check for existing session
+    const initializeAuth = async () => {
+      setIsLoading(true);
+      
+      // Set up auth state listener first
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          if (session && session.user) {
+            // Map Supabase user to our user model
+            const appUser: User = {
+              id: session.user.id,
+              name: session.user.user_metadata.name || session.user.email?.split('@')[0] || 'User',
+              email: session.user.email || '',
+              role: 'admin' as UserRole // Default role for now
+            };
+            
+            setCurrentUser(appUser);
+          } else {
+            setCurrentUser(null);
+          }
+        }
+      );
+      
+      // Check for existing session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session && session.user) {
+        // Map Supabase user to our user model
+        const appUser: User = {
+          id: session.user.id,
+          name: session.user.user_metadata.name || session.user.email?.split('@')[0] || 'User',
+          email: session.user.email || '',
+          role: 'admin' as UserRole // Default role for now
+        };
+        
+        setCurrentUser(appUser);
       }
-    }
-    setIsLoading(false);
+      
+      setIsLoading(false);
+      
+      return () => {
+        subscription.unsubscribe();
+      };
+    };
+    
+    initializeAuth();
   }, []);
-
-  // Save users to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('workshop-users', JSON.stringify(users));
-  }, [users]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    const user = users.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-      const { password, ...userWithoutPassword } = user;
-      // All users get same access - set all roles to admin
-      const userWithAdminAccess = { ...userWithoutPassword, role: 'admin' as UserRole };
-      setCurrentUser(userWithAdminAccess);
-      localStorage.setItem('workshop-user', JSON.stringify(userWithAdminAccess));
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      
+      if (error) {
+        console.error('Login error:', error.message);
+        setIsLoading(false);
+        return false;
+      }
+      
       setIsLoading(false);
       return true;
+    } catch (error) {
+      console.error('Login exception:', error);
+      setIsLoading(false);
+      return false;
     }
-    
-    setIsLoading(false);
-    return false;
   };
 
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Check if user with this email already exists
-    const existingUser = users.find(u => u.email === email);
-    if (existingUser) {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name
+          }
+        }
+      });
+      
+      if (error) {
+        console.error('Registration error:', error.message);
+        setIsLoading(false);
+        return false;
+      }
+      
+      setIsLoading(false);
+      return true;
+    } catch (error) {
+      console.error('Registration exception:', error);
       setIsLoading(false);
       return false;
     }
-    
-    // Create new user (always as admin for equal access)
-    const newUser = {
-      id: Math.random().toString(36).substr(2, 9),
-      name,
-      email,
-      password,
-      role: 'admin' as UserRole // Give full access to all new users
-    };
-    
-    // Add to users list
-    setUsers(prevUsers => [...prevUsers, newUser]);
-    
-    // Log in the new user
-    const { password: _, ...userWithoutPassword } = newUser;
-    setCurrentUser(userWithoutPassword);
-    localStorage.setItem('workshop-user', JSON.stringify(userWithoutPassword));
-    
-    setIsLoading(false);
-    return true;
   };
 
-  const logout = () => {
-    setCurrentUser(null);
-    localStorage.removeItem('workshop-user');
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+      setCurrentUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to log out');
+    }
   };
 
   return (

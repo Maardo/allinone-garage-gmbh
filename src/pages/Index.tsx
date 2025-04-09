@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
   const { currentUser, isLoading } = useAuth();
@@ -10,13 +11,20 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading) {
-      if (currentUser) {
-        navigate('/overview');
-      } else {
-        navigate('/login');
+    const checkSession = async () => {
+      // Get the current session
+      const { data } = await supabase.auth.getSession();
+      
+      if (!isLoading) {
+        if (currentUser) {
+          navigate('/overview');
+        } else {
+          navigate('/login');
+        }
       }
-    }
+    };
+    
+    checkSession();
   }, [currentUser, isLoading, navigate]);
 
   return (

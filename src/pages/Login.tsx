@@ -78,9 +78,11 @@ export default function Login() {
       
       if (success) {
         toast.success(t("register.successMessage"));
-        navigate("/overview");
+        // Note: Supabase usually requires email confirmation, so we may not automatically navigate
+        // to the overview page after registration unless you've disabled email confirmation
+        toast.info("Please check your email to confirm your account.");
       } else {
-        toast.error(t("register.failedMessage"));
+        toast.error(t("register.emailExists"));
       }
     } catch (error) {
       toast.error(t("register.failedMessage"));
@@ -131,7 +133,7 @@ export default function Login() {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="admin@workshop.com"
+                      placeholder="your.email@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -152,13 +154,6 @@ export default function Login() {
                       required
                       className="transition-all text-sm sm:text-base"
                     />
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    <p>{t("login.demoAccounts")}</p>
-                    <ul className="list-disc list-inside mt-1">
-                      <li>{t("login.adminAccount")}</li>
-                      <li>{t("login.mechanicAccount")}</li>
-                    </ul>
                   </div>
                 </CardContent>
                 <CardFooter>
@@ -200,7 +195,7 @@ export default function Login() {
                     <Input
                       id="reg-email"
                       type="email"
-                      placeholder="your.name@workshop.com"
+                      placeholder="your.name@example.com"
                       value={regEmail}
                       onChange={(e) => setRegEmail(e.target.value)}
                       required
