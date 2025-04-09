@@ -23,7 +23,8 @@ export default function Overview() {
     stats, 
     filteredJobs, 
     upcomingJobs,
-    handleMarkComplete 
+    handleMarkComplete,
+    EmailConfirmationDialog
   } = useOverviewAppointments();
   const { chartData } = useChartData(upcomingJobs);
   
@@ -45,6 +46,8 @@ export default function Overview() {
         />
         <AppointmentsChart chartData={chartData} />
       </div>
+      
+      <EmailConfirmationDialog />
     </Layout>
   );
 }

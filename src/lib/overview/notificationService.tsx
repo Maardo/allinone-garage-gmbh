@@ -1,12 +1,50 @@
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Appointment } from './types';
 import { useLanguage } from '@/context/LanguageContext';
+import { useToast } from '@/hooks/use-toast';
 
 export function useNotificationService() {
   const { t } = useLanguage();
+  const [pendingEmails, setPendingEmails] = useState<{[key: number]: NodeJS.Timeout}>({});
+  const { toast } = useToast();
 
-  // Function to send email notification
+  // Clear a pending email without sending it
+  const cancelPendingEmail = useCallback((appointmentId: number) => {
+    if (pendingEmails[appointmentId]) {
+      clearTimeout(pendingEmails[appointmentId]);
+      const updatedPendingEmails = { ...pendingEmails };
+      delete updatedPendingEmails[appointmentId];
+      setPendingEmails(updatedPendingEmails);
+      return true;
+    }
+    return false;
+  }, [pendingEmails]);
+
+  // Schedule an email to be sent after delay
+  const scheduleEmailNotification = useCallback((appointment: Appointment, delayInSeconds: number = 30) => {
+    // Cancel any existing pending email for this appointment
+    cancelPendingEmail(appointment.id);
+    
+    // Schedule the new email
+    const timeout = setTimeout(() => {
+      sendEmailNotification(appointment);
+      // Remove from pending emails
+      const updatedPendingEmails = { ...pendingEmails };
+      delete updatedPendingEmails[appointment.id];
+      setPendingEmails(updatedPendingEmails);
+    }, delayInSeconds * 1000);
+    
+    // Store the timeout reference
+    setPendingEmails(prev => ({
+      ...prev,
+      [appointment.id]: timeout
+    }));
+    
+    return true;
+  }, [pendingEmails]);
+
+  // Function to send email notification immediately
   const sendEmailNotification = (appointment: Appointment) => {
     const emailTemplate = localStorage.getItem("completionEmailTemplate") || 
       "Dear customer,\n\nWe are pleased to inform you that your vehicle service has been completed. Your vehicle is now ready for pickup.\n\nThank you for choosing our services.\n\nBest regards,\nAuto Service Center";
@@ -19,5 +57,10 @@ export function useNotificationService() {
     return true;
   };
 
-  return { sendEmailNotification };
+  return { 
+    sendEmailNotification,
+    scheduleEmailNotification,
+    cancelPendingEmail,
+    pendingEmails
+  };
 }

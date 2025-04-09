@@ -9,5 +9,7 @@ export const actions = {
   remove: 'Entfernen',
   undo: 'Rückgängig',
   undone: 'Rückgängig gemacht',
-  changesReverted: 'Änderungen wurden zurückgesetzt'
+  changesReverted: 'Änderungen wurden zurückgesetzt',
+  yes: 'Ja',
+  no: 'Nein'
 };

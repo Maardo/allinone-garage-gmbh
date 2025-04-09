@@ -16,5 +16,8 @@ export const overview = {
   appointmentCompleted: 'Termin abgeschlossen',
   appointmentMarkedComplete: 'Der Termin wurde als abgeschlossen markiert',
   emailSentToCustomer: 'Eine E-Mail wurde an den Kunden gesendet.',
-  customerAndVehicle: 'Kunde & Fahrzeug'
+  emailScheduled: 'E-Mail-Benachrichtigung wird in 30 Sekunden gesendet. Sie können diese Aktion rückgängig machen, um abzubrechen.',
+  customerAndVehicle: 'Kunde & Fahrzeug',
+  sendEmailConfirmation: 'E-Mail an den Kunden senden?',
+  sendEmailQuestion: 'Möchten Sie eine Benachrichtigungs-E-Mail an den Kunden senden?'
 };

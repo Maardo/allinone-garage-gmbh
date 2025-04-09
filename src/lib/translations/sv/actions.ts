@@ -9,5 +9,7 @@ export const actions = {
   remove: 'Ta Bort',
   undo: 'Ångra',
   undone: 'Ångrad',
-  changesReverted: 'Ändringar har återställts'
+  changesReverted: 'Ändringar har återställts',
+  yes: 'Ja',
+  no: 'Nej'
 };

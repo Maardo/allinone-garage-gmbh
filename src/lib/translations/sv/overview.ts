@@ -16,5 +16,8 @@ export const overview = {
   appointmentCompleted: 'Bokning slutförd',
   appointmentMarkedComplete: 'Bokningen har markerats som slutförd',
   emailSentToCustomer: 'Ett e-postmeddelande har skickats till kunden.',
-  customerAndVehicle: 'Kund & Fordon'
+  emailScheduled: 'E-postmeddelande kommer att skickas om 30 sekunder. Du kan ångra denna åtgärd för att avbryta.',
+  customerAndVehicle: 'Kund & Fordon',
+  sendEmailConfirmation: 'Skicka e-post till kunden?',
+  sendEmailQuestion: 'Vill du skicka ett meddelande via e-post till kunden?'
 };
