@@ -14,12 +14,7 @@ interface SidebarProps {
 export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
   const location = useLocation();
   
-  // For debugging
-  useEffect(() => {
-    console.log("Sidebar status:", isMobileOpen ? "OPEN" : "CLOSED");
-  }, [isMobileOpen]);
-
-  // Close sidebar on mobile when route changes
+  // Stäng sidebar på mobil när route ändras
   useEffect(() => {
     if (isMobileOpen && toggleSidebar && window.innerWidth < 768) {
       toggleSidebar();
@@ -28,14 +23,13 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
 
   const handleCloseSidebar = () => {
     if (toggleSidebar) {
-      console.log("Closing sidebar from X button"); // Debug
       toggleSidebar();
     }
   };
 
   return (
     <>
-      {/* Sidebar backdrop for mobile */}
+      {/* Sidebar bakgrund för mobil */}
       {isMobileOpen && (
         <div 
           className="fixed inset-0 bg-black/30 z-40 md:hidden"

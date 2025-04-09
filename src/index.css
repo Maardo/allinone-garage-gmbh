@@ -45,12 +45,21 @@
     --sidebar-ring: 210 100% 50%;
   }
 
-  /* ... keep existing code (fonts and scrollbar styles) */
+  /* För att förbättra läsbarheten på mobila enheter */
+  html {
+    -webkit-text-size-adjust: 100%;
+    font-size: 16px;
+  }
+  
+  body {
+    @apply text-foreground bg-background;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -65,7 +74,7 @@
     @apply bg-muted-foreground/50;
   }
 
-  /* Custom animations */
+  /* Mobilanpassade animationer */
   .animate-in {
     animation: fade-in 0.3s ease forwards;
   }
@@ -74,7 +83,7 @@
     @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg;
   }
   
-  /* Calendar styles */
+  /* Calendar styles - förbättrade för mobil */
   .calendar-day {
     @apply bg-card border rounded-md p-1 sm:p-2 h-16 sm:h-24 overflow-y-auto transition-all duration-200 text-foreground text-xs sm:text-sm;
   }
@@ -167,6 +176,13 @@
   .payment-unpaid {
     @apply text-red-700;
   }
+
+  /* Touch-friendly selectors för mobil */
+  @media (max-width: 768px) {
+    button, a, select, input {
+      @apply min-h-10 min-w-10;
+    }
+  }
 }
 
 @layer components {
@@ -180,5 +196,27 @@
   
   .sidebar-link-active {
     @apply bg-blue-700 text-white font-medium;
+  }
+  
+  /* Responsiva grid-klasser */
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+  
+  .responsive-grid-tight {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3;
+  }
+}
+
+/* Förbättra mobiltypografi */
+@media (max-width: 640px) {
+  h1 {
+    @apply text-xl;
+  }
+  h2 {
+    @apply text-lg;
+  }
+  p, li, label, input, select, button {
+    @apply text-sm;
   }
 }

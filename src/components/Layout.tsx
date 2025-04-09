@@ -1,10 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { cn } from "@/lib/utils";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -59,18 +59,23 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   }, [currentUser, isLoading, navigate]);
 
   const toggleSidebar = () => {
-    console.log("Layout toggle called, current state:", isMobileOpen);
-    setIsMobileOpen(!isMobileOpen); // Simplified toggle
+    setIsMobileOpen(!isMobileOpen);
   };
 
+  // Stäng sidebar när sidvisningen ändras på mobil
+  useEffect(() => {
+    if (isMobileOpen && window.innerWidth < 768) {
+      setIsMobileOpen(false);
+    }
+  }, [location.pathname]);
+
+  // Hantera klick utanför sidebaren för att stänga den
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (isMobileOpen && window.innerWidth < 768) {
         const target = e.target as HTMLElement;
         const isSidebar = !!target.closest('[data-sidebar="sidebar"]');
         const isToggle = !!target.closest('[data-toggle="sidebar"]');
-        
-        console.log("Outside click - sidebar:", isSidebar, "toggle:", isToggle);
         
         if (!isSidebar && !isToggle) {
           setIsMobileOpen(false);
@@ -84,6 +89,7 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
     };
   }, [isMobileOpen]);
 
+  // Stäng sidebaren automatiskt när skärmstorlek ändras
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768 && isMobileOpen) {

@@ -12,11 +12,6 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
   const { currentUser } = useAuth();
   const { t } = useLanguage();
   
-  const handleToggle = () => {
-    console.log("Navbar hamburger clicked"); // Debug
-    toggleSidebar();
-  };
-  
   return (
     <div className="h-16 border-b bg-white flex items-center justify-between px-4 sticky top-0 z-30">
       <div className="flex items-center gap-4">
@@ -24,7 +19,7 @@ export function Navbar({ toggleSidebar }: NavbarProps) {
           variant="ghost"
           size="icon"
           className="md:hidden"
-          onClick={handleToggle}
+          onClick={toggleSidebar}
           aria-label="Toggle menu"
           data-toggle="sidebar"
         >

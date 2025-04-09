@@ -91,11 +91,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-blue-100 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-blue-100 p-3">
       <div className="w-full max-w-md animate-scale-in">
         <Card className="border-none shadow-lg glass-panel backdrop-blur-md bg-white/90">
           <CardHeader className="space-y-1 text-center">
-            <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-primary/10 p-3">
+            <div className="mx-auto mb-3 h-14 w-14 rounded-full bg-primary/10 p-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -111,22 +111,22 @@ export default function Login() {
                 />
               </svg>
             </div>
-            <CardTitle className="text-2xl font-bold">{t("login.title")}</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-xl sm:text-2xl font-bold">{t("login.title")}</CardTitle>
+            <CardDescription className="text-sm">
               {t("login.subtitle")}
             </CardDescription>
           </CardHeader>
           
           <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-4">
+            <TabsList className="grid w-full grid-cols-2 mb-3">
               <TabsTrigger value="login">{t("login.signIn")}</TabsTrigger>
               <TabsTrigger value="register">{t("register.createAccount")}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="login">
               <form onSubmit={handleLoginSubmit}>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
+                <CardContent className="space-y-3">
+                  <div className="space-y-1">
                     <Label htmlFor="email">{t("login.email")}</Label>
                     <Input
                       id="email"
@@ -136,10 +136,10 @@ export default function Login() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       autoComplete="email"
-                      className="transition-all"
+                      className="transition-all text-sm sm:text-base"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="password">{t("login.password")}</Label>
                     </div>
@@ -150,7 +150,7 @@ export default function Login() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="transition-all"
+                      className="transition-all text-sm sm:text-base"
                     />
                   </div>
                   <div className="text-xs text-muted-foreground">
@@ -182,8 +182,8 @@ export default function Login() {
             
             <TabsContent value="register">
               <form onSubmit={handleRegisterSubmit}>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
+                <CardContent className="space-y-3">
+                  <div className="space-y-1">
                     <Label htmlFor="reg-name">{t("register.name")}</Label>
                     <Input
                       id="reg-name"
@@ -192,10 +192,10 @@ export default function Login() {
                       value={regName}
                       onChange={(e) => setRegName(e.target.value)}
                       required
-                      className="transition-all"
+                      className="transition-all text-sm sm:text-base"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <Label htmlFor="reg-email">{t("register.workEmail")}</Label>
                     <Input
                       id="reg-email"
@@ -204,11 +204,11 @@ export default function Login() {
                       value={regEmail}
                       onChange={(e) => setRegEmail(e.target.value)}
                       required
-                      className="transition-all"
+                      className="transition-all text-sm sm:text-base"
                     />
                     <p className="text-xs text-muted-foreground">{t("register.workEmailNote")}</p>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <Label htmlFor="reg-password">{t("register.password")}</Label>
                     <Input
                       id="reg-password"
@@ -217,10 +217,10 @@ export default function Login() {
                       value={regPassword}
                       onChange={(e) => setRegPassword(e.target.value)}
                       required
-                      className="transition-all"
+                      className="transition-all text-sm sm:text-base"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <Label htmlFor="reg-confirm-password">{t("register.confirmPassword")}</Label>
                     <Input
                       id="reg-confirm-password"
@@ -229,7 +229,7 @@ export default function Login() {
                       value={regConfirmPassword}
                       onChange={(e) => setRegConfirmPassword(e.target.value)}
                       required
-                      className="transition-all"
+                      className="transition-all text-sm sm:text-base"
                     />
                   </div>
                 </CardContent>
