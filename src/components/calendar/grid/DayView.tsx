@@ -6,6 +6,8 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Appointment } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/context/LanguageContext";
+import { sv, de, enUS } from "date-fns/locale";
 
 interface DayViewProps {
   day: Date;
@@ -16,16 +18,31 @@ interface DayViewProps {
 
 export function DayView({ day, appointments, onSelectAppointment, onNewAppointmentAtDate }: DayViewProps) {
   const isMobile = useIsMobile();
+  const { language } = useLanguage();
+  
+  // Get the appropriate locale based on the selected language
+  const getLocale = () => {
+    switch (language) {
+      case 'sv':
+        return sv;
+      case 'de':
+        return de;
+      case 'en':
+      default:
+        return enUS;
+    }
+  };
   
   // Generate hours for the day - adjust based on mobile
   const startHour = 8; // 8 AM
   const endHour = isMobile ? 18 : 19; // 6 PM or 7 PM
   const hours = Array.from({ length: endHour - startHour + 1 }, (_, i) => i + startHour);
+  const locale = getLocale();
 
   return (
     <div className="border rounded-md bg-card overflow-y-auto max-h-[calc(100vh-230px)] w-full">
       <div className="sticky top-0 bg-card z-10 border-b flex justify-between items-center p-2">
-        <h3 className="font-medium text-sm sm:text-base">{format(day, "EEEE, MMMM d, yyyy")}</h3>
+        <h3 className="font-medium text-sm sm:text-base">{format(day, "EEEE, d MMMM yyyy", { locale })}</h3>
         <Dialog>
           <DialogTrigger asChild>
             <Button 
@@ -54,7 +71,7 @@ export function DayView({ day, appointments, onSelectAppointment, onNewAppointme
           return (
             <div key={hour} className="p-2 hover:bg-gray-50 flex">
               <div className="w-10 sm:w-16 font-medium text-muted-foreground text-xs sm:text-sm shrink-0">
-                {format(hourDate, "h a")}
+                {format(hourDate, "HH:00", { locale })}
               </div>
               <div className="flex-1">
                 {hourAppointments.length > 0 ? (
@@ -70,7 +87,7 @@ export function DayView({ day, appointments, onSelectAppointment, onNewAppointme
                         )}
                       >
                         <div className="font-medium text-xs sm:text-sm">
-                          {format(new Date(appointment.date), "HH:mm")} - {appointment.customerName}
+                          {format(new Date(appointment.date), "HH:mm", { locale })} - {appointment.customerName}
                         </div>
                         <div className="text-xs sm:text-sm">{appointment.vehicleMake} - {appointment.vehicleLicense}</div>
                         {!isMobile && appointment.notes && (
