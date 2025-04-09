@@ -15,9 +15,25 @@ export function useLoanerCarOperations(
   const { t } = useLanguage();
   const { toast } = useToast();
   const [selectedCar, setSelectedCar] = useState<LoanerCar | null>(null);
+  const [previousLoanerCars, setPreviousLoanerCars] = useState<LoanerCar[]>([]);
+
+  const saveStateBeforeChange = () => {
+    setPreviousLoanerCars([...loanerCars]);
+  };
+  
+  const undoLastChange = () => {
+    setLoanerCars([...previousLoanerCars]);
+    toast({
+      title: t('actions.undone'),
+      description: t('actions.changesReverted'),
+    });
+    return true;
+  };
 
   const handleAssign = (assignData: { customerId: string; startDate: string; returnDate: string }) => {
     if (!selectedCar || !assignData.customerId) return;
+    
+    saveStateBeforeChange();
     
     const customer = MOCK_CUSTOMERS.find(c => c.id === assignData.customerId);
     if (!customer) return;
@@ -40,6 +56,14 @@ export function useLoanerCarOperations(
     toast({
       title: t('loanerCar.assigned'),
       description: t('loanerCar.assignedDescription'),
+      action: (
+        <button
+          onClick={() => undoLastChange()}
+          className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
+        >
+          {t('actions.undo')}
+        </button>
+      ),
     });
   };
 
@@ -47,6 +71,8 @@ export function useLoanerCarOperations(
     // Find the appointment
     const appointment = appointments.find(app => app.id === appointmentId);
     if (!appointment) return;
+    
+    saveStateBeforeChange();
     
     // Find an available car
     const availableCar = loanerCars.find(car => car.isAvailable);
@@ -87,10 +113,20 @@ export function useLoanerCarOperations(
     toast({
       title: t('loanerCar.assigned'),
       description: t('loanerCar.assignedToAppointmentDescription'),
+      action: (
+        <button
+          onClick={() => undoLastChange()}
+          className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
+        >
+          {t('actions.undo')}
+        </button>
+      ),
     });
   };
 
   const handleReturn = (carId: string) => {
+    saveStateBeforeChange();
+    
     // Get the car
     const car = loanerCars.find(c => c.id === carId);
     if (!car || !car.appointmentId) {
@@ -142,6 +178,14 @@ export function useLoanerCarOperations(
     toast({
       title: t('loanerCar.returned'),
       description: t('loanerCar.returnedDescription'),
+      action: (
+        <button
+          onClick={() => undoLastChange()}
+          className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
+        >
+          {t('actions.undo')}
+        </button>
+      ),
     });
   };
 
@@ -150,6 +194,8 @@ export function useLoanerCarOperations(
     setSelectedCar,
     handleAssign,
     handleReturn,
-    handleAssignToAppointment
+    handleAssignToAppointment,
+    saveStateBeforeChange,
+    undoLastChange
   };
 }
