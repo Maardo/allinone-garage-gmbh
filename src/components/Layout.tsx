@@ -59,18 +59,21 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   }, [currentUser, isLoading, navigate]);
 
   const toggleSidebar = () => {
-    console.log("Toggle sidebar called. Current state:", isMobileOpen);
+    console.log("Toggle sidebar called in Layout. Current state:", isMobileOpen);
     setIsMobileOpen(prevState => !prevState);
   };
 
+  // Close sidebar on route change on mobile
   useEffect(() => {
+    console.log("Route changed to:", location.pathname);
     if (isMobileOpen && window.innerWidth < 768) {
       setIsMobileOpen(false);
     }
-  }, [location.pathname]);
+  }, [location.pathname, isMobileOpen]);
 
+  // Handle outside clicks on mobile
   useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLElement;
       const isSidebar = !!target.closest('[data-sidebar="sidebar"]');
       const isToggle = !!target.closest('[data-toggle="sidebar"]');
@@ -91,6 +94,7 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
     };
   }, [isMobileOpen]);
 
+  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768 && isMobileOpen) {

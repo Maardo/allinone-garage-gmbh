@@ -13,6 +13,13 @@ export function SidebarHeader({ isMobileOpen, onClose }: SidebarHeaderProps) {
   const { currentUser } = useAuth();
   const { t } = useLanguage();
 
+  const handleClose = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose();
+    console.log("Close button clicked in SidebarHeader");
+  };
+
   return (
     <div className="p-6 border-b border-sidebar-border flex justify-between items-center">
       <div>
@@ -27,9 +34,10 @@ export function SidebarHeader({ isMobileOpen, onClose }: SidebarHeaderProps) {
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={onClose}
+          onClick={handleClose}
           className="text-white hover:bg-blue-700 md:hidden"
           data-toggle="sidebar"
+          aria-label="Close menu"
         >
           <X className="h-5 w-5" />
         </Button>
