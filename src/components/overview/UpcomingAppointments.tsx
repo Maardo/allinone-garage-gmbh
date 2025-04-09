@@ -6,14 +6,14 @@ import { sv, de, enUS } from "date-fns/locale";
 import { SERVICE_TYPES, ServiceType } from "@/lib/serviceTypes";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
-import { Appointment, GroupedAppointments } from "@/hooks/useOverviewAppointments";
+import { Appointment, GroupedAppointments, TimeViewType } from "@/lib/overview/types";
 
 type Locale = typeof sv | typeof de | typeof enUS;
 
 interface UpcomingAppointmentsProps {
   filteredJobs: Appointment[];
-  timeView: "week" | "month";
-  setTimeView: (view: "week" | "month") => void;
+  timeView: TimeViewType;
+  setTimeView: (view: TimeViewType) => void;
   jobsByDate: GroupedAppointments;
   locale: Locale;
   onMarkComplete?: (appointmentId: number) => void;

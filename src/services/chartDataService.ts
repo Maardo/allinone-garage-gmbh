@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { SERVICE_TYPES } from '@/lib/serviceTypes';
-import { Appointment } from '@/hooks/useOverviewAppointments';
+import { Appointment } from '@/lib/overview/types';
 
 export function useChartData(upcomingJobs: Appointment[]) {
   const { t } = useLanguage();

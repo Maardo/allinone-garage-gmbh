@@ -7,9 +7,6 @@ import { initialStats, initialAppointments } from '@/lib/overview/mockData';
 import { useNotificationService } from '@/lib/overview/notificationService';
 import { useAppointmentFiltering } from '@/lib/overview/filterService';
 
-// Re-export types for backward compatibility
-export type { Appointment, GroupedAppointments, Stats, TimeViewType };
-
 export function useOverviewAppointments() {
   const { t } = useLanguage();
   const { toast } = useToast();
