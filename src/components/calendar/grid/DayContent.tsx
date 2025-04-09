@@ -6,6 +6,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Appointment } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface DayContentProps {
   day: Date;
@@ -23,6 +24,16 @@ export function DayContent({
   onNewAppointmentAtDate 
 }: DayContentProps) {
   const isMobile = useIsMobile();
+  const { language } = useLanguage();
+  
+  // Get locale for date formatting
+  const getLocale = () => {
+    switch (language) {
+      case 'sv': return 'sv';
+      case 'de': return 'de';
+      default: return 'en';
+    }
+  };
   
   return (
     <>

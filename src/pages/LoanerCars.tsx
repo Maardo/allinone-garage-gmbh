@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { LoanerCarCard } from "@/components/loaner-cars/LoanerCarCard";
 import { AssignDialog } from "@/components/loaner-cars/AssignDialog";
 import { EditCarDialog } from "@/components/loaner-cars/EditCarDialog";
@@ -44,7 +45,7 @@ export default function LoanerCarsPage() {
   return (
     <Layout>
       <div className="space-y-8">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-wrap justify-between items-center gap-3">
           <h2 className="text-xl font-medium">{t('loanerCar.management')}</h2>
           
           {isAdmin && (
@@ -117,10 +118,14 @@ export default function LoanerCarsPage() {
               <Car className="h-5 w-5 mr-2 text-blue-600" />
               {t('loanerCar.requestedCars')}
             </h3>
-            <LoanerCarRequests 
-              appointments={appointmentsNeedingCars} 
-              onAssign={handleAssignToAppointment} 
-            />
+            <ScrollArea className="w-full overflow-x-auto">
+              <div className="min-w-[600px] pb-2">
+                <LoanerCarRequests 
+                  appointments={appointmentsNeedingCars} 
+                  onAssign={handleAssignToAppointment} 
+                />
+              </div>
+            </ScrollArea>
           </div>
         )}
       </div>

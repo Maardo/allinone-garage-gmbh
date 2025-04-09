@@ -1,20 +1,18 @@
 
 export const overview = {
-  todayAppointments: 'Dagens Bokningar',
-  weekAppointments: 'Veckans Bokningar',
-  totalCustomers: 'Totalt Antal Kunder',
-  completedJobs: 'Utförda Arbeten',
-  upcomingAppointments: 'Kommande Bokningar',
-  appointments: 'Bokningar',
-  upcomingJobs: 'Kommande Bokningar',
+  timeView: 'Tidsvy',
   week: 'Vecka',
   month: 'Månad',
-  count: 'st',
-  jobsCount: '{count} bokningar',
-  noAppointments: 'Inga bokningar',
+  todayAppointments: 'Dagens bokningar',
+  weekAppointments: 'Veckans bokningar',
+  totalCustomers: 'Totalt antal kunder',
+  completedJobs: 'Slutförda jobb',
+  upcomingAppointments: 'Kommande bokningar',
+  noAppointments: 'Inga kommande bokningar för denna period',
   markComplete: 'Markera som klar',
   appointmentCompleted: 'Bokning slutförd',
-  appointmentMarkedComplete: 'Bokningen har markerats som slutförd',
+  appointmentMarkedComplete: 'Bokningen har markerats som slutförd.',
   emailSentToCustomer: 'Ett e-postmeddelande har skickats till kunden.',
-  customerAndVehicle: 'Kund & Fordon'
+  sendEmailConfirmation: 'Skicka e-postmeddelande?',
+  sendEmailConfirmationDescription: 'Vill du skicka ett meddelande om slutförande till {customerName}?'
 };
