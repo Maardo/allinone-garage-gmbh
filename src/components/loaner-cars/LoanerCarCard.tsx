@@ -48,9 +48,9 @@ export function LoanerCarCard({
         car.isAvailable ? "bg-green-100" : "bg-amber-200"
       )}>
         <CardTitle className="flex justify-between items-center text-base sm:text-lg">
-          <div className="flex items-center">
-            <Car className="h-4 w-4 mr-1.5" />
-            <span className="truncate max-w-[150px] sm:max-w-none">{car.name}</span>
+          <div className="flex items-center max-w-[65%]">
+            <Car className="h-4 w-4 mr-1.5 flex-shrink-0" />
+            <span className="truncate">{car.name}</span>
           </div>
           <Badge 
             variant={car.isAvailable ? "outline" : "secondary"}
@@ -66,41 +66,41 @@ export function LoanerCarCard({
         </CardTitle>
       </CardHeader>
       <CardContent className={cn(
-        "pt-3 px-4 pb-4",
+        "pt-3 px-3 sm:px-4 pb-4",
         !car.isAvailable && "bg-amber-50"
       )}>
         <div className="flex flex-col space-y-2">
           <div className="flex items-center text-sm">
-            <span className="font-medium w-24 text-muted-foreground">{t('loanerCar.licensePlate')}:</span>
-            <span className="font-medium">{car.license}</span>
+            <span className="font-medium w-20 sm:w-24 text-muted-foreground flex-shrink-0">{t('loanerCar.licensePlate')}:</span>
+            <span className="font-medium truncate">{car.license}</span>
           </div>
           
           {!car.isAvailable && car.assignedTo && (
             <>
-              <div className="flex items-center text-sm">
-                <span className="font-medium w-24 text-muted-foreground">{t('loanerCar.assignedTo')}:</span>
+              <div className="flex items-start sm:items-center text-sm">
+                <span className="font-medium w-20 sm:w-24 text-muted-foreground flex-shrink-0">{t('loanerCar.assignedTo')}:</span>
                 <div className="flex items-center">
-                  <User className="h-3.5 w-3.5 mr-1 text-amber-700" />
-                  <span className="font-medium text-amber-900 truncate max-w-[150px] sm:max-w-none">{car.assignedTo}</span>
+                  <User className="h-3.5 w-3.5 mr-1 text-amber-700 flex-shrink-0 mt-0.5 sm:mt-0" />
+                  <span className="font-medium text-amber-900 break-words">{car.assignedTo}</span>
                 </div>
               </div>
               
               {car.assignedFrom && (
-                <div className="flex items-center text-sm">
-                  <span className="font-medium w-24 text-muted-foreground">{t('loanerCar.startDate')}:</span>
+                <div className="flex items-start sm:items-center text-sm">
+                  <span className="font-medium w-20 sm:w-24 text-muted-foreground flex-shrink-0">{t('loanerCar.startDate')}:</span>
                   <div className="flex items-center">
-                    <Calendar className="h-3.5 w-3.5 mr-1 text-amber-700" />
-                    <span className="truncate max-w-[150px] sm:max-w-none">{formatDate(car.assignedFrom)}</span>
+                    <Calendar className="h-3.5 w-3.5 mr-1 text-amber-700 flex-shrink-0 mt-0.5 sm:mt-0" />
+                    <span className="break-words">{formatDate(car.assignedFrom)}</span>
                   </div>
                 </div>
               )}
               
               {car.assignedUntil && (
-                <div className="flex items-center text-sm">
-                  <span className="font-medium w-24 text-muted-foreground">{t('loanerCar.returnDate')}:</span>
+                <div className="flex items-start sm:items-center text-sm">
+                  <span className="font-medium w-20 sm:w-24 text-muted-foreground flex-shrink-0">{t('loanerCar.returnDate')}:</span>
                   <div className="flex items-center">
-                    <Calendar className="h-3.5 w-3.5 mr-1 text-amber-700" />
-                    <span className="truncate max-w-[150px] sm:max-w-none">{formatDate(car.assignedUntil)}</span>
+                    <Calendar className="h-3.5 w-3.5 mr-1 text-amber-700 flex-shrink-0 mt-0.5 sm:mt-0" />
+                    <span className="break-words">{formatDate(car.assignedUntil)}</span>
                   </div>
                 </div>
               )}
