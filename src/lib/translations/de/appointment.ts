@@ -3,7 +3,7 @@ export const appointment = {
   newAppointment: 'Neuer Termin',
   editAppointment: 'Termin bearbeiten',
   date: 'Datum und Uhrzeit',
-  serviceType: 'Servicetyp',
+  serviceType: 'Serviceart',
   customerDetails: 'Kundendetails',
   customerName: 'Kundenname',
   customerPhone: 'Telefonnummer',
@@ -18,7 +18,7 @@ export const appointment = {
   vehicleLicense: 'Kennzeichen',
   vehicleVin: 'Fahrgestellnummer',
   vehicleCarId: 'Fahrzeug-ID',
-  notes: 'Anmerkungen',
+  notes: 'Notizen',
   create: 'Termin erstellen',
   update: 'Termin aktualisieren',
   status: 'Status',
@@ -27,7 +27,12 @@ export const appointment = {
   vehicleInProgress: 'Service wird durchgeführt',
   ready: 'Fertig',
   ongoing: 'In Bearbeitung',
-  needsLoanerCar: 'Kunde benötigt ein Leihfahrzeug',
+  needsLoanerCar: 'Kunde benötigt Leihwagen',
   timeConflict: 'Zeitkonflikt',
-  timeConflictDescription: 'Dieser Zeitraum ist bereits gebucht. Bitte wählen Sie eine andere Zeit.'
+  timeConflictDescription: 'Dieser Zeitraum ist bereits gebucht. Bitte wählen Sie eine andere Zeit.',
+  deleted: 'Termin gelöscht',
+  created: 'Termin erstellt',
+  updated: 'Termin aktualisiert',
+  confirmDelete: 'Termin löschen',
+  confirmDeleteDescription: 'Sind Sie sicher, dass Sie diesen Termin löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.'
 };

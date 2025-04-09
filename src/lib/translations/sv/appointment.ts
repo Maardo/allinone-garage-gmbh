@@ -29,5 +29,10 @@ export const appointment = {
   ongoing: 'Pågående',
   needsLoanerCar: 'Kunden behöver en lånebil',
   timeConflict: 'Tidskonfikt',
-  timeConflictDescription: 'Denna tid är redan bokad. Välj en annan tid.'
+  timeConflictDescription: 'Denna tid är redan bokad. Välj en annan tid.',
+  deleted: 'Bokning borttagen',
+  created: 'Bokning skapad',
+  updated: 'Bokning uppdaterad',
+  confirmDelete: 'Ta bort bokning',
+  confirmDeleteDescription: 'Är du säker på att du vill ta bort denna bokning? Denna åtgärd kan inte ångras.'
 };

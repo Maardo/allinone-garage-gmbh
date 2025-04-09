@@ -1,8 +1,7 @@
 
-import { Calendar as CalendarIcon } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Appointment } from "@/lib/types";
 import { CalendarViewMode } from "@/lib/calendar/types";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileCalendarHeader } from "./header/MobileCalendarHeader";
 import { DesktopCalendarHeader } from "./header/DesktopCalendarHeader";
 
@@ -12,6 +11,7 @@ interface CalendarHeaderProps {
   onNextMonth: () => void;
   onToday: () => void;
   onAddAppointment: (appointment: Appointment) => void;
+  onDeleteAppointment?: (appointmentId: number) => void;
   isDialogOpen: boolean;
   setIsDialogOpen: (isOpen: boolean) => void;
   selectedAppointment: Appointment | null;
@@ -27,49 +27,54 @@ export function CalendarHeader({
   onNextMonth,
   onToday,
   onAddAppointment,
+  onDeleteAppointment,
   isDialogOpen,
   setIsDialogOpen,
   selectedAppointment,
   setSelectedAppointment,
   viewMode,
   onChangeViewMode,
-  existingAppointments, // Not used in the current implementation, but keeping for backward compatibility
+  existingAppointments = []
 }: CalendarHeaderProps) {
   const isMobile = useIsMobile();
   
-  // Touch-friendly kompakta kontroller för mobil
+  // Render appropriate header based on screen size
   if (isMobile) {
     return (
-      <MobileCalendarHeader 
+      <MobileCalendarHeader
         currentDate={currentDate}
         onPrevMonth={onPrevMonth}
         onNextMonth={onNextMonth}
         onToday={onToday}
         onAddAppointment={onAddAppointment}
+        onDeleteAppointment={onDeleteAppointment}
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
         selectedAppointment={selectedAppointment}
         setSelectedAppointment={setSelectedAppointment}
         viewMode={viewMode}
         onChangeViewMode={onChangeViewMode}
+        existingAppointments={existingAppointments}
       />
     );
   }
-
-  // Desktop version
+  
+  // Desktop header
   return (
-    <DesktopCalendarHeader 
+    <DesktopCalendarHeader
       currentDate={currentDate}
       onPrevMonth={onPrevMonth}
       onNextMonth={onNextMonth}
       onToday={onToday}
       onAddAppointment={onAddAppointment}
+      onDeleteAppointment={onDeleteAppointment}
       isDialogOpen={isDialogOpen}
       setIsDialogOpen={setIsDialogOpen}
       selectedAppointment={selectedAppointment}
       setSelectedAppointment={setSelectedAppointment}
       viewMode={viewMode}
       onChangeViewMode={onChangeViewMode}
+      existingAppointments={existingAppointments}
     />
   );
 }

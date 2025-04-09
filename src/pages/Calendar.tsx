@@ -25,6 +25,7 @@ export default function CalendarPage() {
     handleAddAppointment,
     handleSelectAppointment,
     handleNewAppointmentAtDate,
+    handleDeleteAppointment,
     handleChangeViewMode
   } = useCalendar();
 
@@ -37,6 +38,7 @@ export default function CalendarPage() {
           onNextMonth={handleNavigateNext}
           onToday={goToToday}
           onAddAppointment={handleAddAppointment}
+          onDeleteAppointment={handleDeleteAppointment}
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
           selectedAppointment={selectedAppointment}

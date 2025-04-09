@@ -29,5 +29,10 @@ export const appointment = {
   ongoing: 'Ongoing',
   needsLoanerCar: 'Customer needs a loaner car',
   timeConflict: 'Time Conflict',
-  timeConflictDescription: 'This time slot is already booked. Please choose a different time.'
+  timeConflictDescription: 'This time slot is already booked. Please choose a different time.',
+  deleted: 'Appointment deleted',
+  created: 'Appointment created',
+  updated: 'Appointment updated',
+  confirmDelete: 'Delete Appointment',
+  confirmDeleteDescription: 'Are you sure you want to delete this appointment? This action cannot be undone.'
 };
