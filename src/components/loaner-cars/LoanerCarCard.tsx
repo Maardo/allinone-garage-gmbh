@@ -48,7 +48,7 @@ export function LoanerCarCard({
         car.isAvailable ? "bg-green-100" : "bg-amber-200"
       )}>
         <CardTitle className="flex justify-between items-center text-base sm:text-lg">
-          <div className="flex items-center max-w-[65%]">
+          <div className="flex items-center max-w-[60%]">
             <Car className="h-4 w-4 mr-1.5 flex-shrink-0" />
             <span className="truncate">{car.name}</span>
           </div>
@@ -66,47 +66,47 @@ export function LoanerCarCard({
         </CardTitle>
       </CardHeader>
       <CardContent className={cn(
-        "pt-3 px-3 sm:px-4 pb-4",
+        "pt-3 px-3 sm:px-4 pb-3",
         !car.isAvailable && "bg-amber-50"
       )}>
-        <div className="flex flex-col space-y-2">
-          <div className="flex items-center text-sm">
-            <span className="font-medium w-20 sm:w-24 text-muted-foreground flex-shrink-0">{t('loanerCar.licensePlate')}:</span>
+        <div className="flex flex-col space-y-2.5">
+          <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[90px_1fr] items-center text-sm gap-1">
+            <span className="font-medium text-muted-foreground">{t('loanerCar.licensePlate')}:</span>
             <span className="font-medium truncate">{car.license}</span>
           </div>
           
           {!car.isAvailable && car.assignedTo && (
             <>
-              <div className="flex items-start sm:items-center text-sm">
-                <span className="font-medium w-20 sm:w-24 text-muted-foreground flex-shrink-0">{t('loanerCar.assignedTo')}:</span>
-                <div className="flex items-center">
-                  <User className="h-3.5 w-3.5 mr-1 text-amber-700 flex-shrink-0 mt-0.5 sm:mt-0" />
-                  <span className="font-medium text-amber-900 break-words">{car.assignedTo}</span>
+              <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[90px_1fr] items-start sm:items-center text-sm gap-1">
+                <span className="font-medium text-muted-foreground">{t('loanerCar.assignedTo')}:</span>
+                <div className="flex items-start">
+                  <User className="h-3.5 w-3.5 mr-1 text-amber-700 flex-shrink-0 mt-1" />
+                  <span className="font-medium text-amber-900 break-all">{car.assignedTo}</span>
                 </div>
               </div>
               
               {car.assignedFrom && (
-                <div className="flex items-start sm:items-center text-sm">
-                  <span className="font-medium w-20 sm:w-24 text-muted-foreground flex-shrink-0">{t('loanerCar.startDate')}:</span>
-                  <div className="flex items-center">
-                    <Calendar className="h-3.5 w-3.5 mr-1 text-amber-700 flex-shrink-0 mt-0.5 sm:mt-0" />
-                    <span className="break-words">{formatDate(car.assignedFrom)}</span>
+                <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[90px_1fr] items-start sm:items-center text-sm gap-1">
+                  <span className="font-medium text-muted-foreground">{t('loanerCar.startDate')}:</span>
+                  <div className="flex items-start">
+                    <Calendar className="h-3.5 w-3.5 mr-1 text-amber-700 flex-shrink-0 mt-1" />
+                    <span className="break-all">{formatDate(car.assignedFrom)}</span>
                   </div>
                 </div>
               )}
               
               {car.assignedUntil && (
-                <div className="flex items-start sm:items-center text-sm">
-                  <span className="font-medium w-20 sm:w-24 text-muted-foreground flex-shrink-0">{t('loanerCar.returnDate')}:</span>
-                  <div className="flex items-center">
-                    <Calendar className="h-3.5 w-3.5 mr-1 text-amber-700 flex-shrink-0 mt-0.5 sm:mt-0" />
-                    <span className="break-words">{formatDate(car.assignedUntil)}</span>
+                <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[90px_1fr] items-start sm:items-center text-sm gap-1">
+                  <span className="font-medium text-muted-foreground">{t('loanerCar.returnDate')}:</span>
+                  <div className="flex items-start">
+                    <Calendar className="h-3.5 w-3.5 mr-1 text-amber-700 flex-shrink-0 mt-1" />
+                    <span className="break-all">{formatDate(car.assignedUntil)}</span>
                   </div>
                 </div>
               )}
               
               {car.assignedUntil && new Date(car.assignedUntil) < new Date() && (
-                <div className="flex items-center text-xs sm:text-sm text-red-600 mt-2 font-medium">
+                <div className="flex items-center text-xs sm:text-sm text-red-600 mt-0.5 font-medium">
                   <AlertCircle className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
                   <span>{t('loanerCar.overdue')}</span>
                 </div>
