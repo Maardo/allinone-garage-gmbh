@@ -53,10 +53,9 @@ export function MonthView({
   };
 
   return (
-    <div className="overflow-x-auto pb-2">
+    <div className="overflow-x-auto pb-4">
       <div className="w-full min-w-[320px]">
-        {/* Day headers - more compact on mobile */}
-        <div className="grid grid-cols-7 gap-0.5 mb-1">
+        <div className="grid grid-cols-7 gap-1 mb-2">
           {(isMobile ? ["M", "T", "W", "T", "F", "S", "S"] : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]).map((day) => (
             <div 
               key={day} 
@@ -67,14 +66,13 @@ export function MonthView({
           ))}
         </div>
 
-        {/* Calendar days grid - more compact on mobile */}
-        <div className="grid grid-cols-7 gap-0.5 auto-rows-fr">
+        <div className="grid grid-cols-7 gap-1 auto-rows-fr">
           {allDays.map((day) => (
             <div
               key={day.toISOString()}
               className={cn(
-                "calendar-day min-h-[40px] sm:min-h-[80px] p-0.5 sm:p-1 border rounded-md bg-card",
-                !isSameMonth(day, currentDate) && "opacity-40 bg-muted/30",
+                "calendar-day min-h-[50px] sm:min-h-[80px] p-1 border rounded-md bg-card",
+                !isSameMonth(day, currentDate) && "opacity-40",
                 isToday(day) && "border-primary shadow-sm"
               )}
             >

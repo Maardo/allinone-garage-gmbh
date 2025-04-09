@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Appointment } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useLanguage } from "@/context/LanguageContext";
-import { sv, de, enUS } from "date-fns/locale";
 
 interface WeekViewProps {
   currentDate: Date;
@@ -17,22 +15,6 @@ interface WeekViewProps {
 
 export function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppointmentAtDate }: WeekViewProps) {
   const isMobile = useIsMobile();
-  const { language } = useLanguage();
-  
-  // Get the appropriate locale based on the selected language
-  const getLocale = () => {
-    switch (language) {
-      case 'sv':
-        return sv;
-      case 'de':
-        return de;
-      case 'en':
-      default:
-        return enUS;
-    }
-  };
-  
-  const locale = getLocale();
   
   // Get start of week (Monday) and end of week (Sunday)
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
@@ -60,12 +42,12 @@ export function WeekView({ currentDate, appointments, onSelectAppointment, onNew
               isToday(day) && "bg-primary/10"
             )}
           >
-            <div className="font-medium text-xs">{format(day, "EEE", { locale })}</div>
+            <div className="font-medium text-xs">{format(day, "EEE")}</div>
             <div className={cn(
               "text-xs",
               isToday(day) && "bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center mx-auto"
             )}>
-              {format(day, "d", { locale })}
+              {format(day, "d")}
             </div>
           </div>
         ))}
@@ -113,7 +95,7 @@ export function WeekView({ currentDate, appointments, onSelectAppointment, onNew
                       )}
                     >
                       <div className="font-medium text-xs">
-                        {format(appointmentDate, "HH:mm", { locale })}
+                        {format(appointmentDate, "HH:mm")}
                       </div>
                       <div className="text-xs truncate">{appointment.customerName}</div>
                     </div>

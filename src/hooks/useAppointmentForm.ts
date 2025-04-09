@@ -21,7 +21,7 @@ export function useAppointmentForm(initialData?: Appointment) {
       },
       vehicleInfo: "",
       vehicleMake: "",
-      vehicleModel: "", 
+      vehicleModel: "", // Keeping this for backward compatibility with data structure
       vehicleLicense: "",
       vehicleVin: "",
       vehicleCarId: "",
@@ -57,13 +57,9 @@ export function useAppointmentForm(initialData?: Appointment) {
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Make sure we handle the date in a 24-hour time format
-    if (e.target.value) {
-      const dateObj = new Date(e.target.value);
-      if (!isNaN(dateObj.getTime())) {
-        setFormData((prev) => ({ ...prev, date: dateObj }));
-      }
-    }
+    const [date, time] = e.target.value.split('T');
+    const dateObj = new Date(`${date}T${time || '09:00'}`);
+    setFormData((prev) => ({ ...prev, date: dateObj }));
   };
   
   const handleSwitchChange = (name: string, checked: boolean) => {

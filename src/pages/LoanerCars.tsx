@@ -12,12 +12,10 @@ import { LoanerCarRequests } from "@/components/loaner-cars/LoanerCarRequests";
 import { useLoanerCars } from "@/components/loaner-cars/useLoanerCars";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function LoanerCarsPage() {
   const { t } = useLanguage();
   const { currentUser } = useAuth();
-  const isMobile = useIsMobile();
   const isAdmin = currentUser?.role === 'admin';
   
   const {
@@ -45,8 +43,8 @@ export default function LoanerCarsPage() {
 
   return (
     <Layout>
-      <div className="space-y-6">
-        <div className="flex flex-wrap justify-between items-center gap-3">
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
           <h2 className="text-xl font-medium">{t('loanerCar.management')}</h2>
           
           {isAdmin && (
@@ -82,7 +80,7 @@ export default function LoanerCarsPage() {
         {/* Available and Loaned Cars Grid */}
         <div>
           <h3 className="text-lg font-medium mb-4">{t('loanerCar.availableCars')}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {loanerCars.map((car) => (
               <LoanerCarCard
                 key={car.id}
@@ -109,42 +107,13 @@ export default function LoanerCarsPage() {
                 isAdmin={isAdmin}
               />
             ))}
-            
-            {loanerCars.length === 0 && (
-              <div className="col-span-full text-center py-6 border-2 border-dashed rounded-md border-gray-300 bg-gray-50">
-                <Car className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-20" />
-                <p className="text-muted-foreground">
-                  {isAdmin 
-                    ? t('loanerCar.noAvailableCarsDescription') 
-                    : t('loanerCar.noAvailableCars')}
-                </p>
-                {isAdmin && (
-                  <Button 
-                    variant="outline" 
-                    className="mt-4"
-                    onClick={() => {
-                      setSelectedCar(null);
-                      setNewCar({
-                        name: "",
-                        license: "",
-                        isAvailable: true
-                      });
-                      setIsEditDialogOpen(true);
-                    }}
-                  >
-                    <Car className="h-4 w-4 mr-2" />
-                    {t('loanerCar.addNew')}
-                  </Button>
-                )}
-              </div>
-            )}
           </div>
         </div>
 
         {/* Requested Loaner Cars Section */}
         {appointmentsNeedingCars.length > 0 && (
-          <div className={`${isMobile ? 'p-3' : 'p-4'} border rounded-md bg-blue-50/50`}>
-            <h3 className="text-lg font-medium mb-3 flex items-center text-blue-800">
+          <div className="border rounded-md bg-blue-50/50 p-4">
+            <h3 className="text-lg font-medium mb-4 flex items-center text-blue-800">
               <Car className="h-5 w-5 mr-2 text-blue-600" />
               {t('loanerCar.requestedCars')}
             </h3>
@@ -163,7 +132,7 @@ export default function LoanerCarsPage() {
         onOpenChange={(open) => setIsAssignDialogOpen(open)}
         onAssign={() => {
           handleAssign();
-          setIsAssignDialogOpen(false);
+          setIsAssignDialogOpen(false); // Close the dialog on confirmation
         }}
         assignData={assignData}
         setAssignData={setAssignData}

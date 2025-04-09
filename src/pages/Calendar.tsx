@@ -29,7 +29,7 @@ export default function CalendarPage() {
 
   return (
     <Layout>
-      <div className="space-y-2 sm:space-y-4 px-0.5 sm:px-0 max-w-full overflow-hidden">
+      <div className="space-y-3 sm:space-y-4 px-1 sm:px-0 max-w-full overflow-hidden">
         <CalendarHeader 
           currentDate={currentDate}
           onPrevMonth={handleNavigatePrev}
@@ -53,7 +53,7 @@ export default function CalendarPage() {
           viewMode={viewMode}
         />
 
-        <div className="mt-1 sm:mt-4">
+        <div className="mt-2 sm:mt-4">
           <ServiceTypeLegend />
         </div>
       </div>
