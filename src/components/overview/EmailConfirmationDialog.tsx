@@ -23,7 +23,7 @@ export function EmailConfirmationDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>{t('overview.sendEmailConfirmation')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t('overview.sendEmailConfirmationDescription', { customerName })}
+            {t('overview.sendEmailConfirmationDescription').replace('{customerName}', customerName)}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
