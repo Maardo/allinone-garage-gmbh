@@ -1,3 +1,4 @@
+
 import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, ChevronRight, PlusCircle, CalendarDays, CalendarCheck, Calendar as CalendarIcon2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -54,14 +55,18 @@ export function CalendarHeader({
     
     switch (viewMode) {
       case 'day':
-        return format(currentDate, 'd MMMM yyyy', { locale });
+        return format(currentDate, isMobile ? 'd MMM' : 'd MMMM yyyy', { locale });
       case 'week':
         const startOfWeek = new Date(currentDate);
         startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1)); // Start from Monday
         const endOfWeek = new Date(startOfWeek);
         endOfWeek.setDate(startOfWeek.getDate() + 6); // End on Sunday
         
-        if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
+        if (isMobile) {
+          // Shorter format for mobile
+          return `${format(startOfWeek, 'd', { locale })}–${format(endOfWeek, 'd MMM', { locale })}`;
+        }
+        else if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
           return `${format(startOfWeek, 'd', { locale })}–${format(endOfWeek, 'd MMM yyyy', { locale })}`;
         }
         else if (startOfWeek.getFullYear() === endOfWeek.getFullYear()) {
@@ -72,7 +77,7 @@ export function CalendarHeader({
         }
       case 'month':
       default:
-        return format(currentDate, 'MMMM yyyy', { locale });
+        return format(currentDate, isMobile ? 'MMM yyyy' : 'MMMM yyyy', { locale });
     }
   };
 
@@ -98,6 +103,90 @@ export function CalendarHeader({
     }
   };
 
+  // Touch-friendly compact controls for mobile
+  if (isMobile) {
+    return (
+      <div className="mb-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onPrevMonth}
+              aria-label={`${t('calendar.previous')} ${viewMode}`}
+              className="h-7 w-7"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <h2 className="text-sm font-semibold px-1 min-w-20 text-center">
+              {getViewTitle()}
+            </h2>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onNextMonth}
+              aria-label={`${t('calendar.next')} ${viewMode}`}
+              className="h-7 w-7"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" onClick={onToday} size="sm" className="h-7 text-xs px-2">
+              <CalendarIcon className="h-3 w-3" />
+            </Button>
+            
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-7 text-xs px-2">
+                  <PlusCircle className="h-3 w-3" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>
+                    {selectedAppointment ? t('appointment.editAppointment') : t('appointment.newAppointment')}
+                  </DialogTitle>
+                </DialogHeader>
+                <AppointmentForm 
+                  initialData={selectedAppointment || undefined} 
+                  onSubmit={onAddAppointment}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+        
+        <div className="flex justify-between">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-7 text-xs">
+                {getViewIcon()}
+                {getViewButtonLabel()}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="bg-white">
+              <DropdownMenuItem onClick={() => onChangeViewMode('day')} className="cursor-pointer text-sm">
+                <CalendarIcon2 className="mr-2 h-4 w-4" />
+                <span>{t('calendar.day')}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onChangeViewMode('week')} className="cursor-pointer text-sm">
+                <CalendarCheck className="mr-2 h-4 w-4" />
+                <span>{t('calendar.week')}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onChangeViewMode('month')} className="cursor-pointer text-sm">
+                <CalendarDays className="mr-2 h-4 w-4" />
+                <span>{t('calendar.month')}</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop version
   return (
     <div className="mb-4 sm:mb-6 flex flex-col space-y-3 sm:space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -149,18 +238,16 @@ export function CalendarHeader({
             </DropdownMenuContent>
           </DropdownMenu>
           
-          {!isMobile && (
-            <Button variant="outline" onClick={onToday} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
-              <CalendarIcon className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              {t('calendar.today')}
-            </Button>
-          )}
+          <Button variant="outline" onClick={onToday} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
+            <CalendarIcon className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            {t('calendar.today')}
+          </Button>
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-7 sm:h-8 text-xs sm:text-sm">
                 <PlusCircle className="mr-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                {isMobile ? "" : t('calendar.new')}
+                {t('calendar.new')}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">

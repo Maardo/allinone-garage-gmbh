@@ -70,9 +70,9 @@ export function CalendarGrid({
 
   return (
     <div className="overflow-x-auto pb-4">
-      <div className="w-full">
+      <div className="w-full min-w-[320px]">
         <div className="grid grid-cols-7 gap-1 mb-2">
-          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+          {(isMobile ? ["M", "T", "W", "T", "F", "S", "S"] : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]).map((day) => (
             <div 
               key={day} 
               className="text-center font-medium text-muted-foreground py-1 text-xs"
@@ -99,7 +99,7 @@ export function CalendarGrid({
                 <div
                   key={day.toISOString()}
                   className={cn(
-                    "calendar-day min-h-[60px] sm:min-h-[80px] p-1 border rounded-md bg-card",
+                    "calendar-day min-h-[50px] sm:min-h-[80px] p-1 border rounded-md bg-card",
                     !isSameMonth(day, currentDate) && "opacity-40",
                     isToday(day) && "border-primary shadow-sm"
                   )}
@@ -119,7 +119,7 @@ export function CalendarGrid({
               <div
                 key={day.toISOString()}
                 className={cn(
-                  "calendar-day min-h-[60px] sm:min-h-[80px] p-1 border rounded-md bg-card",
+                  "calendar-day min-h-[50px] sm:min-h-[80px] p-1 border rounded-md bg-card",
                   !isSameMonth(day, currentDate) && "opacity-40",
                   isToday(day) && "border-primary shadow-sm"
                 )}
@@ -183,7 +183,7 @@ function DayContent({
       </div>
       <div className="space-y-0.5 max-h-10 sm:max-h-16 overflow-y-auto text-xs">
         {appointments.length > 0 ? (
-          appointments.map((appointment) => {
+          appointments.slice(0, isMobile ? 2 : 3).map((appointment, index) => {
             const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
             return (
               <div
@@ -198,16 +198,17 @@ function DayContent({
                 <div className="font-medium truncate text-xs">
                   {format(new Date(appointment.date), "HH:mm")} {appointment.customerName.split(' ')[0]}
                 </div>
-                {/* Only show license on larger screens */}
-                <div className="hidden sm:block truncate text-xs">
-                  {appointment.vehicleLicense} {serviceType?.code || ''}
-                </div>
               </div>
             );
           })
         ) : (
           <div className="text-center text-xs text-muted-foreground py-1">
             {isMobile ? "" : "No appointments"}
+          </div>
+        )}
+        {appointments.length > (isMobile ? 2 : 3) && (
+          <div className="text-center text-xs text-muted-foreground">
+            +{appointments.length - (isMobile ? 2 : 3)} more
           </div>
         )}
       </div>
@@ -223,13 +224,17 @@ interface DayViewProps {
 }
 
 function DayView({ day, appointments, onSelectAppointment, onNewAppointmentAtDate }: DayViewProps) {
-  // Generate hours for the day
-  const hours = Array.from({ length: 12 }, (_, i) => i + 8); // 8 AM to 7 PM
+  const isMobile = useIsMobile();
+  
+  // Generate hours for the day - adjust based on mobile
+  const startHour = 8; // 8 AM
+  const endHour = isMobile ? 18 : 19; // 6 PM or 7 PM
+  const hours = Array.from({ length: endHour - startHour + 1 }, (_, i) => i + startHour);
 
   return (
     <div className="border rounded-md bg-card overflow-y-auto max-h-[calc(100vh-230px)]">
       <div className="sticky top-0 bg-card z-10 border-b flex justify-between items-center p-2">
-        <h3 className="font-medium">{format(day, "EEEE, MMMM d, yyyy")}</h3>
+        <h3 className="font-medium text-sm sm:text-base">{format(day, "EEEE, MMMM d, yyyy")}</h3>
         <Dialog>
           <DialogTrigger asChild>
             <Button 
@@ -239,7 +244,7 @@ function DayView({ day, appointments, onSelectAppointment, onNewAppointmentAtDat
               onClick={() => onNewAppointmentAtDate(day)}
             >
               <PlusCircle className="h-4 w-4 mr-1" />
-              Add
+              {!isMobile && "Add"}
             </Button>
           </DialogTrigger>
         </Dialog>
@@ -257,7 +262,7 @@ function DayView({ day, appointments, onSelectAppointment, onNewAppointmentAtDat
           
           return (
             <div key={hour} className="p-2 hover:bg-gray-50 flex">
-              <div className="w-16 font-medium text-muted-foreground text-sm">
+              <div className="w-10 sm:w-16 font-medium text-muted-foreground text-xs sm:text-sm shrink-0">
                 {format(hourDate, "h a")}
               </div>
               <div className="flex-1">
@@ -274,12 +279,13 @@ function DayView({ day, appointments, onSelectAppointment, onNewAppointmentAtDat
                           appointment.isCompleted && "line-through opacity-60"
                         )}
                       >
-                        <div className="font-medium">
+                        <div className="font-medium text-xs sm:text-sm">
                           {format(new Date(appointment.date), "HH:mm")} - {appointment.customerName}
                         </div>
-                        <div className="text-sm">{appointment.vehicleMake} {appointment.vehicleModel} - {appointment.vehicleLicense}</div>
-                        <div className="text-sm">Code: {serviceType?.code || ''}</div>
-                        {appointment.notes && <div className="text-sm mt-1 opacity-90">{appointment.notes}</div>}
+                        <div className="text-xs sm:text-sm">{appointment.vehicleMake} - {appointment.vehicleLicense}</div>
+                        {!isMobile && appointment.notes && (
+                          <div className="text-xs mt-1 opacity-90">{appointment.notes}</div>
+                        )}
                       </div>
                     );
                   })
@@ -319,14 +325,16 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
   // Generate days of the week
   const daysOfWeek = eachDayOfInterval({ start: weekStart, end: weekEnd });
   
-  // Always show all 7 days of the week, regardless of mobile or desktop
-  const visibleDays = daysOfWeek;
+  // For mobile, show only 3 days at a time, centered around the current date
+  const visibleDays = isMobile
+    ? daysOfWeek.slice(0, 7) // Show all 7 days but with horizontal scroll
+    : daysOfWeek;
   
   return (
     <div className="border rounded-md bg-card overflow-x-auto">
       <div className={cn(
         "grid divide-x",
-        "grid-cols-7",
+        isMobile ? "grid-cols-7" : "grid-cols-7",
         "min-w-[700px]"
       )}>
         {/* Days of the week header */}
@@ -338,12 +346,12 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
               isToday(day) && "bg-primary/10"
             )}
           >
-            <div className="font-medium text-xs sm:text-sm">{format(day, "EEE")}</div>
+            <div className="font-medium text-xs">{format(day, "EEE")}</div>
             <div className={cn(
-              "text-xs sm:text-sm",
+              "text-xs",
               isToday(day) && "bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center mx-auto"
             )}>
-              {format(day, "d MMM")} {/* Add month abbreviation to make date clearer */}
+              {format(day, "d")}
             </div>
           </div>
         ))}
@@ -352,7 +360,7 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
       {/* Week content */}
       <div className={cn(
         "grid divide-x min-h-[200px] max-h-[calc(100vh-250px)] overflow-y-auto",
-        "grid-cols-7",
+        isMobile ? "grid-cols-7" : "grid-cols-7",
         "min-w-[700px]"
       )}>
         {visibleDays.map(day => {
@@ -377,7 +385,7 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
                 <PlusCircle className="h-3 w-3" />
               </Button>
               
-              <div className="mt-8 space-y-2">
+              <div className="mt-6 space-y-1">
                 {dayAppointments.map(appointment => {
                   const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
                   return (
@@ -385,25 +393,22 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
                       key={appointment.id}
                       onClick={() => onSelectAppointment(appointment)}
                       className={cn(
-                        "p-2 rounded cursor-pointer text-white",
-                        "bg-blue-600", // Always use blue background for better visibility
+                        "p-1 rounded cursor-pointer text-white",
+                        "bg-blue-600", 
                         appointment.isCompleted && "line-through opacity-60"
                       )}
                     >
-                      <div className="font-medium text-xs sm:text-sm">
+                      <div className="font-medium text-xs">
                         {format(new Date(appointment.date), "HH:mm")}
                       </div>
-                      <div className="text-xs truncate">{appointment.customerName}</div>
-                      <div className="text-xs truncate sm:block">
-                        {appointment.vehicleLicense} {serviceType?.code || ''}
-                      </div>
+                      <div className="text-xs truncate">{appointment.customerName.split(' ')[0]}</div>
                     </div>
                   );
                 })}
                 
                 {dayAppointments.length === 0 && (
-                  <div className="text-center text-muted-foreground text-xs py-4 sm:py-8">
-                    No appointments
+                  <div className="text-center text-muted-foreground text-xs py-2">
+                    {isMobile ? "" : "No appointments"}
                   </div>
                 )}
               </div>

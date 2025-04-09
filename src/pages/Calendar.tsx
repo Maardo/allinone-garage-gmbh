@@ -35,7 +35,7 @@ export default function CalendarPage() {
 
   return (
     <Layout>
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4 px-1 sm:px-0">
         <CalendarHeader 
           currentDate={currentDate}
           onPrevMonth={handleNavigatePrev}
@@ -59,7 +59,7 @@ export default function CalendarPage() {
           viewMode={viewMode}
         />
 
-        <div className={isMobile ? "mt-4" : ""}>
+        <div className="mt-2 sm:mt-4">
           <ServiceTypeLegend />
         </div>
       </div>
