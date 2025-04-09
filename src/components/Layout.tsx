@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
@@ -59,27 +58,24 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   }, [currentUser, isLoading, navigate]);
 
   const toggleSidebar = () => {
-    setIsMobileOpen(!isMobileOpen);
+    setIsMobileOpen(prevState => !prevState);
   };
 
-  // Stäng sidebar när sidvisningen ändras på mobil
   useEffect(() => {
     if (isMobileOpen && window.innerWidth < 768) {
       setIsMobileOpen(false);
     }
   }, [location.pathname]);
 
-  // Hantera klick utanför sidebaren för att stänga den
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      if (isMobileOpen && window.innerWidth < 768) {
-        const target = e.target as HTMLElement;
-        const isSidebar = !!target.closest('[data-sidebar="sidebar"]');
-        const isToggle = !!target.closest('[data-toggle="sidebar"]');
-        
-        if (!isSidebar && !isToggle) {
-          setIsMobileOpen(false);
-        }
+      const target = e.target as HTMLElement;
+      const isSidebar = !!target.closest('[data-sidebar="sidebar"]');
+      const isToggle = !!target.closest('[data-toggle="sidebar"]');
+      const isBackdrop = !!target.closest('[data-backdrop="sidebar"]');
+      
+      if (isMobileOpen && window.innerWidth < 768 && !isSidebar && !isToggle && !isBackdrop) {
+        setIsMobileOpen(false);
       }
     };
 
@@ -89,7 +85,6 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
     };
   }, [isMobileOpen]);
 
-  // Stäng sidebaren automatiskt när skärmstorlek ändras
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768 && isMobileOpen) {

@@ -33,8 +33,9 @@ export function Sidebar({ isMobileOpen = false, toggleSidebar }: SidebarProps) {
       {isMobileOpen && (
         <div 
           className="fixed inset-0 bg-black/30 z-40 md:hidden"
-          onClick={toggleSidebar}
+          onClick={handleCloseSidebar}
           data-backdrop="sidebar"
+          aria-hidden="true"
         />
       )}
       
