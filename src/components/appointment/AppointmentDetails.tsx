@@ -1,19 +1,18 @@
 
-import { format } from "date-fns";
-import { Appointment, ServiceType } from "@/lib/types";
-import { SERVICE_TYPES } from "@/lib/serviceTypes";
-import { useLanguage } from "@/context/LanguageContext";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { 
+import { Label } from "@/components/ui/label";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Textarea } from "@/components/ui/textarea";
+import { Appointment, ServiceType } from "@/lib/types";
+import { useLanguage } from "@/context/LanguageContext";
+import { format, isValid } from "date-fns";
+import { sv, de, enUS } from "date-fns/locale";
 
 interface AppointmentDetailsProps {
   formData: Appointment;
@@ -22,94 +21,80 @@ interface AppointmentDetailsProps {
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-export function AppointmentDetails({ 
-  formData, 
-  handleDateChange, 
+export function AppointmentDetails({
+  formData,
+  handleDateChange,
   handleServiceTypeChange,
-  handleChange 
+  handleChange
 }: AppointmentDetailsProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
-  // Helper function to get the translation key for a service type
-  const getServiceTypeTranslationKey = (typeId: number): string => {
-    switch (typeId) {
-      case 1: return 'serviceTypes.maintenance';
-      case 2: return 'serviceTypes.repair';
-      case 3: return 'serviceTypes.inspection';
-      case 4: return 'serviceTypes.tireChange';
-      case 5: return 'serviceTypes.other';
-      case 6: return 'serviceTypes.other';
-      default: return 'serviceTypes.other';
+  // Get the appropriate locale based on the selected language
+  const getLocale = () => {
+    switch (language) {
+      case 'sv':
+        return sv;
+      case 'de':
+        return de;
+      case 'en':
+      default:
+        return enUS;
     }
   };
 
+  // Format the date for the input value using 24-hour time format
+  const dateValue = formData.date;
+  const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
+  
+  // Default to current time if date is invalid
+  const formattedDate = isValid(date) 
+    ? format(date, "yyyy-MM-dd'T'HH:mm", { locale: getLocale() }) 
+    : format(new Date(), "yyyy-MM-dd'T'HH:mm", { locale: getLocale() });
+
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="space-y-1.5">
-          <Label htmlFor="date">
-            {t('appointment.date')}
-          </Label>
+    <div className="space-y-4">
+      <h2 className="text-lg font-medium">{t('appointment.date')}</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="date">{t('appointment.date')}</Label>
           <Input
-            id="date"
             type="datetime-local"
-            value={formData.date ? format(formData.date, "yyyy-MM-dd'T'HH:mm") : ''}
+            id="date"
+            name="date"
+            value={formattedDate}
             onChange={handleDateChange}
-            required
           />
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="serviceType">
-            {t('appointment.serviceType')}
-          </Label>
+        <div className="space-y-2">
+          <Label htmlFor="serviceType">{t('appointment.serviceType')}</Label>
           <Select 
             value={formData.serviceType.toString()} 
             onValueChange={handleServiceTypeChange}
           >
-            <SelectTrigger>
-              <SelectValue placeholder={t('serviceTypes.select')} />
+            <SelectTrigger id="serviceType">
+              <SelectValue placeholder={t('appointment.serviceType')} />
             </SelectTrigger>
             <SelectContent>
-              {Object.values(SERVICE_TYPES).map((type) => (
-                <SelectItem key={type.id} value={type.id.toString()}>
-                  <div className="flex items-center gap-2">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div 
-                            className="h-2 w-2 rounded-full cursor-help" 
-                            style={{ backgroundColor: type.color }}
-                          ></div>
-                        </TooltipTrigger>
-                        <TooltipContent side="right">
-                          <p>{t(`serviceTypes.${type.color.substring(1)}`)}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <span>
-                      {t(getServiceTypeTranslationKey(type.id))} ({type.code || type.id})
-                    </span>
-                  </div>
-                </SelectItem>
-              ))}
+              <SelectItem value="1">{t('serviceTypes.maintenance')}</SelectItem>
+              <SelectItem value="2">{t('serviceTypes.repair')}</SelectItem>
+              <SelectItem value="3">{t('serviceTypes.inspection')}</SelectItem>
+              <SelectItem value="4">{t('serviceTypes.tireChange')}</SelectItem>
+              <SelectItem value="5">{t('serviceTypes.other')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <div className="space-y-1.5">
-        <Label htmlFor="notes">
-          {t('appointment.notes')}
-        </Label>
+      <div className="space-y-2">
+        <Label htmlFor="notes">{t('appointment.notes')}</Label>
         <Textarea
           id="notes"
           name="notes"
           value={formData.notes}
           onChange={handleChange}
-          rows={2}
-          className="resize-none"
-          placeholder={t('appointment.notes')}
+          rows={3}
         />
       </div>
     </div>

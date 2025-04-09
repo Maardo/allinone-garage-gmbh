@@ -1,9 +1,14 @@
+
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
+import { useLanguage } from "@/context/LanguageContext";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+
+// Import date-fns locales
+import { sv, de, enUS } from "date-fns/locale";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -13,10 +18,26 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  // Get the current language
+  const { language } = useLanguage();
+
+  // Map the language string to the correct date-fns locale
+  const getLocale = () => {
+    switch (language) {
+      case 'sv':
+        return sv;
+      case 'de':
+        return de;
+      case 'en':
+      default:
+        return enUS;
+    }
+  };
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
+      className={cn("p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -54,6 +75,18 @@ function Calendar({
       components={{
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
+      }}
+      locale={getLocale()}
+      formatters={{
+        formatWeekdayName: (date) => {
+          return date.toLocaleDateString(getLocale().code, { weekday: 'short' });
+        },
+        formatCaption: (date) => {
+          return date.toLocaleDateString(getLocale().code, { 
+            month: 'long', 
+            year: 'numeric' 
+          });
+        }
       }}
       {...props}
     />

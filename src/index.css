@@ -85,15 +85,15 @@
   
   /* Calendar styles - förbättrade för mobil */
   .calendar-day {
-    @apply bg-card border rounded-md p-1 sm:p-2 h-16 sm:h-24 overflow-y-auto transition-all duration-200 text-foreground text-xs sm:text-sm;
+    @apply bg-card border border-border/60 rounded-md transition-all duration-200 text-foreground text-xs sm:text-sm;
   }
   
   .calendar-day:hover {
-    @apply shadow-md;
+    @apply shadow-sm;
   }
   
   .calendar-appointment {
-    @apply text-xs p-0.5 sm:p-1 mb-0.5 sm:mb-1 rounded-sm cursor-pointer transition-all text-foreground;
+    @apply text-xs p-0.5 mb-0.5 rounded-sm cursor-pointer transition-all text-foreground;
   }
   
   /* Service type colors - colorblind friendly palette */
@@ -180,7 +180,7 @@
   /* Touch-friendly selectors för mobil */
   @media (max-width: 768px) {
     button, a, select, input {
-      @apply min-h-10 min-w-10;
+      @apply min-h-8;
     }
   }
 }
@@ -220,3 +220,4 @@
     @apply text-sm;
   }
 }
+

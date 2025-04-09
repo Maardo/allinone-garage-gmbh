@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
 import { Appointment } from "@/lib/types";
 import { Calendar, Clock, Car } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LoanerCarRequestsProps {
   appointments: Appointment[];
@@ -14,6 +15,7 @@ interface LoanerCarRequestsProps {
 
 export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsProps) {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   
   if (appointments.length === 0) {
     return (
@@ -24,8 +26,45 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
     );
   }
 
+  if (isMobile) {
+    return (
+      <div className="space-y-4">
+        {appointments.map((appointment) => (
+          <div key={appointment.id} className="bg-white p-3 rounded-md shadow-sm border">
+            <div className="flex justify-between items-start">
+              <div className="font-medium">{appointment.customerName}</div>
+              <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-50 border-blue-200">
+                {t('loanerCar.requested')}
+              </Badge>
+            </div>
+            
+            <div className="text-sm my-2 space-y-1">
+              <div className="flex items-center gap-1 text-gray-600">
+                <Calendar className="h-3.5 w-3.5 text-blue-600" />
+                <span>{format(new Date(appointment.date), "yyyy-MM-dd")}</span>
+                <Clock className="h-3.5 w-3.5 ml-2 text-blue-600" />
+                <span>{format(new Date(appointment.date), "HH:mm")}</span>
+              </div>
+              <div className="truncate">{appointment.vehicleInfo || `${appointment.vehicleMake} ${appointment.vehicleLicense || ''}`}</div>
+            </div>
+            
+            <div className="mt-3">
+              <Button 
+                size="sm" 
+                className="w-full bg-blue-600 hover:bg-blue-700"
+                onClick={() => onAssign(appointment.id)}
+              >
+                {t('loanerCar.assign')}
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className="rounded-md overflow-hidden">
+    <div className="rounded-md overflow-hidden border">
       <Table>
         <TableHeader className="bg-blue-100">
           <TableRow>
@@ -38,7 +77,7 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
         </TableHeader>
         <TableBody>
           {appointments.map((appointment) => (
-            <TableRow key={appointment.id} className="hover:bg-blue-50/70 bg-white border-b">
+            <TableRow key={appointment.id} className="hover:bg-blue-50/70 bg-white">
               <TableCell className="font-medium">{appointment.customerName}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-1">
@@ -48,7 +87,7 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
                   <span>{format(new Date(appointment.date), "HH:mm")}</span>
                 </div>
               </TableCell>
-              <TableCell>{appointment.vehicleInfo || `${appointment.vehicleMake} ${appointment.vehicleLicense || ''}`}</TableCell>
+              <TableCell className="max-w-xs truncate">{appointment.vehicleInfo || `${appointment.vehicleMake} ${appointment.vehicleLicense || ''}`}</TableCell>
               <TableCell>
                 {appointment.loanerCarId ? (
                   <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50 border-green-200">
