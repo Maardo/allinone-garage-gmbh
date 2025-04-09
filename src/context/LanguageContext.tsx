@@ -19,9 +19,9 @@ export const languageOptions = [
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
-    // Default language is now Swedish
+    // Default language is now English
     const savedLang = localStorage.getItem('language');
-    return (savedLang as Language) || 'sv';
+    return (savedLang as Language) || 'en';
   });
 
   useEffect(() => {

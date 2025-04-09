@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '@/lib/types';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +9,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  resetPassword: (email: string) => Promise<boolean>;
   isLoading: boolean;
 }
 
@@ -122,6 +122,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const resetPassword = async (email: string): Promise<boolean> => {
+    setIsLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      
+      if (error) {
+        console.error('Password reset error:', error.message);
+        setIsLoading(false);
+        return false;
+      }
+      
+      setIsLoading(false);
+      return true;
+    } catch (error) {
+      console.error('Password reset exception:', error);
+      setIsLoading(false);
+      return false;
+    }
+  };
+
   const logout = async () => {
     try {
       await supabase.auth.signOut();
@@ -133,7 +156,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, register, logout, isLoading }}>
+    <AuthContext.Provider value={{ currentUser, login, register, logout, resetPassword, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

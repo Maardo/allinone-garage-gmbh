@@ -9,6 +9,16 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
+import { Mail } from "lucide-react";
 
 export default function Login() {
   // Login state
@@ -23,7 +33,12 @@ export default function Login() {
   const [regConfirmPassword, setRegConfirmPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   
-  const { login, register } = useAuth();
+  // Forgot password state
+  const [resetEmail, setResetEmail] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  
+  const { login, register, resetPassword } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
@@ -92,6 +107,35 @@ export default function Login() {
     }
   };
 
+  // Handle password reset submission
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsResetting(true);
+    
+    // Basic validation
+    if (!resetEmail.includes("@") || !resetEmail.includes(".")) {
+      toast.error(t("login.invalidEmail"));
+      setIsResetting(false);
+      return;
+    }
+
+    try {
+      const success = await resetPassword(resetEmail);
+      
+      if (success) {
+        toast.success(t("login.resetPasswordSuccess"));
+        setResetDialogOpen(false);
+      } else {
+        toast.error(t("login.resetPasswordFailed"));
+      }
+    } catch (error) {
+      toast.error(t("login.resetPasswordFailed"));
+      console.error(error);
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-blue-100 p-3">
       <div className="w-full max-w-md animate-scale-in">
@@ -144,6 +188,57 @@ export default function Login() {
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="password">{t("login.password")}</Label>
+                      <Dialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="link" 
+                            size="sm" 
+                            className="px-0 font-normal text-xs"
+                          >
+                            {t("login.forgotPassword")}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>{t("login.resetPassword")}</DialogTitle>
+                            <DialogDescription>
+                              {t("login.resetPasswordDescription")}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <form onSubmit={handleResetPassword} className="space-y-4 py-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="reset-email">{t("login.email")}</Label>
+                              <div className="flex items-center gap-2">
+                                <Mail className="h-4 w-4 opacity-50" />
+                                <Input
+                                  id="reset-email"
+                                  type="email"
+                                  placeholder="your.email@example.com"
+                                  value={resetEmail}
+                                  onChange={(e) => setResetEmail(e.target.value)}
+                                  required
+                                  className="flex-1"
+                                />
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button
+                                type="submit"
+                                disabled={isResetting}
+                              >
+                                {isResetting ? (
+                                  <div className="flex items-center justify-center">
+                                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+                                    <span className="ml-2">{t("login.sendingResetLink")}</span>
+                                  </div>
+                                ) : (
+                                  t("login.sendResetLink")
+                                )}
+                              </Button>
+                            </DialogFooter>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                     <Input
                       id="password"

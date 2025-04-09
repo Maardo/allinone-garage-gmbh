@@ -11,7 +11,14 @@ export const login = {
   invalidCredentials: 'Felaktig e-post eller lösenord',
   demoAccounts: 'Demokonton:',
   adminAccount: 'Admin: admin@workshop.com / admin123',
-  mechanicAccount: 'Mekaniker: mechanic1@workshop.com / mechanic123'
+  mechanicAccount: 'Mekaniker: mechanic1@workshop.com / mechanic123',
+  forgotPassword: 'Glömt lösenord?',
+  resetPassword: 'Återställ lösenord',
+  resetPasswordDescription: 'Ange din e-postadress så skickar vi en länk för att återställa lösenordet.',
+  sendResetLink: 'Skicka återställningslänk',
+  sendingResetLink: 'Skickar...',
+  resetPasswordSuccess: 'Återställningslänk skickad! Kontrollera din e-post.',
+  resetPasswordFailed: 'Kunde inte skicka återställningslänken. Försök igen.'
 };
 
 export const register = {
