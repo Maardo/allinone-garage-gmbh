@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoanerCarCard } from "@/components/loaner-cars/LoanerCarCard";
 import { AssignDialog } from "@/components/loaner-cars/AssignDialog";
 import { EditCarDialog } from "@/components/loaner-cars/EditCarDialog";
@@ -79,81 +80,109 @@ export default function LoanerCarsPage() {
           )}
         </div>
 
-        {/* Available and Loaned Cars Grid */}
-        <div>
-          <h3 className="text-lg font-medium mb-4">{t('loanerCar.availableCars')}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-            {loanerCars.map((car) => (
-              <LoanerCarCard
-                key={car.id}
-                car={car}
-                onAssign={(car) => {
-                  setSelectedCar(car);
-                  const today = format(new Date(), "yyyy-MM-dd");
-                  setAssignData({
-                    customerId: "",
-                    startDate: today,
-                    returnDate: format(new Date(new Date().setDate(new Date().getDate() + 3)), "yyyy-MM-dd"),
-                  });
-                  setIsAssignDialogOpen(true);
-                }}
-                onReturn={handleReturn}
-                onEdit={(car) => {
-                  setSelectedCar(car);
-                  setIsEditDialogOpen(true);
-                }}
-                onDelete={(car) => {
-                  setSelectedCar(car);
-                  setIsDeleteDialogOpen(true);
-                }}
-                isAdmin={isAdmin}
-              />
-            ))}
-            
-            {loanerCars.length === 0 && (
-              <div className="col-span-full text-center py-6 border-2 border-dashed rounded-md border-gray-300 bg-gray-50">
-                <Car className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-20" />
-                <p className="text-muted-foreground">
-                  {isAdmin 
-                    ? t('loanerCar.noAvailableCarsDescription') 
-                    : t('loanerCar.noAvailableCars')}
-                </p>
-                {isAdmin && (
-                  <Button 
-                    variant="outline" 
-                    className="mt-4"
-                    onClick={() => {
-                      setSelectedCar(null);
-                      setNewCar({
-                        name: "",
-                        license: "",
-                        isAvailable: true
-                      });
-                      setIsEditDialogOpen(true);
-                    }}
-                  >
-                    <Car className="h-4 w-4 mr-2" />
-                    {t('loanerCar.addNew')}
-                  </Button>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Tabs for Available Cars and Loaner Car Needs */}
+        <Tabs defaultValue="availableCars" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="availableCars" className="flex-grow">
+              <Car className="h-4 w-4 mr-2 hidden sm:inline" />
+              {t('loanerCar.tabAvailableCars')}
+            </TabsTrigger>
+            <TabsTrigger value="loanerNeeds" className="flex-grow">
+              <Car className="h-4 w-4 mr-2 hidden sm:inline" />
+              {t('loanerCar.tabLoanerNeeds')}
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Requested Loaner Cars Section */}
-        {appointmentsNeedingCars.length > 0 && (
-          <div className={`${isMobile ? 'p-3' : 'p-4'} border rounded-md bg-blue-50/50`}>
-            <h3 className="text-lg font-medium mb-3 flex items-center text-blue-800">
-              <Car className="h-5 w-5 mr-2 text-blue-600" />
-              {t('loanerCar.requestedCars')}
-            </h3>
-            <LoanerCarRequests 
-              appointments={appointmentsNeedingCars} 
-              onAssign={handleAssignToAppointment} 
-            />
-          </div>
-        )}
+          <TabsContent value="availableCars" className="mt-0">
+            {/* Available Cars Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {loanerCars.map((car) => (
+                <LoanerCarCard
+                  key={car.id}
+                  car={car}
+                  onAssign={(car) => {
+                    setSelectedCar(car);
+                    const today = format(new Date(), "yyyy-MM-dd");
+                    setAssignData({
+                      customerId: "",
+                      startDate: today,
+                      returnDate: format(new Date(new Date().setDate(new Date().getDate() + 3)), "yyyy-MM-dd"),
+                    });
+                    setIsAssignDialogOpen(true);
+                  }}
+                  onReturn={handleReturn}
+                  onEdit={(car) => {
+                    setSelectedCar(car);
+                    setIsEditDialogOpen(true);
+                  }}
+                  onDelete={(car) => {
+                    setSelectedCar(car);
+                    setIsDeleteDialogOpen(true);
+                  }}
+                  isAdmin={isAdmin}
+                />
+              ))}
+              
+              {loanerCars.length === 0 && (
+                <div className="col-span-full text-center py-6 border-2 border-dashed rounded-md border-gray-300 bg-gray-50">
+                  <Car className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-20" />
+                  <p className="text-muted-foreground">
+                    {isAdmin 
+                      ? t('loanerCar.noAvailableCarsDescription') 
+                      : t('loanerCar.noAvailableCars')}
+                  </p>
+                  {isAdmin && (
+                    <Button 
+                      variant="outline" 
+                      className="mt-4"
+                      onClick={() => {
+                        setSelectedCar(null);
+                        setNewCar({
+                          name: "",
+                          license: "",
+                          isAvailable: true
+                        });
+                        setIsEditDialogOpen(true);
+                      }}
+                    >
+                      <Car className="h-4 w-4 mr-2" />
+                      {t('loanerCar.addNew')}
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="loanerNeeds" className="mt-0">
+            {/* Loaner Car Needs Section */}
+            <div className="bg-blue-50/50 border rounded-md p-4">
+              <h3 className="text-lg font-medium mb-3 flex items-center text-blue-800">
+                <Car className="h-5 w-5 mr-2 text-blue-600" />
+                {t('loanerCar.loanerNeedsTab')}
+                <span className="ml-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {appointmentsNeedingCars.length}
+                </span>
+              </h3>
+              
+              <p className="text-sm text-blue-700 mb-4">
+                {t('loanerCar.needsLoanerCarDescription')}
+              </p>
+              
+              <LoanerCarRequests 
+                appointments={appointmentsNeedingCars} 
+                onAssign={handleAssignToAppointment} 
+              />
+              
+              {appointmentsNeedingCars.length === 0 && (
+                <div className="text-center py-10">
+                  <Car className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-20" />
+                  <p className="text-muted-foreground">{t('loanerCar.noLoanerNeeds')}</p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Dialogs */}

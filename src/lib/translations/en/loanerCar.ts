@@ -43,5 +43,10 @@ export const loanerCar = {
   assign: 'Assign',
   status: 'Status',
   noAvailableCars: 'No available cars',
-  noAvailableCarsDescription: 'There are no available loaner cars at the moment'
+  noAvailableCarsDescription: 'There are no available loaner cars at the moment',
+  loanerNeedsTab: 'Loaner Car Needs',
+  tabAvailableCars: 'Available Cars',
+  tabLoanerNeeds: 'Loaner Car Needs',
+  needsLoanerCarDescription: 'Customers who have requested loaner cars',
+  noLoanerNeeds: 'No customers need loaner cars at the moment'
 };

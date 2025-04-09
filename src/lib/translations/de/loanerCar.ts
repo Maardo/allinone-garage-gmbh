@@ -43,5 +43,10 @@ export const loanerCar = {
   assign: 'Zuweisen',
   status: 'Status',
   noAvailableCars: 'Keine verfügbaren Autos',
-  noAvailableCarsDescription: 'Es gibt derzeit keine verfügbaren Leihwagen'
+  noAvailableCarsDescription: 'Es gibt derzeit keine verfügbaren Leihwagen',
+  loanerNeedsTab: 'Leihwagenbedarf',
+  tabAvailableCars: 'Verfügbare Autos',
+  tabLoanerNeeds: 'Leihwagenbedarf',
+  needsLoanerCarDescription: 'Kunden, die Leihwagen angefordert haben',
+  noLoanerNeeds: 'Derzeit benötigt kein Kunde einen Leihwagen'
 };

@@ -43,7 +43,7 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
                 <Calendar className="h-3.5 w-3.5 text-blue-600" />
                 <span>{format(new Date(appointment.date), "yyyy-MM-dd")}</span>
                 <Clock className="h-3.5 w-3.5 ml-2 text-blue-600" />
-                <span>{format(new Date(appointment.date), "HH:mm")}</span>
+                <span>{format(new Date(appointment.date), t('calendar.timeFormat'))}</span>
               </div>
               <div className="truncate">{appointment.vehicleInfo || `${appointment.vehicleMake} ${appointment.vehicleLicense || ''}`}</div>
             </div>
@@ -84,7 +84,7 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
                   <Calendar className="h-4 w-4 text-blue-600" />
                   <span>{format(new Date(appointment.date), "yyyy-MM-dd")}</span>
                   <Clock className="h-4 w-4 ml-2 text-blue-600" />
-                  <span>{format(new Date(appointment.date), "HH:mm")}</span>
+                  <span>{format(new Date(appointment.date), t('calendar.timeFormat'))}</span>
                 </div>
               </TableCell>
               <TableCell className="max-w-xs truncate">{appointment.vehicleInfo || `${appointment.vehicleMake} ${appointment.vehicleLicense || ''}`}</TableCell>

@@ -43,5 +43,10 @@ export const loanerCar = {
   assign: 'Tilldela',
   status: 'Status',
   noAvailableCars: 'Inga tillgängliga bilar',
-  noAvailableCarsDescription: 'Det finns inga tillgängliga lånebilar för tillfället'
+  noAvailableCarsDescription: 'Det finns inga tillgängliga lånebilar för tillfället',
+  loanerNeedsTab: 'Behov av lånebil',
+  tabAvailableCars: 'Tillgängliga bilar',
+  tabLoanerNeeds: 'Behov av lånebil',
+  needsLoanerCarDescription: 'Kunder som har begärt lånebilar',
+  noLoanerNeeds: 'Inga kunder behöver lånebilar för tillfället'
 };

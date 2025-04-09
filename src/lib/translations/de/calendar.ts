@@ -40,5 +40,7 @@ export const calendar = {
   thu: 'Do',
   fri: 'Fr',
   sat: 'Sa',
-  sun: 'So'
+  sun: 'So',
+  // Time format
+  timeFormat: 'HH:mm'
 };
