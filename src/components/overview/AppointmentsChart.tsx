@@ -28,7 +28,7 @@ export function AppointmentsChart({ chartData }: AppointmentsChartProps) {
       <CardHeader className="text-center pb-0">
         <div className="flex flex-col items-center justify-center">
           <div className="text-4xl font-bold">{totalAppointments}</div>
-          <CardTitle className="mt-1">{t('overview.upcomingJobs')}</CardTitle>
+          <CardTitle className="mt-1">{t('overview.appointments')}</CardTitle>
         </div>
       </CardHeader>
       <CardContent>

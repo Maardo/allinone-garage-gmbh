@@ -5,7 +5,6 @@ import { format } from "date-fns";
 import { sv, de, enUS } from "date-fns/locale";
 import { SERVICE_TYPES, ServiceType } from "@/lib/serviceTypes";
 import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
 import { Appointment, GroupedAppointments, TimeViewType } from "@/lib/overview/types";
 
 type Locale = typeof sv | typeof de | typeof enUS;
@@ -110,7 +109,6 @@ export function UpcomingAppointments({
                           className="mr-2 bg-green-50 border-green-500 text-green-600 hover:text-green-700 hover:bg-green-100 hover:border-green-600 font-medium"
                           onClick={() => onMarkComplete(job.id)}
                         >
-                          <CheckCircle className="h-4 w-4 mr-1" />
                           {t('overview.markComplete')}
                         </Button>
                       )}

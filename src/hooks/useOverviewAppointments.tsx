@@ -78,7 +78,7 @@ export function useOverviewAppointments() {
           action: (
             <button
               onClick={() => undoLastChange()}
-              className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
+              className="bg-secondary hover:bg-secondary/90 text-foreground px-6 py-2 rounded-md text-sm font-medium"
             >
               {t('actions.undo')}
             </button>
@@ -92,7 +92,7 @@ export function useOverviewAppointments() {
         action: (
           <button
             onClick={() => undoLastChange()}
-            className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
+            className="bg-secondary hover:bg-secondary/90 text-foreground px-6 py-2 rounded-md text-sm font-medium"
           >
             {t('actions.undo')}
           </button>
