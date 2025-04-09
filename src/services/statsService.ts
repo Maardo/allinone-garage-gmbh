@@ -43,11 +43,12 @@ export const fetchStats = async (): Promise<Stats> => {
   }
   
   // Otherwise, return the existing stats
+  const stats = existingStats[0];
   return {
-    todayAppointments: existingStats[0].today_appointments,
-    weekAppointments: existingStats[0].week_appointments,
-    totalCustomers: existingStats[0].total_customers,
-    completedJobs: existingStats[0].completed_jobs
+    todayAppointments: stats.today_appointments,
+    weekAppointments: stats.week_appointments,
+    totalCustomers: stats.total_customers,
+    completedJobs: stats.completed_jobs
   };
 };
 

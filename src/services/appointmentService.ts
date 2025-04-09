@@ -1,14 +1,15 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { Appointment } from "@/lib/overview/types";
+import { ServiceType } from "@/lib/serviceTypes";
 
 // Convert database appointment to frontend appointment
 export const mapDbAppointmentToAppointment = (dbAppointment: any): Appointment => {
   return {
-    id: Number(dbAppointment.id.substring(0, 8), 16), // Convert first 8 chars of UUID to number
+    id: dbAppointment.id ? Number(dbAppointment.id.substring(0, 8)) : 0,
     date: new Date(dbAppointment.date),
     vehicleModel: dbAppointment.vehicle_model,
-    serviceType: parseInt(dbAppointment.service_type),
+    serviceType: parseInt(dbAppointment.service_type) as ServiceType,
     isCompleted: dbAppointment.is_completed,
     customerEmail: dbAppointment.customer_email,
     customerName: dbAppointment.customer_name,
@@ -79,7 +80,7 @@ export const updateAppointment = async (appointment: Appointment): Promise<Appoi
     // Find a match based on the first 8 characters of the UUID
     const numStr = appointment.id.toString(16).padStart(8, '0');
     appointmentId = existingAppointments.find(a => 
-      a.id.startsWith(numStr)
+      typeof a.id === 'string' && a.id.startsWith(numStr)
     )?.id;
     
     if (!appointmentId) {
