@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Appointment } from "@/lib/overview/types";
 import { ServiceType } from "@/lib/serviceTypes";
+import { useAuth } from "@/context/AuthContext";
 
 // Convert database appointment to frontend appointment
 export const mapDbAppointmentToAppointment = (dbAppointment: any): Appointment => {
@@ -19,6 +20,17 @@ export const mapDbAppointmentToAppointment = (dbAppointment: any): Appointment =
 
 // Convert frontend appointment to database format
 export const mapAppointmentToDbFormat = (appointment: Appointment) => {
+  // Get the current user's ID
+  const getUserId = () => {
+    try {
+      const session = supabase.auth.getSession();
+      return session || "00000000-0000-0000-0000-000000000000"; // Fallback
+    } catch (error) {
+      console.error("Error getting user ID:", error);
+      return "00000000-0000-0000-0000-000000000000"; // Fallback
+    }
+  };
+
   return {
     date: appointment.date.toISOString(),
     vehicle_model: appointment.vehicleModel,
@@ -26,7 +38,8 @@ export const mapAppointmentToDbFormat = (appointment: Appointment) => {
     is_completed: appointment.isCompleted,
     customer_email: appointment.customerEmail,
     customer_name: appointment.customerName,
-    license_plate: appointment.licensePlate
+    license_plate: appointment.licensePlate,
+    user_id: getUserId()
   };
 };
 
@@ -47,9 +60,21 @@ export const fetchAppointments = async (): Promise<Appointment[]> => {
 
 // Create a new appointment
 export const createAppointment = async (appointment: Appointment): Promise<Appointment> => {
+  const { data: session } = await supabase.auth.getSession();
+  const userId = session?.session?.user?.id;
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+  
+  const appointmentData = {
+    ...mapAppointmentToDbFormat(appointment),
+    user_id: userId
+  };
+  
   const { data, error } = await supabase
     .from('appointments')
-    .insert(mapAppointmentToDbFormat(appointment))
+    .insert(appointmentData)
     .select()
     .single();
     
@@ -91,10 +116,23 @@ export const updateAppointment = async (appointment: Appointment): Promise<Appoi
     appointmentId = appointment.id;
   }
 
+  // Get the current user's ID
+  const { data: session } = await supabase.auth.getSession();
+  const userId = session?.session?.user?.id;
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+  
+  const appointmentData = {
+    ...mapAppointmentToDbFormat(appointment),
+    user_id: userId
+  };
+
   const { data, error } = await supabase
     .from('appointments')
-    .update(mapAppointmentToDbFormat(appointment))
-    .eq('id', appointmentId)
+    .update(appointmentData)
+    .eq('id', appointmentId as string)
     .select()
     .single();
     

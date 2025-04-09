@@ -1,12 +1,22 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { Stats } from "@/lib/overview/types";
 
 // Fetch stats for the current user
 export const fetchStats = async (): Promise<Stats> => {
+  // Get current user ID
+  const { data: session } = await supabase.auth.getSession();
+  const userId = session?.session?.user?.id;
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
   // Check if the user has any stats records
   const { data: existingStats, error: checkError } = await supabase
     .from('stats')
     .select('*')
+    .eq('user_id', userId)
     .limit(1);
     
   if (checkError) {
@@ -20,7 +30,8 @@ export const fetchStats = async (): Promise<Stats> => {
       today_appointments: 0,
       week_appointments: 0,
       total_customers: 0,
-      completed_jobs: 0
+      completed_jobs: 0,
+      user_id: userId
     };
     
     const { data: newStats, error: createError } = await supabase
@@ -54,10 +65,19 @@ export const fetchStats = async (): Promise<Stats> => {
 
 // Update stats for the current user
 export const updateStats = async (stats: Stats): Promise<Stats> => {
+  // Get current user ID
+  const { data: session } = await supabase.auth.getSession();
+  const userId = session?.session?.user?.id;
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
   // Get the stats record ID first
   const { data: existingStats, error: fetchError } = await supabase
     .from('stats')
     .select('id')
+    .eq('user_id', userId)
     .limit(1);
     
   if (fetchError) {
@@ -76,7 +96,8 @@ export const updateStats = async (stats: Stats): Promise<Stats> => {
     today_appointments: stats.todayAppointments,
     week_appointments: stats.weekAppointments,
     total_customers: stats.totalCustomers,
-    completed_jobs: stats.completedJobs
+    completed_jobs: stats.completedJobs,
+    user_id: userId
   };
   
   const { data: updatedStats, error } = await supabase
