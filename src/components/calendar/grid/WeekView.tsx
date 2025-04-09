@@ -23,8 +23,8 @@ export function WeekView({ currentDate, appointments, onSelectAppointment, onNew
   // Generate days of the week
   const daysOfWeek = eachDayOfInterval({ start: weekStart, end: weekEnd });
   
-  // For mobile, show all 7 days with horizontal scroll
-  const visibleDays = daysOfWeek;
+  // Get today's date for highlighting
+  const today = new Date();
   
   return (
     <div className="border rounded-md bg-card overflow-x-auto w-full">
@@ -34,7 +34,7 @@ export function WeekView({ currentDate, appointments, onSelectAppointment, onNew
         isMobile ? "min-w-[700px]" : "" // Always show full week view with horizontal scroll on mobile
       )}>
         {/* Week days header */}
-        {visibleDays.map(day => (
+        {daysOfWeek.map(day => (
           <div 
             key={day.toISOString() + "-header"} 
             className={cn(
@@ -59,7 +59,7 @@ export function WeekView({ currentDate, appointments, onSelectAppointment, onNew
         "grid-cols-7",
         isMobile ? "min-w-[700px]" : "" // Always show full week view with horizontal scroll on mobile
       )}>
-        {visibleDays.map(day => {
+        {daysOfWeek.map(day => {
           const dayAppointments = appointments.filter(appointment => 
             isSameDay(new Date(appointment.date), day)
           );
@@ -83,6 +83,7 @@ export function WeekView({ currentDate, appointments, onSelectAppointment, onNew
               
               <div className="mt-6 space-y-1">
                 {dayAppointments.map(appointment => {
+                  const appointmentDate = new Date(appointment.date);
                   return (
                     <div
                       key={appointment.id}
@@ -94,16 +95,16 @@ export function WeekView({ currentDate, appointments, onSelectAppointment, onNew
                       )}
                     >
                       <div className="font-medium text-xs">
-                        {format(new Date(appointment.date), "HH:mm")}
+                        {format(appointmentDate, "HH:mm")}
                       </div>
                       <div className="text-xs truncate">{appointment.customerName}</div>
                     </div>
                   );
                 })}
                 
-                {dayAppointments.length === 0 && (
+                {dayAppointments.length === 0 && !isMobile && (
                   <div className="text-center text-muted-foreground text-xs py-2">
-                    {isMobile ? "" : "No appointments"}
+                    No appointments
                   </div>
                 )}
               </div>

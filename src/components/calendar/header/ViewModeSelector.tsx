@@ -1,3 +1,4 @@
+
 import { Calendar as CalendarIcon, CalendarCheck, CalendarDays } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,7 @@ export function ViewModeSelector({ viewMode, onChangeViewMode, className }: View
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className={`h-7 sm:h-8 text-xs sm:text-sm ${className}`}>
+        <Button variant="outline" size="sm" className={`h-8 text-xs sm:text-sm ${className} min-w-[80px]`}>
           {getViewIcon()}
           {getViewButtonLabel()}
         </Button>

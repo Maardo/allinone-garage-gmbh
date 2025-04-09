@@ -6,6 +6,7 @@ import { CalendarGrid } from "@/components/calendar/CalendarGrid";
 import { ServiceTypeLegend } from "@/components/calendar/ServiceTypeLegend";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCalendar } from "@/hooks/useCalendar";
+import { toast } from "sonner";
 
 export default function CalendarPage() {
   const isMobile = useIsMobile();
@@ -25,13 +26,6 @@ export default function CalendarPage() {
     handleNewAppointmentAtDate,
     handleChangeViewMode
   } = useCalendar();
-  
-  // Om på mobil, alltid defaulta till veckovis för bättre upplevelse
-  useEffect(() => {
-    if (isMobile && viewMode === 'month') {
-      handleChangeViewMode('week');
-    }
-  }, [isMobile, viewMode, handleChangeViewMode]);
 
   return (
     <Layout>

@@ -47,7 +47,7 @@ export function MobileCalendarHeader({
             size="icon"
             onClick={onPrevMonth}
             aria-label={`${t('calendar.previous')} ${viewMode}`}
-            className="h-7 w-7"
+            className="h-8 w-8"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -57,20 +57,20 @@ export function MobileCalendarHeader({
             size="icon"
             onClick={onNextMonth}
             aria-label={`${t('calendar.next')} ${viewMode}`}
-            className="h-7 w-7"
+            className="h-8 w-8"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
         
         <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={onToday} size="sm" className="h-7 text-xs px-2">
+          <Button variant="outline" onClick={onToday} size="sm" className="h-8 text-xs px-2 min-h-0">
             <CalendarIcon className="h-3.5 w-3.5" />
           </Button>
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-7 text-xs px-2">
+              <Button onClick={() => setSelectedAppointment(null)} size="sm" className="h-8 text-xs px-2 min-h-0">
                 <PlusCircle className="h-3.5 w-3.5" />
               </Button>
             </DialogTrigger>
@@ -89,7 +89,7 @@ export function MobileCalendarHeader({
         </div>
       </div>
       
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <ViewModeSelector 
           viewMode={viewMode} 
           onChangeViewMode={onChangeViewMode} 

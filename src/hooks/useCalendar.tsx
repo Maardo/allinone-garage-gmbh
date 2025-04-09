@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Appointment } from "@/lib/types";
 import { CalendarViewMode } from "@/lib/calendar/types";
 import { MOCK_APPOINTMENTS } from "@/lib/calendar/mockData";
@@ -21,12 +21,13 @@ export function useCalendar() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<CalendarViewMode>(isMobile ? 'week' : 'week');
 
-  // Säkerställ att vi använder rätt vy när skärmstorleken ändras
+  // Ensure we're using the right view when screen size changes
   useEffect(() => {
     if (isMobile && viewMode === 'month') {
-      setViewMode('week');
+      // Don't automatically change the view mode on mobile anymore
+      // We'll let the user decide which view they want to use
     }
-  }, [isMobile]);
+  }, [isMobile, viewMode]);
 
   const handleNavigatePrev = () => {
     setCurrentDate(navigateToPreviousPeriod(currentDate, viewMode));
@@ -43,10 +44,10 @@ export function useCalendar() {
 
   const handleAddAppointment = (appointment: Appointment) => {
     if (selectedAppointment) {
-      // Uppdatera befintlig bokning
+      // Update existing appointment
       setAppointments(updateAppointmentInList(appointments, appointment));
     } else {
-      // Lägg till ny bokning
+      // Add new appointment
       setAppointments(addAppointmentToList(appointments, appointment));
     }
     setIsDialogOpen(false);
@@ -63,12 +64,12 @@ export function useCalendar() {
     setIsDialogOpen(true);
   };
 
-  const handleChangeViewMode = (mode: CalendarViewMode) => {
+  const handleChangeViewMode = useCallback((mode: CalendarViewMode) => {
     setViewMode(mode);
     
-    // Justera nuvarande datum till början av lämplig period
+    // Adjust current date to the beginning of appropriate period
     setCurrentDate(getStartOfCurrentPeriod(currentDate, mode));
-  };
+  }, [currentDate]);
 
   return {
     currentDate,

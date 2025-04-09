@@ -1,5 +1,5 @@
 
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, isSameDay } from "date-fns";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, isSameDay, addDays, getDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Appointment } from "@/lib/types";
@@ -24,6 +24,28 @@ export function MonthView({
   const monthEnd = endOfMonth(currentDate);
   const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
+  // Calculate days to display before the first day of the month
+  const startWeekday = getDay(monthStart);
+  // Convert from 0 = Sunday to 0 = Monday
+  const startDayOffset = startWeekday === 0 ? 6 : startWeekday - 1;
+  const prevDays = Array.from({ length: startDayOffset }).map((_, i) => 
+    addDays(monthStart, -1 * (startDayOffset - i))
+  );
+
+  // Combine all days to display
+  const calendarDays = [...prevDays, ...daysInMonth];
+  
+  // Calculate rows based on the number of days
+  const rows = Math.ceil(calendarDays.length / 7);
+  
+  // Complete the grid with days from the next month
+  const nextDays = Array.from({ length: rows * 7 - calendarDays.length }).map((_, i) => 
+    addDays(monthEnd, i + 1)
+  );
+  
+  // Final calendar grid
+  const allDays = [...calendarDays, ...nextDays];
+
   const getAppointmentsForDay = (day: Date) => {
     return appointments.filter(appointment => 
       isSameDay(new Date(appointment.date), day)
@@ -45,57 +67,24 @@ export function MonthView({
         </div>
 
         <div className="grid grid-cols-7 gap-1 auto-rows-fr">
-          {daysInMonth.map((day, i) => {
-            // Adjust to start week on Monday
-            let dayOfWeek = day.getDay(); // 0 = Sunday, 1 = Monday, etc.
-            dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Convert to 0 = Monday, 6 = Sunday
-            
-            // Create empty cells for days before the first of the month
-            const startOffset = dayOfWeek;
-            if (i === 0) {
-              const emptyCells = Array(startOffset).fill(null);
-              return [
-                ...emptyCells.map((_, index) => (
-                  <div key={`empty-${index}`} className="calendar-day opacity-0"></div>
-                )),
-                <div
-                  key={day.toISOString()}
-                  className={cn(
-                    "calendar-day min-h-[50px] sm:min-h-[80px] p-1 border rounded-md bg-card",
-                    !isSameMonth(day, currentDate) && "opacity-40",
-                    isToday(day) && "border-primary shadow-sm"
-                  )}
-                >
-                  <DayContent 
-                    day={day} 
-                    currentDate={currentDate}
-                    appointments={getAppointmentsForDay(day)}
-                    onSelectAppointment={onSelectAppointment}
-                    onNewAppointmentAtDate={() => onNewAppointmentAtDate(day)}
-                  />
-                </div>
-              ];
-            }
-            
-            return (
-              <div
-                key={day.toISOString()}
-                className={cn(
-                  "calendar-day min-h-[50px] sm:min-h-[80px] p-1 border rounded-md bg-card",
-                  !isSameMonth(day, currentDate) && "opacity-40",
-                  isToday(day) && "border-primary shadow-sm"
-                )}
-              >
-                <DayContent 
-                  day={day} 
-                  currentDate={currentDate}
-                  appointments={getAppointmentsForDay(day)}
-                  onSelectAppointment={onSelectAppointment}
-                  onNewAppointmentAtDate={() => onNewAppointmentAtDate(day)}
-                />
-              </div>
-            );
-          })}
+          {allDays.map((day) => (
+            <div
+              key={day.toISOString()}
+              className={cn(
+                "calendar-day min-h-[50px] sm:min-h-[80px] p-1 border rounded-md bg-card",
+                !isSameMonth(day, currentDate) && "opacity-40",
+                isToday(day) && "border-primary shadow-sm"
+              )}
+            >
+              <DayContent 
+                day={day} 
+                currentDate={currentDate}
+                appointments={getAppointmentsForDay(day)}
+                onSelectAppointment={onSelectAppointment}
+                onNewAppointmentAtDate={() => onNewAppointmentAtDate(day)}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>
