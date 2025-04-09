@@ -1,5 +1,5 @@
 
-import { Appointment } from './types';
+import { Appointment, Stats } from './types';
 import { ServiceType } from '@/lib/serviceTypes';
 
 export const MOCK_APPOINTMENTS: Appointment[] = [
