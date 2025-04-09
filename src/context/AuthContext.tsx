@@ -31,6 +31,7 @@ const DEMO_USERS = [
 interface AuthContextType {
   currentUser: User | null;
   login: (email: string, password: string) => Promise<boolean>;
+  register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -40,6 +41,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [users, setUsers] = useState<typeof DEMO_USERS>(() => {
+    const savedUsers = localStorage.getItem('workshop-users');
+    return savedUsers ? JSON.parse(savedUsers) : DEMO_USERS;
+  });
 
   // Check if user is already logged in
   useEffect(() => {
@@ -54,13 +59,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
+  // Save users to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('workshop-users', JSON.stringify(users));
+  }, [users]);
+
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    const user = DEMO_USERS.find(u => u.email === email && u.password === password);
+    const user = users.find(u => u.email === email && u.password === password);
     
     if (user) {
       const { password, ...userWithoutPassword } = user;
@@ -74,13 +84,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return false;
   };
 
+  const register = async (name: string, email: string, password: string): Promise<boolean> => {
+    setIsLoading(true);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Check if user with this email already exists
+    const existingUser = users.find(u => u.email === email);
+    if (existingUser) {
+      setIsLoading(false);
+      return false;
+    }
+    
+    // Create new user
+    const newUser = {
+      id: Math.random().toString(36).substr(2, 9),
+      name,
+      email,
+      password,
+      role: 'mechanic' as UserRole // Default role for new users
+    };
+    
+    // Add to users list
+    setUsers(prevUsers => [...prevUsers, newUser]);
+    
+    // Log in the new user
+    const { password: _, ...userWithoutPassword } = newUser;
+    setCurrentUser(userWithoutPassword);
+    localStorage.setItem('workshop-user', JSON.stringify(userWithoutPassword));
+    
+    setIsLoading(false);
+    return true;
+  };
+
   const logout = () => {
     setCurrentUser(null);
     localStorage.removeItem('workshop-user');
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ currentUser, login, register, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

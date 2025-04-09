@@ -1,30 +1,35 @@
 
+import { common } from './common';
+import { pages } from './pages';
 import { navigation } from './navigation';
 import { dashboard } from './dashboard';
-import { calendar } from './calendar';
-import { appointment } from './appointment';
-import { loanerCar } from './loanerCar';
 import { actions } from './actions';
-import { common } from './common';
-import { roles } from './roles';
-import { overview } from './overview';
-import { pages } from './pages';
-import { serviceTypes } from './serviceTypes';
 import { customer } from './customer';
 import { vehicle } from './vehicle';
+import { appointment } from './appointment';
+import { overview } from './overview';
+import { roles } from './roles';
+import { loanerCar } from './loanerCar';
+import { serviceTypes } from './serviceTypes';
+import { calendar } from './calendar';
+import { login, register } from './login';
 
-export const enTranslations = {
+const en = {
+  common,
+  pages,
   navigation,
   dashboard,
-  calendar,
-  appointment,
-  loanerCar,
   actions,
-  common,
-  roles,
-  overview,
-  pages,
-  serviceTypes,
   customer,
-  vehicle
+  vehicle,
+  appointment,
+  overview,
+  roles,
+  loanerCar,
+  serviceTypes,
+  calendar,
+  login,
+  register
 };
+
+export default en;

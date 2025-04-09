@@ -1,3 +1,4 @@
+
 import { 
   format, 
   startOfMonth, 
@@ -16,6 +17,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Appointment } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SERVICE_TYPES } from "@/lib/serviceTypes";
 
 interface CalendarGridProps {
   currentDate: Date;
@@ -178,23 +180,27 @@ function DayContent({
         </Dialog>
       </div>
       <div className="space-y-0.5 max-h-12 sm:max-h-16 overflow-y-auto text-xs">
-        {appointments.map((appointment) => (
-          <div
-            key={appointment.id}
-            onClick={() => onSelectAppointment(appointment)}
-            className={cn(
-              "calendar-appointment p-0.5 px-1 rounded cursor-pointer text-white",
-              `bg-blue-${appointment.serviceType * 100 + 500}`,
-              appointment.isPaid && "opacity-80",
-              appointment.isCompleted && "line-through opacity-60"
-            )}
-          >
-            <div className="font-medium truncate text-xs">
-              {format(new Date(appointment.date), "HH:mm")} {appointment.customerName}
+        {appointments.map((appointment) => {
+          const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
+          return (
+            <div
+              key={appointment.id}
+              onClick={() => onSelectAppointment(appointment)}
+              className={cn(
+                "calendar-appointment p-0.5 px-1 rounded cursor-pointer text-white",
+                "bg-blue-600", // Always use blue background for better visibility
+                appointment.isCompleted && "opacity-60 line-through"
+              )}
+            >
+              <div className="font-medium truncate text-xs">
+                {format(new Date(appointment.date), "HH:mm")} {appointment.customerName}
+              </div>
+              <div className="truncate text-xs sm:block">
+                {appointment.vehicleLicense} {serviceType?.code || ''}
+              </div>
             </div>
-            <div className="truncate text-xs hidden sm:block">{appointment.vehicleInfo}</div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );
@@ -247,24 +253,27 @@ function DayView({ day, appointments, onSelectAppointment, onNewAppointmentAtDat
               </div>
               <div className="flex-1">
                 {hourAppointments.length > 0 ? (
-                  hourAppointments.map(appointment => (
-                    <div
-                      key={appointment.id}
-                      onClick={() => onSelectAppointment(appointment)}
-                      className={cn(
-                        "p-2 rounded cursor-pointer text-white mb-1",
-                        `bg-blue-${appointment.serviceType * 100 + 500}`,
-                        appointment.isPaid && "opacity-80",
-                        appointment.isCompleted && "line-through opacity-60"
-                      )}
-                    >
-                      <div className="font-medium">
-                        {format(new Date(appointment.date), "HH:mm")} - {appointment.customerName}
+                  hourAppointments.map(appointment => {
+                    const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
+                    return (
+                      <div
+                        key={appointment.id}
+                        onClick={() => onSelectAppointment(appointment)}
+                        className={cn(
+                          "p-2 rounded cursor-pointer text-white mb-1",
+                          "bg-blue-600", // Always use blue background for better visibility
+                          appointment.isCompleted && "line-through opacity-60"
+                        )}
+                      >
+                        <div className="font-medium">
+                          {format(new Date(appointment.date), "HH:mm")} - {appointment.customerName}
+                        </div>
+                        <div className="text-sm">{appointment.vehicleMake} {appointment.vehicleModel} - {appointment.vehicleLicense}</div>
+                        <div className="text-sm">Code: {serviceType?.code || ''}</div>
+                        {appointment.notes && <div className="text-sm mt-1 opacity-90">{appointment.notes}</div>}
                       </div>
-                      <div className="text-sm">{appointment.vehicleMake} {appointment.vehicleModel}</div>
-                      {appointment.notes && <div className="text-sm mt-1 opacity-90">{appointment.notes}</div>}
-                    </div>
-                  ))
+                    );
+                  })
                 ) : (
                   <div 
                     className="h-6 w-full rounded border border-dashed border-gray-200 hover:border-gray-300 cursor-pointer"
@@ -360,24 +369,28 @@ function WeekView({ currentDate, appointments, onSelectAppointment, onNewAppoint
               </Button>
               
               <div className="mt-8 space-y-2">
-                {dayAppointments.map(appointment => (
-                  <div
-                    key={appointment.id}
-                    onClick={() => onSelectAppointment(appointment)}
-                    className={cn(
-                      "p-2 rounded cursor-pointer text-white",
-                      `bg-blue-${appointment.serviceType * 100 + 500}`,
-                      appointment.isPaid && "opacity-80",
-                      appointment.isCompleted && "line-through opacity-60"
-                    )}
-                  >
-                    <div className="font-medium text-xs sm:text-sm">
-                      {format(new Date(appointment.date), "HH:mm")}
+                {dayAppointments.map(appointment => {
+                  const serviceType = SERVICE_TYPES[appointment.serviceType] || SERVICE_TYPES[1];
+                  return (
+                    <div
+                      key={appointment.id}
+                      onClick={() => onSelectAppointment(appointment)}
+                      className={cn(
+                        "p-2 rounded cursor-pointer text-white",
+                        "bg-blue-600", // Always use blue background for better visibility
+                        appointment.isCompleted && "line-through opacity-60"
+                      )}
+                    >
+                      <div className="font-medium text-xs sm:text-sm">
+                        {format(new Date(appointment.date), "HH:mm")}
+                      </div>
+                      <div className="text-xs truncate">{appointment.customerName}</div>
+                      <div className="text-xs truncate sm:block">
+                        {appointment.vehicleLicense} {serviceType?.code || ''}
+                      </div>
                     </div>
-                    <div className="text-xs truncate">{appointment.customerName}</div>
-                    <div className="text-xs truncate hidden sm:block">{appointment.vehicleMake} {appointment.vehicleModel}</div>
-                  </div>
-                ))}
+                  );
+                })}
                 
                 {dayAppointments.length === 0 && (
                   <div className="text-center text-muted-foreground text-xs py-4 sm:py-8">
