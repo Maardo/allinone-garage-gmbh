@@ -10,6 +10,19 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/LanguageContext";
+import { resetAppointments } from "@/services/appointmentService";
+import { resetStats } from "@/services/statsService";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function Settings() {
   const { toast } = useToast();
@@ -18,6 +31,7 @@ export default function Settings() {
   const [completionEmailTemplate, setCompletionEmailTemplate] = useState(
     "Dear customer,\n\nWe are pleased to inform you that your vehicle service has been completed. Your vehicle is now ready for pickup.\n\nThank you for choosing our services.\n\nBest regards,\nAuto Service Center"
   );
+  const [isResetting, setIsResetting] = useState(false);
   
   const handleSaveGeneralSettings = () => {
     toast({
@@ -35,6 +49,32 @@ export default function Settings() {
       title: t('common.success'),
       description: t('common.notificationPreferencesSaved'),
     });
+  };
+
+  const handleResetData = async () => {
+    try {
+      setIsResetting(true);
+      // Reset all data in Supabase
+      await resetAppointments();
+      await resetStats();
+      
+      toast({
+        title: t('common.success'),
+        description: "All data has been reset successfully.",
+      });
+      
+      // Reload the page to refresh all data
+      window.location.reload();
+    } catch (error) {
+      console.error("Error resetting data:", error);
+      toast({
+        title: t('common.error'),
+        description: "Failed to reset data. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   return (
@@ -128,9 +168,32 @@ export default function Settings() {
               </div>
               
               <div className="pt-4 border-t">
-                <Button variant="destructive">
-                  {t('common.resetAllSettings')}
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive">
+                      Återställ alla data
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Är du säker?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Detta kommer att radera alla dina bokningar, statistik och annan data. 
+                        Åtgärden kan inte ångras.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleResetData} 
+                        disabled={isResetting}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
+                        {isResetting ? "Återställer..." : "Ja, återställ all data"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </div>
           </Card>

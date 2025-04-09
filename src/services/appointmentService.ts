@@ -30,6 +30,26 @@ export const mapAppointmentToDbFormat = (appointment: Appointment) => {
   };
 };
 
+// Reset all appointments for the current user
+export const resetAppointments = async (): Promise<void> => {
+  const { data: session } = await supabase.auth.getSession();
+  const userId = session?.session?.user?.id;
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+  
+  const { error } = await supabase
+    .from('appointments')
+    .delete()
+    .eq('user_id', userId);
+    
+  if (error) {
+    console.error('Error resetting appointments:', error);
+    throw error;
+  }
+};
+
 // Fetch all appointments for the current user
 export const fetchAppointments = async (): Promise<Appointment[]> => {
   const { data: session } = await supabase.auth.getSession();
@@ -111,7 +131,7 @@ export const updateAppointment = async (appointment: Appointment): Promise<Appoi
     const numStr = appointment.id.toString(16).padStart(8, '0');
     
     // Find a match based on the first 8 characters of the UUID
-    const foundAppointment = existingAppointments.find(a => 
+    const foundAppointment = existingAppointments?.find(a => 
       typeof a.id === 'string' && a.id.substring(0, 8).toLowerCase() === numStr.toLowerCase()
     );
     
@@ -175,7 +195,7 @@ export const deleteAppointment = async (appointmentId: number | string): Promise
     const numStr = appointmentId.toString(16).padStart(8, '0');
     
     // Find a match based on the first 8 characters of the UUID
-    const foundAppointment = existingAppointments.find(a => 
+    const foundAppointment = existingAppointments?.find(a => 
       typeof a.id === 'string' && a.id.substring(0, 8).toLowerCase() === numStr.toLowerCase()
     );
     
