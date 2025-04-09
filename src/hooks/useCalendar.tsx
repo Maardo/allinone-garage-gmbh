@@ -12,6 +12,7 @@ import {
   updateAppointmentInList,
   addAppointmentToList
 } from "@/lib/calendar/calendarService";
+import { toast } from "sonner";
 
 export function useCalendar() {
   const isMobile = useIsMobile();
@@ -20,14 +21,6 @@ export function useCalendar() {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<CalendarViewMode>(isMobile ? 'week' : 'week');
-
-  // Ensure we're using the right view when screen size changes
-  useEffect(() => {
-    if (isMobile && viewMode === 'month') {
-      // Don't automatically change the view mode on mobile anymore
-      // We'll let the user decide which view they want to use
-    }
-  }, [isMobile, viewMode]);
 
   const handleNavigatePrev = () => {
     setCurrentDate(navigateToPreviousPeriod(currentDate, viewMode));
@@ -40,15 +33,18 @@ export function useCalendar() {
   const goToToday = () => {
     const today = new Date();
     setCurrentDate(getStartOfCurrentPeriod(today, viewMode));
+    toast.success("Calendar set to today's date");
   };
 
   const handleAddAppointment = (appointment: Appointment) => {
     if (selectedAppointment) {
       // Update existing appointment
       setAppointments(updateAppointmentInList(appointments, appointment));
+      toast.success("Appointment updated successfully");
     } else {
       // Add new appointment
       setAppointments(addAppointmentToList(appointments, appointment));
+      toast.success("New appointment added");
     }
     setIsDialogOpen(false);
     setSelectedAppointment(null);
@@ -69,6 +65,8 @@ export function useCalendar() {
     
     // Adjust current date to the beginning of appropriate period
     setCurrentDate(getStartOfCurrentPeriod(currentDate, mode));
+    
+    toast.info(`Calendar view changed to ${mode} view`);
   }, [currentDate]);
 
   return {

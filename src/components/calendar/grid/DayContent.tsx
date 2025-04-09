@@ -35,26 +35,22 @@ export function DayContent({
         >
           {format(day, "d")}
         </span>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-4 w-4 opacity-50 hover:opacity-100"
-              onClick={onNewAppointmentAtDate}
-            >
-              <PlusCircle className="h-3 w-3" />
-            </Button>
-          </DialogTrigger>
-        </Dialog>
+        {appointments.length > 0 && (
+          <span className="text-[0.65rem] bg-blue-100 text-blue-800 px-1 rounded-full">
+            {appointments.length}
+          </span>
+        )}
       </div>
-      <div className="space-y-0.5 max-h-10 sm:max-h-16 overflow-y-auto text-xs">
+      <div className="space-y-0.5 max-h-12 sm:max-h-20 overflow-y-auto text-xs">
         {appointments.length > 0 ? (
           appointments.slice(0, isMobile ? 2 : 3).map((appointment) => {
             return (
               <div
                 key={appointment.id}
-                onClick={() => onSelectAppointment(appointment)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelectAppointment(appointment);
+                }}
                 className={cn(
                   "calendar-appointment p-0.5 px-1 rounded cursor-pointer text-white",
                   "bg-blue-600", 
@@ -68,12 +64,12 @@ export function DayContent({
             );
           })
         ) : (
-          <div className="text-center text-xs text-muted-foreground py-1">
+          <div className="text-center text-xs text-muted-foreground py-1 opacity-50">
             {isMobile ? "" : "No appointments"}
           </div>
         )}
         {appointments.length > (isMobile ? 2 : 3) && (
-          <div className="text-center text-xs text-muted-foreground">
+          <div className="text-center text-[0.65rem] text-blue-700 bg-blue-50 rounded-sm">
             +{appointments.length - (isMobile ? 2 : 3)} more
           </div>
         )}
