@@ -2,7 +2,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Appointment } from "@/lib/overview/types";
 import { ServiceType } from "@/lib/serviceTypes";
-import { useAuth } from "@/context/AuthContext";
 
 // Convert database appointment to frontend appointment
 export const mapDbAppointmentToAppointment = (dbAppointment: any): Appointment => {
@@ -20,17 +19,6 @@ export const mapDbAppointmentToAppointment = (dbAppointment: any): Appointment =
 
 // Convert frontend appointment to database format
 export const mapAppointmentToDbFormat = (appointment: Appointment) => {
-  // Get the current user's ID
-  const getUserId = () => {
-    try {
-      const session = supabase.auth.getSession();
-      return session || "00000000-0000-0000-0000-000000000000"; // Fallback
-    } catch (error) {
-      console.error("Error getting user ID:", error);
-      return "00000000-0000-0000-0000-000000000000"; // Fallback
-    }
-  };
-
   return {
     date: appointment.date.toISOString(),
     vehicle_model: appointment.vehicleModel,
@@ -38,16 +26,23 @@ export const mapAppointmentToDbFormat = (appointment: Appointment) => {
     is_completed: appointment.isCompleted,
     customer_email: appointment.customerEmail,
     customer_name: appointment.customerName,
-    license_plate: appointment.licensePlate,
-    user_id: getUserId()
+    license_plate: appointment.licensePlate
   };
 };
 
 // Fetch all appointments for the current user
 export const fetchAppointments = async (): Promise<Appointment[]> => {
+  const { data: session } = await supabase.auth.getSession();
+  const userId = session?.session?.user?.id;
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+  
   const { data: dbAppointments, error } = await supabase
     .from('appointments')
     .select('*')
+    .eq('user_id', userId)
     .order('date', { ascending: true });
     
   if (error) {
@@ -89,12 +84,20 @@ export const createAppointment = async (appointment: Appointment): Promise<Appoi
 // Update an appointment
 export const updateAppointment = async (appointment: Appointment): Promise<Appointment> => {
   // Convert UUID to string if needed
-  let appointmentId;
+  let appointmentId: string;
   if (typeof appointment.id === 'number') {
     // Find the original UUID for this appointment by querying first
+    const { data: session } = await supabase.auth.getSession();
+    const userId = session?.session?.user?.id;
+    
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+    
     const { data: existingAppointments, error: fetchError } = await supabase
       .from('appointments')
       .select('id')
+      .eq('user_id', userId)
       .limit(100);
       
     if (fetchError) {
@@ -104,16 +107,18 @@ export const updateAppointment = async (appointment: Appointment): Promise<Appoi
     
     // Find a match based on the first 8 characters of the UUID
     const numStr = appointment.id.toString(16).padStart(8, '0');
-    appointmentId = existingAppointments.find(a => 
+    const foundAppointment = existingAppointments.find(a => 
       typeof a.id === 'string' && a.id.startsWith(numStr)
-    )?.id;
+    );
     
-    if (!appointmentId) {
+    if (!foundAppointment) {
       console.error('Could not find appointment with id:', appointment.id);
       throw new Error('Appointment not found');
     }
+    
+    appointmentId = foundAppointment.id;
   } else {
-    appointmentId = appointment.id;
+    appointmentId = appointment.id.toString();
   }
 
   // Get the current user's ID
@@ -132,7 +137,7 @@ export const updateAppointment = async (appointment: Appointment): Promise<Appoi
   const { data, error } = await supabase
     .from('appointments')
     .update(appointmentData)
-    .eq('id', appointmentId as string)
+    .eq('id', appointmentId)
     .select()
     .single();
     
@@ -146,10 +151,49 @@ export const updateAppointment = async (appointment: Appointment): Promise<Appoi
 
 // Delete an appointment
 export const deleteAppointment = async (appointmentId: number | string): Promise<void> => {
+  // If the ID is a number, first find the corresponding UUID
+  let dbAppointmentId: string;
+  
+  if (typeof appointmentId === 'number') {
+    // Get the current user's ID for security
+    const { data: session } = await supabase.auth.getSession();
+    const userId = session?.session?.user?.id;
+    
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+    
+    // Find the appointment by its shortened ID
+    const { data: existingAppointments, error: fetchError } = await supabase
+      .from('appointments')
+      .select('id')
+      .eq('user_id', userId);
+      
+    if (fetchError) {
+      console.error('Error fetching appointments for delete:', fetchError);
+      throw fetchError;
+    }
+    
+    // Find a match based on the first 8 characters of the UUID
+    const numStr = appointmentId.toString(16).padStart(8, '0');
+    const foundAppointment = existingAppointments.find(a => 
+      typeof a.id === 'string' && a.id.startsWith(numStr)
+    );
+    
+    if (!foundAppointment) {
+      console.error('Could not find appointment with id:', appointmentId);
+      throw new Error('Appointment not found');
+    }
+    
+    dbAppointmentId = foundAppointment.id;
+  } else {
+    dbAppointmentId = appointmentId;
+  }
+  
   const { error } = await supabase
     .from('appointments')
     .delete()
-    .eq('id', appointmentId);
+    .eq('id', dbAppointmentId);
     
   if (error) {
     console.error('Error deleting appointment:', error);
