@@ -16,6 +16,19 @@ export function ServiceTypeList({
 }: ServiceTypeListProps) {
   const { t } = useLanguage();
 
+  // Helper function to get the translation key for a service type
+  const getServiceTypeTranslationKey = (typeId: number): string => {
+    switch (typeId) {
+      case 1: return 'serviceTypes.maintenance';
+      case 2: return 'serviceTypes.repair';
+      case 3: return 'serviceTypes.inspection';
+      case 4: return 'serviceTypes.tireChange';
+      case 5: return 'serviceTypes.other';
+      case 6: return 'serviceTypes.other';
+      default: return 'serviceTypes.other';
+    }
+  };
+
   return (
     <Card className="shadow-md">
       <CardHeader className="bg-muted/30">
@@ -44,7 +57,10 @@ export function ServiceTypeList({
                 </Tooltip>
               </TooltipProvider>
               <div className="overflow-hidden flex-1">
-                <h3 className="font-medium text-base">{type.name}</h3>
+                <h3 className="font-medium text-base">
+                  {/* Use translated name if available in serviceTypes translations */}
+                  {t(getServiceTypeTranslationKey(type.id))}
+                </h3>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="font-medium text-xs bg-muted px-2 py-0.5 rounded">
                     {type.code || type.id}

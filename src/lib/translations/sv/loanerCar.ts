@@ -48,5 +48,8 @@ export const loanerCar = {
   tabAvailableCars: 'Tillgängliga bilar',
   tabLoanerNeeds: 'Behov av lånebil',
   needsLoanerCarDescription: 'Kunder som har begärt lånebilar',
-  noLoanerNeeds: 'Inga kunder behöver lånebilar för tillfället'
+  noLoanerNeeds: 'Inga kunder behöver lånebilar för tillfället',
+  editDates: 'Redigera Datum',
+  datesUpdated: 'Datum Uppdaterade',
+  datesUpdatedDescription: 'Lånedatumen har uppdaterats framgångsrikt'
 };

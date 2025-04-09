@@ -48,5 +48,8 @@ export const loanerCar = {
   tabAvailableCars: 'Verfügbare Autos',
   tabLoanerNeeds: 'Leihwagenbedarf',
   needsLoanerCarDescription: 'Kunden, die Leihwagen angefordert haben',
-  noLoanerNeeds: 'Derzeit benötigt kein Kunde einen Leihwagen'
+  noLoanerNeeds: 'Derzeit benötigt kein Kunde einen Leihwagen',
+  editDates: 'Daten bearbeiten',
+  datesUpdated: 'Daten aktualisiert',
+  datesUpdatedDescription: 'Die Leihdaten wurden erfolgreich aktualisiert'
 };

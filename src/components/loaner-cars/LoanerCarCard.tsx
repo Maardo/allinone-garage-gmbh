@@ -1,5 +1,5 @@
 
-import { Car, User, Calendar, AlertCircle, Edit, Trash2 } from "lucide-react";
+import { Car, User, Calendar, AlertCircle, Edit, Trash2, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { LoanerCar } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -14,6 +14,7 @@ interface LoanerCarCardProps {
   onReturn: (carId: string) => void;
   onEdit: (car: LoanerCar) => void;
   onDelete: (car: LoanerCar) => void;
+  onEditDates: (car: LoanerCar) => void;
   isAdmin: boolean;
 }
 
@@ -22,7 +23,8 @@ export function LoanerCarCard({
   onAssign, 
   onReturn, 
   onEdit, 
-  onDelete, 
+  onDelete,
+  onEditDates,
   isAdmin 
 }: LoanerCarCardProps) {
   const { t } = useLanguage();
@@ -122,6 +124,16 @@ export function LoanerCarCard({
                   onClick={() => onReturn(car.id)}
                 >
                   {t('loanerCar.markAsReturned')}
+                </Button>
+                
+                <Button 
+                  size="sm" 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => onEditDates(car)}
+                >
+                  <Clock className="h-3 w-3 mr-1" />
+                  {t('loanerCar.editDates')}
                 </Button>
                 
                 {isAdmin && (

@@ -43,6 +43,28 @@ export function useLoanerCarOperations(
     });
   };
 
+  const handleUpdateDates = (carId: string, startDate: string, returnDate: string) => {
+    if (!carId) return;
+    
+    const updatedCars = loanerCars.map(car => {
+      if (car.id === carId) {
+        return {
+          ...car,
+          assignedFrom: new Date(startDate),
+          assignedUntil: new Date(returnDate)
+        };
+      }
+      return car;
+    });
+    
+    setLoanerCars(updatedCars);
+    
+    toast({
+      title: t('loanerCar.datesUpdated'),
+      description: t('loanerCar.datesUpdatedDescription'),
+    });
+  };
+
   const handleAssignToAppointment = (appointmentId: string) => {
     // Find the appointment
     const appointment = appointments.find(app => app.id === appointmentId);
@@ -149,6 +171,7 @@ export function useLoanerCarOperations(
     selectedCar,
     setSelectedCar,
     handleAssign,
+    handleUpdateDates,
     handleReturn,
     handleAssignToAppointment
   };

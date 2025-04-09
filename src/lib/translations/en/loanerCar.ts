@@ -48,5 +48,8 @@ export const loanerCar = {
   tabAvailableCars: 'Available Cars',
   tabLoanerNeeds: 'Loaner Car Needs',
   needsLoanerCarDescription: 'Customers who have requested loaner cars',
-  noLoanerNeeds: 'No customers need loaner cars at the moment'
+  noLoanerNeeds: 'No customers need loaner cars at the moment',
+  editDates: 'Edit Dates',
+  datesUpdated: 'Dates Updated',
+  datesUpdatedDescription: 'The loan dates have been updated successfully'
 };

@@ -9,6 +9,7 @@ import { LoanerCarCard } from "@/components/loaner-cars/LoanerCarCard";
 import { AssignDialog } from "@/components/loaner-cars/AssignDialog";
 import { EditCarDialog } from "@/components/loaner-cars/EditCarDialog";
 import { DeleteCarDialog } from "@/components/loaner-cars/DeleteCarDialog";
+import { EditLoanerDateDialog } from "@/components/loaner-cars/EditLoanerDateDialog";
 import { LoanerCarRequests } from "@/components/loaner-cars/LoanerCarRequests";
 import { useLoanerCars } from "@/components/loaner-cars/useLoanerCars";
 import { useLanguage } from "@/context/LanguageContext";
@@ -31,6 +32,8 @@ export default function LoanerCarsPage() {
     setIsEditDialogOpen,
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
+    isEditDatesDialogOpen,
+    setIsEditDatesDialogOpen,
     appointmentsNeedingCars,
     assignData,
     setAssignData,
@@ -41,6 +44,7 @@ export default function LoanerCarsPage() {
     handleAddCar,
     handleUpdateCar,
     handleDeleteCar,
+    handleUpdateDates,
     handleAssignToAppointment
   } = useLoanerCars();
 
@@ -118,6 +122,10 @@ export default function LoanerCarsPage() {
                   onDelete={(car) => {
                     setSelectedCar(car);
                     setIsDeleteDialogOpen(true);
+                  }}
+                  onEditDates={(car) => {
+                    setSelectedCar(car);
+                    setIsEditDatesDialogOpen(true);
                   }}
                   isAdmin={isAdmin}
                 />
@@ -212,6 +220,18 @@ export default function LoanerCarsPage() {
         selectedCar={selectedCar}
         onOpenChange={(open) => setIsDeleteDialogOpen(open)}
         onDelete={handleDeleteCar}
+      />
+      
+      <EditLoanerDateDialog
+        isOpen={isEditDatesDialogOpen && selectedCar !== null}
+        selectedCar={selectedCar}
+        onOpenChange={(open) => setIsEditDatesDialogOpen(open)}
+        onSave={(startDate, returnDate) => {
+          if (selectedCar) {
+            handleUpdateDates(selectedCar.id, startDate, returnDate);
+            setIsEditDatesDialogOpen(false);
+          }
+        }}
       />
     </Layout>
   );
