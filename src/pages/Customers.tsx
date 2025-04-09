@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Plus } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { Input } from "@/components/ui/input";
@@ -49,6 +49,23 @@ export default function CustomersPage() {
     setSelectedCustomer(customer);
     setIsDeleteDialogOpen(true);
   };
+
+  // Check if we have a user
+  if (!currentUser) {
+    return (
+      <Layout title={t('navigation.customers')} subtitle={t('customer.manageSubtitle')}>
+        <div className="flex flex-col items-center justify-center p-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+          <p className="text-lg text-center">
+            {t('common.loading')} {t('customer.info')}
+          </p>
+          <p className="text-sm text-muted-foreground mt-2 text-center">
+            Please log in to view your customers
+          </p>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout title={t('navigation.customers')} subtitle={t('customer.manageSubtitle')}>

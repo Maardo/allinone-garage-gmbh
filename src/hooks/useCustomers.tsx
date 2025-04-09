@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/LanguageContext";
 import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
 import { MOCK_CUSTOMERS } from "@/lib/customers/mockData";
+import { useAuth } from "@/context/AuthContext";
 import { 
   createCustomer, 
   createVehicle, 
@@ -12,12 +13,14 @@ import {
   fetchCustomersFromDb,
   addCustomerToDb,
   updateCustomerInDb,
-  deleteCustomerFromDb
+  deleteCustomerFromDb,
+  importMockDataToDb
 } from "@/lib/customers/customerService";
 
 export function useCustomers() {
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { currentUser } = useAuth();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [previousCustomers, setPreviousCustomers] = useState<Customer[]>([]);
@@ -42,17 +45,37 @@ export function useCustomers() {
     const loadCustomers = async () => {
       setIsLoading(true);
       try {
-        const dbCustomers = await fetchCustomersFromDb();
+        // Make sure we have a user before trying to load data
+        if (!currentUser) {
+          console.log("No current user, using mock data");
+          setCustomers(MOCK_CUSTOMERS);
+          setPreviousCustomers(MOCK_CUSTOMERS);
+          setIsLoading(false);
+          return;
+        }
+
+        console.log("Loading customers for user:", currentUser.id);
+        const dbCustomers = await fetchCustomersFromDb(currentUser.id);
+        
         if (dbCustomers.length > 0) {
+          console.log(`Found ${dbCustomers.length} customers in database`);
           setCustomers(dbCustomers);
           setPreviousCustomers(dbCustomers);
         } else {
-          // Fallback to mock data if no customers in DB
-          setCustomers(MOCK_CUSTOMERS);
-          setPreviousCustomers(MOCK_CUSTOMERS);
+          console.log("No customers found in database, importing mock data");
+          // Import mock data to database for this user
+          const imported = await importMockDataToDb(MOCK_CUSTOMERS, currentUser.id);
           
-          // Optional: Add mock data to DB for first-time setup
-          // MOCK_CUSTOMERS.forEach(customer => addCustomerToDb(customer));
+          if (imported) {
+            // After importing, fetch the customers again with proper IDs
+            const importedCustomers = await fetchCustomersFromDb(currentUser.id);
+            setCustomers(importedCustomers);
+            setPreviousCustomers(importedCustomers);
+          } else {
+            // Fallback to mock data if import fails
+            setCustomers(MOCK_CUSTOMERS);
+            setPreviousCustomers(MOCK_CUSTOMERS);
+          }
         }
       } catch (error) {
         console.error("Error loading customers:", error);
@@ -65,7 +88,7 @@ export function useCustomers() {
     };
 
     loadCustomers();
-  }, []);
+  }, [currentUser]);
 
   const filteredCustomers = filterCustomers(customers, searchTerm);
 
@@ -84,6 +107,14 @@ export function useCustomers() {
 
   const handleAddCustomer = async () => {
     if (!newCustomer.name) return;
+    if (!currentUser) {
+      toast({
+        title: t('common.error'),
+        description: "You must be logged in to add customers",
+        variant: "destructive",
+      });
+      return;
+    }
     
     saveStateBeforeChange();
     const customer = createCustomer(newCustomer);
@@ -122,7 +153,7 @@ export function useCustomers() {
     });
 
     // Then persist to database
-    const savedCustomer = await addCustomerToDb(customer);
+    const savedCustomer = await addCustomerToDb(customer, currentUser.id);
     if (savedCustomer) {
       // Update with saved customer from DB (with proper IDs)
       setCustomers(prev => prev.map(c => c.id === customer.id ? savedCustomer : c));
@@ -140,6 +171,14 @@ export function useCustomers() {
 
   const handleUpdateCustomer = async () => {
     if (!selectedCustomer || !selectedCustomer.name) return;
+    if (!currentUser) {
+      toast({
+        title: t('common.error'),
+        description: "You must be logged in to update customers",
+        variant: "destructive",
+      });
+      return;
+    }
     
     saveStateBeforeChange();
     
@@ -164,7 +203,7 @@ export function useCustomers() {
     });
 
     // Then persist to database
-    const success = await updateCustomerInDb(selectedCustomer);
+    const success = await updateCustomerInDb(selectedCustomer, currentUser.id);
     if (!success) {
       // Handle error (optional: could revert state here)
       toast({
@@ -179,6 +218,14 @@ export function useCustomers() {
 
   const handleDeleteCustomer = async () => {
     if (!selectedCustomer) return;
+    if (!currentUser) {
+      toast({
+        title: t('common.error'),
+        description: "You must be logged in to delete customers",
+        variant: "destructive",
+      });
+      return;
+    }
     
     saveStateBeforeChange();
     
