@@ -7,5 +7,9 @@ export const calendar = {
   newAppointment: 'Neuer Termin',
   new: 'Neuer Termin',
   previous: 'Vorherige',
-  next: 'Nächste'
+  next: 'Nächste',
+  // Add date picker translations
+  selectedDate: 'Ausgewähltes Datum',
+  selectDate: 'Datum auswählen',
+  close: 'Schließen'
 };

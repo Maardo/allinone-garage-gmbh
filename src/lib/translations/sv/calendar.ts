@@ -7,5 +7,9 @@ export const calendar = {
   newAppointment: 'Ny Bokning',
   new: 'Ny Bokning',
   previous: 'Föregående',
-  next: 'Nästa'
+  next: 'Nästa',
+  // Add date picker translations
+  selectedDate: 'Valt datum',
+  selectDate: 'Välj datum',
+  close: 'Stäng'
 };
