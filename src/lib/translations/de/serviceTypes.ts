@@ -26,6 +26,9 @@ export const serviceTypes = {
   codePlaceholder: 'Servicecode auswählen',
   codePrefix: 'Präfix',
   codeNumber: 'Nummer',
+  deleteTitle: 'Servicetyp löschen',
+  deleteConfirmation: 'Sind Sie sicher, dass Sie diesen Servicetyp löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.',
+  deleted: 'Servicetyp gelöscht',
   // Color names
   blue: 'Blau',
   red: 'Rot',

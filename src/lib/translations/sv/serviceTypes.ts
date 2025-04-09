@@ -26,6 +26,9 @@ export const serviceTypes = {
   codePlaceholder: 'Välj servicekod',
   codePrefix: 'Prefix',
   codeNumber: 'Nummer',
+  deleteTitle: 'Ta bort Servicetyp',
+  deleteConfirmation: 'Är du säker på att du vill ta bort denna servicetyp? Denna åtgärd kan inte ångras.',
+  deleted: 'Servicetyp borttagen',
   // Color names
   blue: 'Blå',
   red: 'Röd',

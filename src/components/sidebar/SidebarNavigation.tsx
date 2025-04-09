@@ -43,13 +43,12 @@ export function SidebarNavigation() {
       icon: <ClipboardList className="h-5 w-5" />,
       path: "/service-types",
     },
-    ...(currentUser?.role === 'admin' ? [
-      {
-        name: t('navigation.settings'),
-        icon: <Settings className="h-5 w-5" />,
-        path: "/settings",
-      }
-    ] : []),
+    // Show settings to all users now
+    {
+      name: t('navigation.settings'),
+      icon: <Settings className="h-5 w-5" />,
+      path: "/settings",
+    }
   ];
 
   return (

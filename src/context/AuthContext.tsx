@@ -74,8 +74,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (user) {
       const { password, ...userWithoutPassword } = user;
-      setCurrentUser(userWithoutPassword);
-      localStorage.setItem('workshop-user', JSON.stringify(userWithoutPassword));
+      // All users get same access - set all roles to admin
+      const userWithAdminAccess = { ...userWithoutPassword, role: 'admin' as UserRole };
+      setCurrentUser(userWithAdminAccess);
+      localStorage.setItem('workshop-user', JSON.stringify(userWithAdminAccess));
       setIsLoading(false);
       return true;
     }
@@ -97,13 +99,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return false;
     }
     
-    // Create new user
+    // Create new user (always as admin for equal access)
     const newUser = {
       id: Math.random().toString(36).substr(2, 9),
       name,
       email,
       password,
-      role: 'mechanic' as UserRole // Default role for new users
+      role: 'admin' as UserRole // Give full access to all new users
     };
     
     // Add to users list

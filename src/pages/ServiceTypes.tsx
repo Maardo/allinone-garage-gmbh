@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { CODE_PREFIXES, COLOR_OPTIONS, SERVICE_TYPES, ServiceType, ServiceTypeInfo } from "@/lib/serviceTypes";
 import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Trash2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   Select, 
@@ -18,6 +17,13 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function ServiceTypes() {
   const { t } = useLanguage();
@@ -25,6 +31,8 @@ export default function ServiceTypes() {
   const [serviceTypes, setServiceTypes] = useState<Record<ServiceType, ServiceTypeInfo>>(SERVICE_TYPES);
   const [newType, setNewType] = useState<boolean>(false);
   const [nextId, setNextId] = useState<ServiceType>(6 as ServiceType);
+  const [typeToDelete, setTypeToDelete] = useState<ServiceType | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleSelectType = (type: ServiceType) => {
     setNewType(false);
@@ -34,6 +42,26 @@ export default function ServiceTypes() {
   const handleCreateNew = () => {
     setSelectedType(null);
     setNewType(true);
+  };
+  
+  const handleDeleteType = (typeId: ServiceType) => {
+    setTypeToDelete(typeId);
+    setIsDeleteDialogOpen(true);
+  };
+  
+  const confirmDelete = () => {
+    if (typeToDelete) {
+      const { [typeToDelete]: _, ...remainingTypes } = serviceTypes;
+      setServiceTypes(remainingTypes as Record<ServiceType, ServiceTypeInfo>);
+      toast.success(t('serviceTypes.deleted'));
+      setIsDeleteDialogOpen(false);
+      setTypeToDelete(null);
+      
+      if (selectedType === typeToDelete) {
+        setSelectedType(null);
+        setNewType(false);
+      }
+    }
   };
 
   return (
@@ -52,7 +80,7 @@ export default function ServiceTypes() {
                 {Object.values(serviceTypes).map((type) => (
                   <div
                     key={type.id}
-                    className="flex items-center p-4 border rounded-lg cursor-pointer hover:border-primary transition-colors"
+                    className="flex items-center p-4 border rounded-lg cursor-pointer hover:border-primary transition-colors group relative"
                     style={{ borderColor: type.color, borderWidth: '2px' }}
                     onClick={() => handleSelectType(type.id)}
                   >
@@ -69,7 +97,7 @@ export default function ServiceTypes() {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                    <div className="overflow-hidden">
+                    <div className="overflow-hidden flex-1">
                       <h3 className="font-medium text-sm md:text-base">{type.name}</h3>
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-xs bg-muted px-2 py-0.5 rounded">
@@ -80,6 +108,17 @@ export default function ServiceTypes() {
                         </p>
                       </div>
                     </div>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteType(type.id);
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -135,6 +174,28 @@ export default function ServiceTypes() {
           </Card>
         </div>
       </div>
+      
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{t('serviceTypes.deleteTitle')}</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p>{t('serviceTypes.deleteConfirmation')}</p>
+            {typeToDelete && (
+              <p className="font-semibold mt-2">{serviceTypes[typeToDelete]?.name}</p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              {t('actions.cancel')}
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              {t('actions.confirmDelete')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }
@@ -158,7 +219,6 @@ function TypeEditor({
   const [codeNumber, setCodeNumber] = useState(serviceTypes[typeId].code?.substring(1) || "01");
 
   const handleUpdate = () => {
-    // Update the service type
     const code = `${codePrefix}${codeNumber}`;
     
     const updatedTypes = {
@@ -280,7 +340,6 @@ function NewTypeEditor({
   const [codeNumber, setCodeNumber] = useState("01");
 
   const handleCreate = () => {
-    // Create a new service type
     const code = `${codePrefix}${codeNumber}`;
     
     const newServiceType: ServiceTypeInfo = {
