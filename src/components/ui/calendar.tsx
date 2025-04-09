@@ -81,11 +81,13 @@ function Calendar({
       formatters={{
         formatWeekdayName: (date) => {
           const locale = getLocale();
-          return locale.localize?.day(date.getDay(), {width: 'abbreviated'}) || '';
+          // Cast day index (0-6) to proper format expected by react-day-picker
+          return locale.localize?.day(date.getDay()) || '';
         },
-        formatCaption: (date, options) => {
+        formatCaption: (date) => {
           const locale = getLocale();
-          return locale.localize?.month(date.getMonth(), {width: 'full'}) || '';
+          // Cast month index (0-11) to proper format expected by react-day-picker
+          return locale.localize?.month(date.getMonth()) || '';
         }
       }}
       {...props}
