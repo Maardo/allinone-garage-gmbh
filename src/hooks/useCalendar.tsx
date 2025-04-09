@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useCallback } from "react";
-import { Appointment } from "@/lib/types";
+import { Appointment as CustomerAppointment } from "@/lib/types";
+import { Appointment as OverviewAppointment } from "@/lib/overview/types";
 import { CalendarViewMode } from "@/lib/calendar/types";
 import { MOCK_APPOINTMENTS } from "@/lib/calendar/mockData";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -15,13 +16,14 @@ import {
 import { fetchAppointments, createAppointment as createAppointmentApi, updateAppointment as updateAppointmentApi, deleteAppointment as deleteAppointmentApi } from "@/services/appointmentService";
 import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
+import { customerToOverviewAppointment, overviewToCustomerAppointment } from "@/lib/overview/appointmentConverter";
 
 export function useCalendar() {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [appointments, setAppointments] = useState<CustomerAppointment[]>([]);
+  const [selectedAppointment, setSelectedAppointment] = useState<CustomerAppointment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<CalendarViewMode>(isMobile ? 'week' : 'week');
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +34,9 @@ export function useCalendar() {
       try {
         setIsLoading(true);
         const data = await fetchAppointments();
-        setAppointments(data);
+        // Convert all overview appointments to customer appointments
+        const customerAppointments = data.map(overviewToCustomerAppointment);
+        setAppointments(customerAppointments);
       } catch (error) {
         console.error("Error loading appointments:", error);
         toast.error(t('common.error'));
@@ -65,17 +69,25 @@ export function useCalendar() {
     setCurrentDate(getStartOfCurrentPeriod(today, viewMode));
   };
 
-  const handleAddAppointment = async (appointment: Appointment) => {
+  const handleAddAppointment = async (appointment: CustomerAppointment) => {
     try {
       if (selectedAppointment && selectedAppointment.id) {
         // Update existing appointment
-        const updatedAppointment = await updateAppointmentApi(appointment);
-        setAppointments(updateAppointmentInList(appointments, updatedAppointment));
+        // Convert to overview appointment for the API
+        const overviewAppointment = customerToOverviewAppointment(appointment);
+        const updatedOverviewAppointment = await updateAppointmentApi(overviewAppointment);
+        // Convert back to customer appointment
+        const updatedCustomerAppointment = overviewToCustomerAppointment(updatedOverviewAppointment);
+        setAppointments(updateAppointmentInList(appointments, updatedCustomerAppointment));
         toast.success(t('appointment.updated'));
       } else {
         // Add new appointment
-        const newAppointment = await createAppointmentApi(appointment);
-        setAppointments([...appointments, newAppointment]);
+        // Convert to overview appointment for the API
+        const overviewAppointment = customerToOverviewAppointment(appointment);
+        const newOverviewAppointment = await createAppointmentApi(overviewAppointment);
+        // Convert back to customer appointment
+        const newCustomerAppointment = overviewToCustomerAppointment(newOverviewAppointment);
+        setAppointments([...appointments, newCustomerAppointment]);
         toast.success(t('appointment.created'));
       }
       setIsDialogOpen(false);
@@ -86,7 +98,7 @@ export function useCalendar() {
     }
   };
 
-  const handleSelectAppointment = (appointment: Appointment) => {
+  const handleSelectAppointment = (appointment: CustomerAppointment) => {
     setSelectedAppointment(appointment);
     setIsDialogOpen(true);
   };
@@ -96,9 +108,15 @@ export function useCalendar() {
     setIsDialogOpen(true);
   };
 
-  const handleDeleteAppointment = async (appointmentId: number) => {
+  const handleDeleteAppointment = async (appointmentId: string) => {
     try {
-      await deleteAppointmentApi(appointmentId);
+      // Convert string to number for the API
+      const numericId = parseInt(appointmentId);
+      if (isNaN(numericId)) {
+        throw new Error("Invalid appointment ID");
+      }
+      
+      await deleteAppointmentApi(numericId);
       setAppointments(appointments.filter(app => app.id !== appointmentId));
       setIsDialogOpen(false);
       setSelectedAppointment(null);

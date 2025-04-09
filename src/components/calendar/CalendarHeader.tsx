@@ -11,7 +11,7 @@ interface CalendarHeaderProps {
   onNextMonth: () => void;
   onToday: () => void;
   onAddAppointment: (appointment: Appointment) => void;
-  onDeleteAppointment?: (appointmentId: number) => void;
+  onDeleteAppointment?: (appointmentId: string) => void;
   isDialogOpen: boolean;
   setIsDialogOpen: (isOpen: boolean) => void;
   selectedAppointment: Appointment | null;

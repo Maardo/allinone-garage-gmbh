@@ -16,7 +16,7 @@ interface MobileCalendarHeaderProps {
   onNextMonth: () => void;
   onToday: () => void;
   onAddAppointment: (appointment: Appointment) => void;
-  onDeleteAppointment?: (appointmentId: number) => void;
+  onDeleteAppointment?: (appointmentId: string) => void;
   isDialogOpen: boolean;
   setIsDialogOpen: (isOpen: boolean) => void;
   selectedAppointment: Appointment | null;
@@ -44,7 +44,7 @@ export function MobileCalendarHeader({
   const { t } = useLanguage();
 
   const handleDelete = () => {
-    if (selectedAppointment && typeof selectedAppointment.id === 'number' && onDeleteAppointment) {
+    if (selectedAppointment && selectedAppointment.id && onDeleteAppointment) {
       onDeleteAppointment(selectedAppointment.id);
     }
   };
