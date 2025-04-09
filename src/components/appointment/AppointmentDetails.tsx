@@ -11,7 +11,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Appointment, ServiceType } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 
 interface AppointmentDetailsProps {
   formData: Appointment;
@@ -29,7 +29,14 @@ export function AppointmentDetails({
   const { t } = useLanguage();
 
   // Format the date for the input value using 24-hour time format (HH:mm)
-  const formattedDate = format(new Date(formData.date), "yyyy-MM-dd'T'HH:mm");
+  // Add validation to ensure date is valid before formatting
+  const dateValue = formData.date;
+  const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
+  
+  // Default to current time if date is invalid
+  const formattedDate = isValid(date) 
+    ? format(date, "yyyy-MM-dd'T'HH:mm") 
+    : format(new Date(), "yyyy-MM-dd'T'HH:mm");
 
   return (
     <div className="space-y-4">
