@@ -42,8 +42,7 @@ export function AppointmentDetails({
     }
   };
 
-  // Format the date for the input value using 24-hour time format (HH:mm)
-  // Add validation to ensure date is valid before formatting
+  // Format the date for the input value using 24-hour time format
   const dateValue = formData.date;
   const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
   

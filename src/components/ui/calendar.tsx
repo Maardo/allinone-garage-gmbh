@@ -19,7 +19,7 @@ function Calendar({
   ...props
 }: CalendarProps) {
   // Get the current language
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
 
   // Map the language string to the correct date-fns locale
   const getLocale = () => {
@@ -79,12 +79,13 @@ function Calendar({
       locale={getLocale()}
       formatters={{
         formatWeekdayName: (date) => {
-          const locale = getLocale();
-          return date.toLocaleDateString(locale.code, { weekday: 'short' });
+          return date.toLocaleDateString(getLocale().code, { weekday: 'short' });
         },
         formatCaption: (date) => {
-          const locale = getLocale();
-          return date.toLocaleDateString(locale.code, { month: 'long', year: 'numeric' });
+          return date.toLocaleDateString(getLocale().code, { 
+            month: 'long', 
+            year: 'numeric' 
+          });
         }
       }}
       {...props}

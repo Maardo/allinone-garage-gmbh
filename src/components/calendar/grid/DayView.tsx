@@ -71,7 +71,7 @@ export function DayView({ day, appointments, onSelectAppointment, onNewAppointme
           return (
             <div key={hour} className="p-2 hover:bg-gray-50 flex">
               <div className="w-10 sm:w-16 font-medium text-muted-foreground text-xs sm:text-sm shrink-0">
-                {format(hourDate, "HH:00", { locale })}
+                {format(hourDate, "HH:mm", { locale })}
               </div>
               <div className="flex-1">
                 {hourAppointments.length > 0 ? (
