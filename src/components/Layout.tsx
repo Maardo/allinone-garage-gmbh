@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
@@ -18,6 +18,9 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  
+  // Add a ref to track first render
+  const isFirstRender = useRef(true);
 
   const getPageKey = () => {
     const path = location.pathname.substring(1);
@@ -66,9 +69,11 @@ export function Layout({ children, title, subtitle }: LayoutProps) {
   // Close sidebar on route change on mobile
   useEffect(() => {
     console.log("Route changed to:", location.pathname);
-    if (isMobileOpen && window.innerWidth < 768) {
+    // Skip the first render to avoid closing immediately on navigation
+    if (!isFirstRender.current && isMobileOpen && window.innerWidth < 768) {
       setIsMobileOpen(false);
     }
+    isFirstRender.current = false;
   }, [location.pathname, isMobileOpen]);
 
   // Handle outside clicks on mobile
