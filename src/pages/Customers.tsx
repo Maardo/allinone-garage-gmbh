@@ -14,6 +14,7 @@ import { CustomerTable } from "@/components/customers/CustomerTable";
 import { EmptySearchResult } from "@/components/customers/EmptySearchResult";
 import { useCustomers } from "@/hooks/useCustomers";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Loader2 } from "lucide-react";
 
 export default function CustomersPage() {
   const { t } = useLanguage();
@@ -29,7 +30,8 @@ export default function CustomersPage() {
     setNewCustomer,
     handleAddCustomer, 
     handleUpdateCustomer, 
-    handleDeleteCustomer 
+    handleDeleteCustomer,
+    isLoading
   } = useCustomers();
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -97,7 +99,12 @@ export default function CustomersPage() {
         </div>
       </div>
       
-      {searchTerm && filteredCustomers.length === 0 ? (
+      {isLoading ? (
+        <div className="flex items-center justify-center p-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="ml-2 text-lg">{t('common.loading')}</span>
+        </div>
+      ) : searchTerm && filteredCustomers.length === 0 ? (
         <EmptySearchResult searchTerm={searchTerm} />
       ) : (
         <Card>
