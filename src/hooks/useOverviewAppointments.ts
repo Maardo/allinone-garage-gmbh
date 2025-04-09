@@ -127,10 +127,6 @@ export function useOverviewAppointments() {
     }
   ]);
   
-  // Store previous state for undo functionality
-  const [previousUpcomingJobs, setPreviousUpcomingJobs] = useState<Appointment[]>([...upcomingJobs]);
-  const [previousStats, setPreviousStats] = useState<Stats>({...stats});
-  
   const [filteredJobs, setFilteredJobs] = useState<Appointment[]>([]);
   
   useEffect(() => {
@@ -175,21 +171,6 @@ export function useOverviewAppointments() {
     }));
   }, [timeView, upcomingJobs]);
   
-  const saveStateBeforeChange = () => {
-    setPreviousUpcomingJobs([...upcomingJobs]);
-    setPreviousStats({...stats});
-  };
-  
-  const undoLastChange = () => {
-    setUpcomingJobs([...previousUpcomingJobs]);
-    setStats({...previousStats});
-    toast({
-      title: t('actions.undone'),
-      description: t('actions.changesReverted'),
-    });
-    return true;
-  };
-
   // Function to send email notification
   const sendEmailNotification = (appointment: Appointment) => {
     const emailTemplate = localStorage.getItem("completionEmailTemplate") || 
@@ -205,8 +186,6 @@ export function useOverviewAppointments() {
 
   // Handle marking an appointment as complete
   const handleMarkComplete = (appointmentId: number) => {
-    saveStateBeforeChange();
-    
     // Find the appointment
     const appointment = upcomingJobs.find(job => job.id === appointmentId);
     if (!appointment) return;
@@ -235,35 +214,18 @@ export function useOverviewAppointments() {
           title: t('overview.appointmentCompleted'),
           description: t('overview.appointmentMarkedComplete') + 
             (emailNotificationsEnabled ? ` ${t('overview.emailSentToCustomer')}` : ''),
-          action: (
-            <button
-              onClick={() => undoLastChange()}
-              className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
-            >
-              {t('actions.undo')}
-            </button>
-          ),
         });
       }
     } else {
       toast({
         title: t('overview.appointmentCompleted'),
         description: t('overview.appointmentMarkedComplete'),
-        action: (
-          <button
-            onClick={() => undoLastChange()}
-            className="bg-secondary hover:bg-secondary/90 text-foreground px-3 py-1 rounded-md text-xs font-medium"
-          >
-            {t('actions.undo')}
-          </button>
-        ),
       });
     }
   };
 
   // Function to update total customers count
   const updateTotalCustomers = (change: number) => {
-    saveStateBeforeChange();
     setStats(currentStats => ({
       ...currentStats,
       totalCustomers: currentStats.totalCustomers + change
@@ -277,10 +239,7 @@ export function useOverviewAppointments() {
     setStats,
     filteredJobs,
     upcomingJobs,
-    setUpcomingJobs,
     handleMarkComplete,
-    updateTotalCustomers,
-    saveStateBeforeChange,
-    undoLastChange
+    updateTotalCustomers
   };
 }

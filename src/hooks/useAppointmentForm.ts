@@ -2,10 +2,8 @@
 import { useState } from "react";
 import { Appointment, ServiceType } from "@/lib/types";
 import { addHours, areIntervalsOverlapping } from "date-fns";
-import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
 
 export function useAppointmentForm(initialData?: Appointment) {
-  const { updateTotalCustomers } = useOverviewAppointments();
   const [formData, setFormData] = useState<Appointment>(() => {
     if (initialData) return { ...initialData };
     

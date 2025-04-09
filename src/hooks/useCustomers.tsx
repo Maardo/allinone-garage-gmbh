@@ -66,7 +66,7 @@ export function useCustomers() {
       vehicles: []
     });
     
-    toast({
+    const { id } = toast({
       title: t('customer.addedTitle'),
       description: t('customer.addedDescription'),
       action: (
