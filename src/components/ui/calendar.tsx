@@ -77,6 +77,14 @@ function Calendar({
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
       locale={getLocale()}
+      formatters={{
+        formatWeekdayName: (weekday, options) => {
+          return options?.locale.localize?.day(weekday.getDay(), {width: 'abbreviated'}) || '';
+        },
+        formatMonthCaption: (date, options) => {
+          return options?.locale.localize?.month(date.getMonth(), {width: 'full'}) || '';
+        }
+      }}
       {...props}
     />
   );
