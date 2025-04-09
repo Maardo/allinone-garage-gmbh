@@ -79,7 +79,6 @@ export default function ServiceTypes() {
           <ServiceTypeList 
             serviceTypes={serviceTypes}
             onSelectType={handleSelectType}
-            onDeleteType={handleDeleteType}
           />
         </div>
 
@@ -93,6 +92,7 @@ export default function ServiceTypes() {
             onCreateType={handleCreateType}
             onSelectType={setSelectedType}
             onNewType={setNewType}
+            onDeleteType={handleDeleteType}
           />
         </div>
       </div>

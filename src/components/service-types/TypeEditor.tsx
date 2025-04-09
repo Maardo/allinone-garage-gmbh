@@ -14,19 +14,22 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Trash2 } from "lucide-react";
 
 interface TypeEditorProps {
   typeId: ServiceType;
   serviceTypes: Record<ServiceType, ServiceTypeInfo>;
   onUpdate: (updatedType: ServiceTypeInfo) => void;
   onCancel: () => void;
+  onDelete: (typeId: ServiceType) => void;
 }
 
 export function TypeEditor({ 
   typeId, 
   serviceTypes,
   onUpdate,
-  onCancel 
+  onCancel,
+  onDelete
 }: TypeEditorProps) {
   const { t } = useLanguage();
   const [name, setName] = useState(serviceTypes[typeId].name);
@@ -53,7 +56,7 @@ export function TypeEditor({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="service-code">{t('serviceTypes.code')}</Label>
-        <Input id="service-code" value={typeId} disabled />
+        <Input id="service-code" value={typeId} disabled className="bg-muted/50" />
       </div>
       <div className="space-y-2">
         <Label htmlFor="service-name">{t('serviceTypes.name')}</Label>
@@ -61,6 +64,7 @@ export function TypeEditor({
           id="service-name" 
           value={name} 
           onChange={(e) => setName(e.target.value)} 
+          className="bg-card border-muted"
         />
       </div>
       <div className="space-y-2">
@@ -68,7 +72,7 @@ export function TypeEditor({
         <div className="flex gap-2">
           <div className="w-1/2">
             <Select value={codePrefix} onValueChange={setCodePrefix}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-card border-input">
                 <SelectValue placeholder={t('serviceTypes.codePrefix')} />
               </SelectTrigger>
               <SelectContent>
@@ -85,6 +89,7 @@ export function TypeEditor({
               value={codeNumber}
               onChange={(e) => setCodeNumber(e.target.value)}
               maxLength={2}
+              className="bg-card border-input"
             />
           </div>
         </div>
@@ -95,21 +100,26 @@ export function TypeEditor({
           id="service-desc" 
           value={description} 
           onChange={(e) => setDescription(e.target.value)} 
-          rows={3} 
+          rows={3}
+          className="bg-card border-input resize-none"
         />
       </div>
       <div className="space-y-2">
         <Label>{t('serviceTypes.calendarColor')}</Label>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 bg-muted/20 p-3 rounded-md border">
           {COLOR_OPTIONS.map((colorOption) => (
             <TooltipProvider key={colorOption.value}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2 transition-transform hover:scale-110"
-                    style={{ backgroundColor: colorOption.value, borderColor: color === colorOption.value ? "black" : colorOption.value }}
+                    className="h-8 w-8 rounded-md cursor-pointer flex items-center justify-center border-2 transition-transform hover:scale-110 shadow-sm"
+                    style={{ 
+                      backgroundColor: colorOption.value, 
+                      borderColor: color === colorOption.value ? "black" : "transparent" 
+                    }}
                     onClick={() => setColor(colorOption.value)}
+                    aria-label={t(`serviceTypes.${colorOption.name}`)}
                   >
                     {color === colorOption.value && <span className="text-white">✓</span>}
                   </button>
@@ -122,10 +132,20 @@ export function TypeEditor({
           ))}
         </div>
       </div>
-      <div className="flex justify-between pt-4">
-        <Button variant="outline" onClick={onCancel}>
-          {t('actions.cancel')}
-        </Button>
+      <div className="flex justify-between pt-4 border-t mt-6">
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={onCancel}>
+            {t('actions.cancel')}
+          </Button>
+          <Button 
+            variant="destructive" 
+            size="icon" 
+            onClick={() => onDelete(typeId)}
+            title={t('serviceTypes.deleteTitle')}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
         <Button onClick={handleUpdate}>{t('serviceTypes.update')}</Button>
       </div>
     </div>

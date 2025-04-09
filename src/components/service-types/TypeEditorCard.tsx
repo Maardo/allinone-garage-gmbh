@@ -15,6 +15,7 @@ interface TypeEditorCardProps {
   onCreateType: (newType: ServiceTypeInfo) => void;
   onSelectType: (type: ServiceType | null) => void;
   onNewType: (newType: boolean) => void;
+  onDeleteType: (typeId: ServiceType) => void;
 }
 
 export function TypeEditorCard({
@@ -26,6 +27,7 @@ export function TypeEditorCard({
   onCreateType,
   onSelectType,
   onNewType,
+  onDeleteType,
 }: TypeEditorCardProps) {
   const { t } = useLanguage();
 
@@ -36,8 +38,8 @@ export function TypeEditorCard({
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="shadow-md">
+      <CardHeader className="bg-muted/30">
         <CardTitle>
           {selectedType 
             ? t('serviceTypes.edit')
@@ -47,13 +49,14 @@ export function TypeEditorCard({
           }
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="p-6">
         {selectedType ? (
           <TypeEditor 
             typeId={selectedType} 
             serviceTypes={serviceTypes}
             onUpdate={handleUpdate}
-            onCancel={() => onSelectType(null)} 
+            onCancel={() => onSelectType(null)}
+            onDelete={onDeleteType}
           />
         ) : newType ? (
           <NewTypeEditor 

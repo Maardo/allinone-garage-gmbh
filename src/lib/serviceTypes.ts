@@ -54,28 +54,47 @@ export const SERVICE_TYPES: Record<ServiceType, ServiceTypeInfo> = {
   }
 };
 
-// Available color options - expanded to 20 colors
+// Available color options - expanded to 28 colors, colorblind-friendly
 export const COLOR_OPTIONS = [
-  { value: '#0284c7', name: 'blue' },       // Blue
-  { value: '#dc2626', name: 'red' },        // Red
-  { value: '#16a34a', name: 'green' },      // Green
-  { value: '#9333ea', name: 'purple' },     // Purple
-  { value: '#d97706', name: 'amber' },      // Amber
-  { value: '#0ea5e9', name: 'skyBlue' },    // Sky Blue
-  { value: '#ea580c', name: 'orange' },     // Orange
-  { value: '#4338ca', name: 'indigo' },     // Indigo
-  { value: '#be123c', name: 'rose' },       // Rose
-  { value: '#0f766e', name: 'teal' },       // Teal
-  { value: '#4d7c0f', name: 'lime' },       // Lime
-  { value: '#7e22ce', name: 'violet' },     // Violet
-  { value: '#db2777', name: 'pink' },       // Pink
-  { value: '#06b6d4', name: 'cyan' },       // Cyan
-  { value: '#eab308', name: 'yellow' },     // Yellow
-  { value: '#10b981', name: 'emerald' },    // Emerald
-  { value: '#d946ef', name: 'fuchsia' },    // Fuchsia
-  { value: '#64748b', name: 'slate' },      // Slate
-  { value: '#92400e', name: 'brown' },      // Brown
-  { value: '#f97316', name: 'coral' }       // Coral
+  // Blues
+  { value: '#0284c7', name: 'blue' },        // Blue
+  { value: '#0ea5e9', name: 'skyBlue' },     // Sky Blue
+  { value: '#4338ca', name: 'indigo' },      // Indigo
+  { value: '#06b6d4', name: 'cyan' },        // Cyan
+  { value: '#1e40af', name: 'darkBlue' },    // Dark Blue
+  { value: '#0f766e', name: 'teal' },        // Teal
+  { value: '#1e3a8a', name: 'navyBlue' },    // Navy Blue
+
+  // Greens
+  { value: '#16a34a', name: 'green' },       // Green
+  { value: '#4d7c0f', name: 'lime' },        // Lime
+  { value: '#10b981', name: 'emerald' },     // Emerald
+  { value: '#15803d', name: 'forestGreen' }, // Forest Green
+  { value: '#14532d', name: 'darkGreen' },   // Dark Green
+
+  // Reds/Pinks
+  { value: '#dc2626', name: 'red' },         // Red
+  { value: '#be123c', name: 'rose' },        // Rose
+  { value: '#db2777', name: 'pink' },        // Pink
+  { value: '#d946ef', name: 'fuchsia' },     // Fuchsia
+  { value: '#9f1239', name: 'crimson' },     // Crimson
+  { value: '#831843', name: 'burgundy' },    // Burgundy
+
+  // Oranges/Yellows
+  { value: '#ea580c', name: 'orange' },      // Orange
+  { value: '#d97706', name: 'amber' },       // Amber
+  { value: '#eab308', name: 'yellow' },      // Yellow
+  { value: '#f97316', name: 'coral' },       // Coral
+  { value: '#92400e', name: 'brown' },       // Brown
+
+  // Purples
+  { value: '#9333ea', name: 'purple' },      // Purple
+  { value: '#7e22ce', name: 'violet' },      // Violet
+  
+  // Neutrals - good for contrast with other colors
+  { value: '#64748b', name: 'slate' },       // Slate
+  { value: '#334155', name: 'darkSlate' },   // Dark Slate
+  { value: '#000000', name: 'black' }        // Black
 ];
 
 // Available service code prefixes

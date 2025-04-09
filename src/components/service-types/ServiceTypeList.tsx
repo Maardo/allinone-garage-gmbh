@@ -1,8 +1,6 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
 import { ServiceType, ServiceTypeInfo } from "@/lib/serviceTypes";
 import { useLanguage } from "@/context/LanguageContext";
 import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -10,27 +8,25 @@ import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from "@/comp
 interface ServiceTypeListProps {
   serviceTypes: Record<ServiceType, ServiceTypeInfo>;
   onSelectType: (type: ServiceType) => void;
-  onDeleteType: (typeId: ServiceType) => void;
 }
 
 export function ServiceTypeList({ 
   serviceTypes, 
-  onSelectType, 
-  onDeleteType 
+  onSelectType 
 }: ServiceTypeListProps) {
   const { t } = useLanguage();
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="shadow-md">
+      <CardHeader className="bg-muted/30">
         <CardTitle>{t('serviceTypes.description')}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Object.values(serviceTypes).map((type) => (
             <div
               key={type.id}
-              className="flex items-center p-4 border rounded-lg cursor-pointer hover:border-primary transition-colors group relative"
+              className="flex items-center p-4 bg-card border rounded-lg cursor-pointer hover:border-primary hover:shadow-md transition-all group relative"
               style={{ borderColor: type.color, borderWidth: '2px' }}
               onClick={() => onSelectType(type.id)}
             >
@@ -38,7 +34,7 @@ export function ServiceTypeList({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div 
-                      className="h-8 w-8 flex-shrink-0 rounded mr-4 cursor-help" 
+                      className="h-10 w-10 flex-shrink-0 rounded-md mr-4 cursor-help shadow-sm" 
                       style={{ backgroundColor: type.color }}
                     ></div>
                   </TooltipTrigger>
@@ -48,27 +44,16 @@ export function ServiceTypeList({
                 </Tooltip>
               </TooltipProvider>
               <div className="overflow-hidden flex-1">
-                <h3 className="font-medium text-sm md:text-base">{type.name}</h3>
-                <div className="flex items-center gap-2">
+                <h3 className="font-medium text-base">{type.name}</h3>
+                <div className="flex items-center gap-2 mt-1">
                   <span className="font-medium text-xs bg-muted px-2 py-0.5 rounded">
                     {type.code || type.id}
                   </span>
-                  <p className="text-xs md:text-sm text-muted-foreground truncate">
+                  <p className="text-sm text-muted-foreground truncate">
                     {type.description}
                   </p>
                 </div>
               </div>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDeleteType(type.id);
-                }}
-              >
-                <Trash2 className="h-4 w-4 text-red-500" />
-              </Button>
             </div>
           ))}
         </div>

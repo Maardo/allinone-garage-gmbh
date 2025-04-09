@@ -56,6 +56,7 @@ export function NewTypeEditor({
           value={name} 
           onChange={(e) => setName(e.target.value)} 
           placeholder={t('serviceTypes.namePlaceholder')}
+          className="bg-card border-input"
         />
       </div>
       <div className="space-y-2">
@@ -63,7 +64,7 @@ export function NewTypeEditor({
         <div className="flex gap-2">
           <div className="w-1/2">
             <Select value={codePrefix} onValueChange={setCodePrefix}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-card border-input">
                 <SelectValue placeholder={t('serviceTypes.codePrefix')} />
               </SelectTrigger>
               <SelectContent>
@@ -80,6 +81,7 @@ export function NewTypeEditor({
               value={codeNumber}
               onChange={(e) => setCodeNumber(e.target.value)}
               maxLength={2}
+              className="bg-card border-input"
             />
           </div>
         </div>
@@ -92,20 +94,25 @@ export function NewTypeEditor({
           onChange={(e) => setDescription(e.target.value)} 
           rows={3}
           placeholder={t('serviceTypes.descPlaceholder')}
+          className="bg-card border-input resize-none"
         />
       </div>
       <div className="space-y-2">
         <Label>{t('serviceTypes.calendarColor')}</Label>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 bg-muted/20 p-3 rounded-md border">
           {COLOR_OPTIONS.map((colorOption) => (
             <TooltipProvider key={colorOption.value}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    className="h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2 transition-transform hover:scale-110"
-                    style={{ backgroundColor: colorOption.value, borderColor: color === colorOption.value ? "black" : colorOption.value }}
+                    className="h-8 w-8 rounded-md cursor-pointer flex items-center justify-center border-2 transition-transform hover:scale-110 shadow-sm"
+                    style={{ 
+                      backgroundColor: colorOption.value, 
+                      borderColor: color === colorOption.value ? "black" : "transparent" 
+                    }}
                     onClick={() => setColor(colorOption.value)}
+                    aria-label={t(`serviceTypes.${colorOption.name}`)}
                   >
                     {color === colorOption.value && <span className="text-white">✓</span>}
                   </button>
@@ -118,7 +125,7 @@ export function NewTypeEditor({
           ))}
         </div>
       </div>
-      <div className="flex justify-between pt-4">
+      <div className="flex justify-between pt-4 border-t mt-6">
         <Button variant="outline" onClick={onCancel}>
           {t('actions.cancel')}
         </Button>
