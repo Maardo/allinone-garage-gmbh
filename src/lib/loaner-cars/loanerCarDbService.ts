@@ -58,6 +58,7 @@ export async function addLoanerCarToDb(car: Partial<LoanerCar>, userId: string):
 
 export async function updateLoanerCarInDb(car: LoanerCar): Promise<boolean> {
   try {
+    // Convert Date objects to ISO strings for Supabase
     const { error } = await supabase
       .from('loaner_cars')
       .update({
@@ -65,8 +66,8 @@ export async function updateLoanerCarInDb(car: LoanerCar): Promise<boolean> {
         license: car.license,
         is_available: car.isAvailable,
         assigned_to: car.assignedTo,
-        assigned_until: car.assignedUntil,
-        assigned_from: car.assignedFrom,
+        assigned_until: car.assignedUntil ? car.assignedUntil.toISOString() : null,
+        assigned_from: car.assignedFrom ? car.assignedFrom.toISOString() : null,
         appointment_id: car.appointmentId
       })
       .eq('id', car.id);
@@ -105,13 +106,14 @@ export async function deleteLoanerCarFromDb(carId: string): Promise<boolean> {
 export async function importLoanerCarsToDb(cars: LoanerCar[], userId: string): Promise<boolean> {
   try {
     // Convert the LoanerCar objects to the format expected by the database
+    // Also convert Date objects to ISO strings for Supabase
     const dbCars = cars.map(car => ({
       name: car.name,
       license: car.license,
       is_available: car.isAvailable,
       assigned_to: car.assignedTo,
-      assigned_until: car.assignedUntil,
-      assigned_from: car.assignedFrom,
+      assigned_until: car.assignedUntil ? car.assignedUntil.toISOString() : null,
+      assigned_from: car.assignedFrom ? car.assignedFrom.toISOString() : null,
       appointment_id: car.appointmentId,
       user_id: userId
     }));
