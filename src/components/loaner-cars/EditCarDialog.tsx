@@ -35,7 +35,8 @@ export function EditCarDialog({
   // Helper function to handle the different types of setCar functions
   const handleCarUpdate = (updatedCar: LoanerCar | Partial<LoanerCar>) => {
     if (typeof setCar === 'function') {
-      setCar(updatedCar);
+      // Use type assertion to handle the different possible types of setCar
+      (setCar as (car: LoanerCar | Partial<LoanerCar>) => void)(updatedCar);
     }
   };
   
