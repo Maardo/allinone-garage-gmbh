@@ -25,13 +25,11 @@ export function useCustomers() {
     if (refreshData) {
       try {
         await refreshData();
-        return true;
+        // Don't return a boolean, just return void to match the expected type
       } catch (error) {
         console.error("Error refreshing customer data:", error);
-        return false;
       }
     }
-    return false;
   }, [refreshData]);
 
   const {
