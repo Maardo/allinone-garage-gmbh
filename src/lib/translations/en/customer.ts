@@ -41,5 +41,6 @@ export const customer = {
   addedVehicles: 'Added Vehicles',
   addVehicle: 'Add Vehicle',
   search: 'Search for existing customer',
-  searchExisting: 'Search existing customers'
+  searchExisting: 'Search existing customers',
+  availableForLoanerCar: 'This customer will be available in the loaner car assignment dialog'
 };

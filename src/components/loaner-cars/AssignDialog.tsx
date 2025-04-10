@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { LoanerCar } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -20,14 +20,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-
-// Mock customers for demo
-const MOCK_CUSTOMERS = [
-  { id: "c1", name: "Johan Andersson" },
-  { id: "c2", name: "Maria Johansson" },
-  { id: "c3", name: "Erik Svensson" },
-  { id: "c4", name: "Anna Karlsson" },
-];
+import { useCustomers } from "@/hooks/useCustomers";
 
 interface AssignDialogProps {
   isOpen: boolean;
@@ -51,6 +44,14 @@ export function AssignDialog({
   setAssignData
 }: AssignDialogProps) {
   const { t } = useLanguage();
+  const { customers, refreshCustomers } = useCustomers();
+  
+  // Refresh customer data when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      refreshCustomers();
+    }
+  }, [isOpen, refreshCustomers]);
   
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -78,7 +79,7 @@ export function AssignDialog({
                 <SelectValue placeholder={t('loanerCar.selectCustomer')} />
               </SelectTrigger>
               <SelectContent>
-                {MOCK_CUSTOMERS.map((customer) => (
+                {customers.map((customer) => (
                   <SelectItem key={customer.id} value={customer.id}>
                     {customer.name}
                   </SelectItem>

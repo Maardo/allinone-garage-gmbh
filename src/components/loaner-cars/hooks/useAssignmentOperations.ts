@@ -1,10 +1,10 @@
 
 import { useState } from 'react';
-import { LoanerCar, Appointment } from '@/lib/types';
+import { LoanerCar, Appointment, Customer } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from '@/context/LanguageContext';
-import { MOCK_CUSTOMERS } from '../mockLoanerData';
 import { updateLoanerCarInDb } from '@/lib/loaner-cars/loanerCarDbService';
+import { useCustomers } from '@/hooks/useCustomers';
 
 export function useAssignmentOperations(
   loanerCars: LoanerCar[],
@@ -16,11 +16,12 @@ export function useAssignmentOperations(
   const { t } = useLanguage();
   const { toast } = useToast();
   const [selectedCar, setSelectedCar] = useState<LoanerCar | null>(null);
+  const { customers } = useCustomers();
 
   const handleAssign = async (assignData: { customerId: string; startDate: string; returnDate: string }) => {
     if (!selectedCar || !assignData.customerId) return;
     
-    const customer = MOCK_CUSTOMERS.find(c => c.id === assignData.customerId);
+    const customer = customers.find(c => c.id === assignData.customerId);
     if (!customer) return;
 
     const updatedCars = loanerCars.map(car => {

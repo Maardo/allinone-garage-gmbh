@@ -41,5 +41,6 @@ export const customer = {
   addedVehicles: 'Tillagda Fordon',
   addVehicle: 'Lägg till Fordon',
   search: 'Sök efter befintlig kund',
-  searchExisting: 'Sök bland befintliga kunder'
+  searchExisting: 'Sök bland befintliga kunder',
+  availableForLoanerCar: 'Denna kund kommer att finnas tillgänglig i dialogrutan för tilldelning av lånebil'
 };

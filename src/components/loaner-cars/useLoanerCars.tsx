@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 import { LoanerCar } from '@/lib/types';
@@ -9,6 +8,7 @@ import { useLoanerCarManagement } from './useLoanerCarManagement';
 import { useAuth } from "@/context/AuthContext";
 import { fetchLoanerCarsFromDb, importLoanerCarsToDb } from '@/lib/loaner-cars/loanerCarDbService';
 import { useToast } from '@/hooks/use-toast';
+import { useCustomers } from '@/hooks/useCustomers';
 
 export function useLoanerCars() {
   const [loanerCars, setLoanerCars] = useState<LoanerCar[]>([]);
@@ -25,6 +25,7 @@ export function useLoanerCars() {
   });
   const { toast } = useToast();
   const { currentUser } = useAuth();
+  const { refreshCustomers } = useCustomers();
 
   const { appointments, handleAddAppointment } = useCalendar();
 
@@ -101,6 +102,13 @@ export function useLoanerCars() {
   useEffect(() => {
     loadLoanerCars();
   }, [loadLoanerCars]);
+
+  // Ensure customer data is refreshed when assign dialog opens
+  useEffect(() => {
+    if (isAssignDialogOpen) {
+      refreshCustomers();
+    }
+  }, [isAssignDialogOpen, refreshCustomers]);
 
   // Wrapper functions that call our extracted operations with the right parameters
   const handleAssignWrapper = () => handleAssign(assignData);
