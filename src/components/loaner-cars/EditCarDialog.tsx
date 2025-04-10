@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { SetStateAction, Dispatch } from 'react';
 
 interface EditCarDialogProps {
   isOpen: boolean;
@@ -18,7 +19,7 @@ interface EditCarDialogProps {
   onOpenChange: (open: boolean) => void;
   onSave: () => void;
   car: LoanerCar | Partial<LoanerCar>;
-  setCar: (car: LoanerCar | Partial<LoanerCar>) => void;
+  setCar: ((car: LoanerCar | Partial<LoanerCar>) => void) | Dispatch<SetStateAction<LoanerCar | null>> | Dispatch<SetStateAction<Partial<LoanerCar>>>;
 }
 
 export function EditCarDialog({
@@ -30,6 +31,13 @@ export function EditCarDialog({
   setCar
 }: EditCarDialogProps) {
   const { t } = useLanguage();
+  
+  // Helper function to handle the different types of setCar functions
+  const handleCarUpdate = (updatedCar: LoanerCar | Partial<LoanerCar>) => {
+    if (typeof setCar === 'function') {
+      setCar(updatedCar);
+    }
+  };
   
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -45,7 +53,7 @@ export function EditCarDialog({
             <Input 
               id="car-name" 
               value={car.name || ""}
-              onChange={(e) => setCar({...car, name: e.target.value})}
+              onChange={(e) => handleCarUpdate({...car, name: e.target.value})}
               placeholder={isNewCar ? t('loanerCar.carNamePlaceholder') : ""}
             />
           </div>
@@ -55,7 +63,7 @@ export function EditCarDialog({
             <Input 
               id="car-license" 
               value={car.license || ""}
-              onChange={(e) => setCar({...car, license: e.target.value})}
+              onChange={(e) => handleCarUpdate({...car, license: e.target.value})}
               placeholder={isNewCar ? t('loanerCar.licensePlatePlaceholder') : ""}
             />
           </div>
