@@ -1,7 +1,8 @@
+
 import { useState, useEffect, useCallback } from "react";
 import { Appointment as CustomerAppointment } from "@/lib/types";
 import { Appointment as OverviewAppointment } from "@/lib/overview/types";
-import { CalendarViewType } from "@/lib/calendar/types";
+import { CalendarViewMode } from "@/lib/calendar/types";
 import { MOCK_APPOINTMENTS } from "@/lib/calendar/mockData";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
@@ -25,7 +26,7 @@ export function useCalendar() {
   const [appointments, setAppointments] = useState<CustomerAppointment[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState<CustomerAppointment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<CalendarViewType>(isMobile ? 'week' : 'week');
+  const [viewMode, setViewMode] = useState<CalendarViewMode>(isMobile ? 'week' : 'week');
   const [isLoading, setIsLoading] = useState(true);
   const { handleAddCustomer, customers } = useCustomers();
 
@@ -152,7 +153,7 @@ export function useCalendar() {
     }
   };
 
-  const handleChangeViewMode = useCallback((mode: CalendarViewType) => {
+  const handleChangeViewMode = useCallback((mode: CalendarViewMode) => {
     setViewMode(mode);
     setCurrentDate(getStartOfCurrentPeriod(currentDate, mode));
   }, [currentDate]);

@@ -135,6 +135,7 @@ export function useLoanerCars() {
     handleUpdateDates: handleUpdateDatesWrapper,
     getAvailableLoanerCars,
     handleAssignToAppointment,
-    isLoading
+    isLoading,
+    loadLoanerCars
   };
 }
