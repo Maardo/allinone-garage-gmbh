@@ -5,23 +5,26 @@ import { LoanerCar, Appointment } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from '@/context/LanguageContext';
 import { MOCK_CUSTOMERS } from './mockLoanerData';
+import { updateLoanerCarInDb } from '@/lib/loaner-cars/loanerCarDbService';
 
 export function useLoanerCarOperations(
   loanerCars: LoanerCar[],
   setLoanerCars: React.Dispatch<React.SetStateAction<LoanerCar[]>>,
   handleAddAppointment: (appointment: Appointment) => void,
-  appointments: Appointment[]
+  appointments: Appointment[],
+  refreshData: () => Promise<void>
 ) {
   const { t } = useLanguage();
   const { toast } = useToast();
   const [selectedCar, setSelectedCar] = useState<LoanerCar | null>(null);
 
-  const handleAssign = (assignData: { customerId: string; startDate: string; returnDate: string }) => {
+  const handleAssign = async (assignData: { customerId: string; startDate: string; returnDate: string }) => {
     if (!selectedCar || !assignData.customerId) return;
     
     const customer = MOCK_CUSTOMERS.find(c => c.id === assignData.customerId);
     if (!customer) return;
 
+    // First update in memory
     const updatedCars = loanerCars.map(car => {
       if (car.id === selectedCar.id) {
         return {
@@ -37,15 +40,30 @@ export function useLoanerCarOperations(
     
     setLoanerCars(updatedCars);
     
-    toast({
-      title: t('loanerCar.assigned'),
-      description: t('loanerCar.assignedDescription'),
-    });
+    // Then update in database
+    const updatedCar = updatedCars.find(car => car.id === selectedCar.id);
+    if (updatedCar) {
+      const success = await updateLoanerCarInDb(updatedCar);
+      if (success) {
+        toast({
+          title: t('loanerCar.assigned'),
+          description: t('loanerCar.assignedDescription'),
+        });
+      } else {
+        toast({
+          title: "Update failed",
+          description: "Failed to update the database. Changes may not persist.",
+          variant: "destructive"
+        });
+        await refreshData(); // Refresh to get the latest state from DB
+      }
+    }
   };
 
-  const handleUpdateDates = (carId: string, startDate: string, returnDate: string) => {
+  const handleUpdateDates = async (carId: string, startDate: string, returnDate: string) => {
     if (!carId) return;
     
+    // First update in memory
     const updatedCars = loanerCars.map(car => {
       if (car.id === carId) {
         return {
@@ -59,13 +77,27 @@ export function useLoanerCarOperations(
     
     setLoanerCars(updatedCars);
     
-    toast({
-      title: t('loanerCar.datesUpdated'),
-      description: t('loanerCar.datesUpdatedDescription'),
-    });
+    // Then update in database
+    const updatedCar = updatedCars.find(car => car.id === carId);
+    if (updatedCar) {
+      const success = await updateLoanerCarInDb(updatedCar);
+      if (success) {
+        toast({
+          title: t('loanerCar.datesUpdated'),
+          description: t('loanerCar.datesUpdatedDescription'),
+        });
+      } else {
+        toast({
+          title: "Update failed",
+          description: "Failed to update the database. Changes may not persist.",
+          variant: "destructive"
+        });
+        await refreshData(); // Refresh to get the latest state from DB
+      }
+    }
   };
 
-  const handleAssignToAppointment = (appointmentId: string) => {
+  const handleAssignToAppointment = async (appointmentId: string) => {
     // Find the appointment
     const appointment = appointments.find(app => app.id === appointmentId);
     if (!appointment) return;
@@ -81,7 +113,7 @@ export function useLoanerCarOperations(
       return;
     }
     
-    // Update the car to assign it to the customer
+    // Update the car to assign it to the customer (first in memory)
     const updatedCars = loanerCars.map(car => {
       if (car.id === availableCar.id) {
         return {
@@ -98,26 +130,47 @@ export function useLoanerCarOperations(
     
     setLoanerCars(updatedCars);
     
-    // Update the appointment with the loaner car info
-    const updatedAppointment = {
-      ...appointment,
-      loanerCarId: availableCar.id
-    };
-    
-    handleAddAppointment(updatedAppointment);
-    
-    toast({
-      title: t('loanerCar.assigned'),
-      description: t('loanerCar.assignedToAppointmentDescription'),
-    });
+    // Then update in database
+    const updatedCar = updatedCars.find(car => car.id === availableCar.id);
+    if (updatedCar) {
+      const success = await updateLoanerCarInDb(updatedCar);
+      
+      // Update the appointment with the loaner car info
+      const updatedAppointment = {
+        ...appointment,
+        loanerCarId: availableCar.id
+      };
+      
+      handleAddAppointment(updatedAppointment);
+      
+      if (success) {
+        toast({
+          title: t('loanerCar.assigned'),
+          description: t('loanerCar.assignedToAppointmentDescription'),
+        });
+      } else {
+        toast({
+          title: "Update failed",
+          description: "Failed to update the database. Changes may not persist.",
+          variant: "destructive"
+        });
+        await refreshData(); // Refresh to get the latest state from DB
+      }
+    }
   };
 
-  const handleReturn = (carId: string) => {
+  const handleReturn = async (carId: string) => {
+    // First update in memory
+    
     // Get the car
     const car = loanerCars.find(c => c.id === carId);
-    if (!car || !car.appointmentId) {
+    if (!car) return;
+    
+    let updatedCars;
+    
+    if (!car.appointmentId) {
       // Car is not linked to an appointment, just mark it as available
-      const updatedCars = loanerCars.map(c => {
+      updatedCars = loanerCars.map(c => {
         if (c.id === carId) {
           return {
             ...c,
@@ -144,7 +197,7 @@ export function useLoanerCarOperations(
         handleAddAppointment(updatedAppointment);
       }
       
-      const updatedCars = loanerCars.map(c => {
+      updatedCars = loanerCars.map(c => {
         if (c.id === carId) {
           return {
             ...c,
@@ -161,10 +214,24 @@ export function useLoanerCarOperations(
       setLoanerCars(updatedCars);
     }
     
-    toast({
-      title: t('loanerCar.returned'),
-      description: t('loanerCar.returnedDescription'),
-    });
+    // Then update in database
+    const updatedCar = updatedCars.find(c => c.id === carId);
+    if (updatedCar) {
+      const success = await updateLoanerCarInDb(updatedCar);
+      if (success) {
+        toast({
+          title: t('loanerCar.returned'),
+          description: t('loanerCar.returnedDescription'),
+        });
+      } else {
+        toast({
+          title: "Update failed",
+          description: "Failed to update the database. Changes may not persist.",
+          variant: "destructive"
+        });
+        await refreshData(); // Refresh to get the latest state from DB
+      }
+    }
   };
 
   return {

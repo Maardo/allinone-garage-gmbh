@@ -15,6 +15,7 @@ import { useLoanerCars } from "@/components/loaner-cars/useLoanerCars";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function LoanerCarsPage() {
   const { t } = useLanguage();
@@ -45,8 +46,34 @@ export default function LoanerCarsPage() {
     handleUpdateCar,
     handleDeleteCar,
     handleUpdateDates,
-    handleAssignToAppointment
+    handleAssignToAppointment,
+    isLoading
   } = useLoanerCars();
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="space-y-6">
+          <div className="flex flex-wrap justify-between items-center gap-3">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-10 w-32" />
+          </div>
+          
+          <Tabs defaultValue="availableCars" className="w-full">
+            <TabsList className="mb-4">
+              <Skeleton className="h-10 w-full" />
+            </TabsList>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-48 w-full rounded-md" />
+              ))}
+            </div>
+          </Tabs>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

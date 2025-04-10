@@ -1,14 +1,18 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 import { LoanerCar } from '@/lib/types';
 import { useCalendar } from '@/hooks/useCalendar';
 import { INITIAL_LOANER_CARS } from './mockLoanerData';
 import { useLoanerCarOperations } from './useLoanerCarOperations';
 import { useLoanerCarManagement } from './useLoanerCarManagement';
+import { useAuth } from "@/context/AuthContext";
+import { fetchLoanerCarsFromDb, importLoanerCarsToDb } from '@/lib/loaner-cars/loanerCarDbService';
+import { useToast } from '@/hooks/use-toast';
 
 export function useLoanerCars() {
-  const [loanerCars, setLoanerCars] = useState<LoanerCar[]>(INITIAL_LOANER_CARS);
+  const [loanerCars, setLoanerCars] = useState<LoanerCar[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -19,6 +23,8 @@ export function useLoanerCars() {
     startDate: today,
     returnDate: format(new Date(new Date().setDate(new Date().getDate() + 3)), "yyyy-MM-dd"),
   });
+  const { toast } = useToast();
+  const { currentUser } = useAuth();
 
   const { appointments, handleAddAppointment } = useCalendar();
 
@@ -26,6 +32,50 @@ export function useLoanerCars() {
   const appointmentsNeedingCars = appointments.filter(
     appointment => appointment.needsLoanerCar && !appointment.loanerCarId
   );
+
+  const loadLoanerCars = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      if (!currentUser) {
+        console.log("No current user, using mock data for loaner cars");
+        setLoanerCars(INITIAL_LOANER_CARS);
+        setIsLoading(false);
+        return;
+      }
+
+      console.log("Loading loaner cars for user:", currentUser.id);
+      const dbLoanerCars = await fetchLoanerCarsFromDb(currentUser.id);
+      
+      if (dbLoanerCars.length > 0) {
+        console.log(`Found ${dbLoanerCars.length} loaner cars in database`);
+        setLoanerCars(dbLoanerCars);
+      } else {
+        console.log("No loaner cars found in database, importing mock data");
+        // Import mock data to database for this user
+        const imported = await importLoanerCarsToDb(INITIAL_LOANER_CARS, currentUser.id);
+        
+        if (imported) {
+          // After importing, fetch the loaner cars again with proper IDs
+          const importedLoanerCars = await fetchLoanerCarsFromDb(currentUser.id);
+          setLoanerCars(importedLoanerCars);
+        } else {
+          // Fallback to mock data if import fails
+          setLoanerCars(INITIAL_LOANER_CARS);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading loaner cars:", error);
+      // Fallback to mock data on error
+      setLoanerCars(INITIAL_LOANER_CARS);
+      toast({
+        title: "Error loading loaner cars",
+        description: "There was an error loading your loaner cars. Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentUser, toast]);
 
   // Car operations
   const {
@@ -35,7 +85,7 @@ export function useLoanerCars() {
     handleUpdateDates,
     handleReturn,
     handleAssignToAppointment
-  } = useLoanerCarOperations(loanerCars, setLoanerCars, handleAddAppointment, appointments);
+  } = useLoanerCarOperations(loanerCars, setLoanerCars, handleAddAppointment, appointments, loadLoanerCars);
 
   // Car management
   const {
@@ -45,13 +95,12 @@ export function useLoanerCars() {
     handleUpdateCar,
     handleDeleteCar,
     getAvailableLoanerCars
-  } = useLoanerCarManagement(loanerCars, setLoanerCars);
+  } = useLoanerCarManagement(loanerCars, setLoanerCars, loadLoanerCars);
 
-  // Fetch appointments that need loaner cars from local storage or API
+  // Load loaner cars from database on component mount
   useEffect(() => {
-    // This would be replaced with an actual API call in a real application
-    // For now we're working with the mocked data
-  }, []);
+    loadLoanerCars();
+  }, [loadLoanerCars]);
 
   // Wrapper functions that call our extracted operations with the right parameters
   const handleAssignWrapper = () => handleAssign(assignData);
@@ -85,6 +134,7 @@ export function useLoanerCars() {
     handleDeleteCar: handleDeleteCarWrapper,
     handleUpdateDates: handleUpdateDatesWrapper,
     getAvailableLoanerCars,
-    handleAssignToAppointment
+    handleAssignToAppointment,
+    isLoading
   };
 }
