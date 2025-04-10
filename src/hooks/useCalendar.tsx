@@ -1,188 +1,64 @@
 
-import { useState, useEffect, useCallback } from "react";
-import { Appointment as CustomerAppointment } from "@/lib/types";
-import { Appointment as OverviewAppointment } from "@/lib/overview/types";
-import { CalendarViewMode } from "@/lib/calendar/types";
-import { MOCK_APPOINTMENTS } from "@/lib/calendar/mockData";
+import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { 
-  createEmptyAppointment,
-  navigateToPreviousPeriod, 
-  navigateToNextPeriod,
-  getStartOfCurrentPeriod,
-  updateAppointmentInList,
-  addAppointmentToList
-} from "@/lib/calendar/calendarService";
-import { fetchAppointments, createAppointment as createAppointmentApi, updateAppointment as updateAppointmentApi, deleteAppointment as deleteAppointmentApi } from "@/services/appointmentService";
-import { toast } from "sonner";
-import { useLanguage } from "@/context/LanguageContext";
-import { customerToOverviewAppointment, overviewToCustomerAppointment } from "@/lib/overview/appointmentConverter";
 import { useCustomers } from "@/hooks/useCustomers";
 import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
+import { useCalendarNavigation } from "./calendar/useCalendarNavigation";
+import { useAppointmentSelection } from "./calendar/useAppointmentSelection";
+import { useAppointmentData } from "./calendar/useAppointmentData";
+import { useAppointmentOperations } from "./calendar/useAppointmentOperations";
 
 export function useCalendar() {
-  const { t } = useLanguage();
   const isMobile = useIsMobile();
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [appointments, setAppointments] = useState<CustomerAppointment[]>([]);
-  const [selectedAppointment, setSelectedAppointment] = useState<CustomerAppointment | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<CalendarViewMode>(isMobile ? 'week' : 'week');
-  const [isLoading, setIsLoading] = useState(true);
-  const { handleAddCustomer, customers, refreshCustomers } = useCustomers();
+  const { refreshCustomers } = useCustomers();
   const { refreshData: refreshOverviewData } = useOverviewAppointments();
+  
+  // Get calendar navigation state and handlers
+  const {
+    currentDate,
+    viewMode,
+    handleNavigatePrev,
+    handleNavigateNext,
+    goToToday,
+    handleChangeViewMode
+  } = useCalendarNavigation();
 
-  const loadAppointments = async () => {
-    try {
-      setIsLoading(true);
-      const data = await fetchAppointments();
-      const customerAppointments = data.map(overviewToCustomerAppointment);
-      setAppointments(customerAppointments);
-    } catch (error) {
-      console.error("Error loading appointments:", error);
-      toast.error(t('common.error'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Get appointment selection state and handlers
+  const {
+    selectedAppointment,
+    setSelectedAppointment,
+    isDialogOpen,
+    setIsDialogOpen,
+    handleSelectAppointment,
+    handleNewAppointmentAtDate
+  } = useAppointmentSelection();
 
+  // Get appointment data
+  const {
+    appointments,
+    setAppointments,
+    isLoading,
+    loadAppointments
+  } = useAppointmentData();
+
+  // Get appointment operations
+  const {
+    handleAddAppointment,
+    handleDeleteAppointment
+  } = useAppointmentOperations({
+    appointments,
+    setAppointments,
+    setIsDialogOpen,
+    setSelectedAppointment,
+    refreshCustomers,
+    refreshOverviewData,
+    loadAppointments
+  });
+
+  // Load appointments on mount
   useEffect(() => {
     loadAppointments();
-  }, [t]);
-
-  useEffect(() => {
-    if (isMobile && viewMode === 'month') {
-      // Adjust view mode based on device size
-    }
-  }, [isMobile, viewMode]);
-
-  const handleNavigatePrev = () => {
-    setCurrentDate(navigateToPreviousPeriod(currentDate, viewMode));
-  };
-
-  const handleNavigateNext = () => {
-    setCurrentDate(navigateToNextPeriod(currentDate, viewMode));
-  };
-
-  const goToToday = () => {
-    const today = new Date();
-    setCurrentDate(getStartOfCurrentPeriod(today, viewMode));
-  };
-
-  const handleAddAppointment = async (appointment: CustomerAppointment) => {
-    try {
-      if (selectedAppointment && selectedAppointment.id) {
-        appointment.needsLoanerCar = appointment.needsLoanerCar ?? selectedAppointment.needsLoanerCar;
-        appointment.loanerCarId = appointment.loanerCarId ?? selectedAppointment.loanerCarId;
-        
-        const overviewAppointment = customerToOverviewAppointment(appointment);
-        const updatedOverviewAppointment = await updateAppointmentApi(overviewAppointment);
-        const updatedCustomerAppointment = overviewToCustomerAppointment(updatedOverviewAppointment);
-        setAppointments(updateAppointmentInList(appointments, updatedCustomerAppointment));
-        
-        if (appointment.customerName && appointment.customerEmail) {
-          const existingCustomer = customers.find(c => 
-            c.email === appointment.customerEmail || 
-            c.name === appointment.customerName
-          );
-          
-          if (!existingCustomer) {
-            await handleAddCustomer({
-              name: appointment.customerName,
-              email: appointment.customerEmail || '',
-              phone: appointment.customerPhone || '',
-              address: appointment.customerAddress || { street: '', zipCode: '', city: '' },
-            });
-          }
-        }
-        
-        toast.success(t('appointment.updated'));
-        
-        // Refresh both customers and overview data after updating
-        await refreshCustomers();
-        await refreshOverviewData();
-        
-      } else {
-        const overviewAppointment = customerToOverviewAppointment(appointment);
-        const newOverviewAppointment = await createAppointmentApi(overviewAppointment);
-        const newCustomerAppointment = overviewToCustomerAppointment(newOverviewAppointment);
-        setAppointments([...appointments, newCustomerAppointment]);
-        
-        if (appointment.customerName && appointment.customerEmail) {
-          const existingCustomer = customers.find(c => 
-            c.email === appointment.customerEmail || 
-            c.name === appointment.customerName
-          );
-          
-          if (!existingCustomer) {
-            await handleAddCustomer({
-              name: appointment.customerName,
-              email: appointment.customerEmail || '',
-              phone: appointment.customerPhone || '',
-              address: appointment.customerAddress || { street: '', zipCode: '', city: '' },
-            });
-          }
-        }
-        
-        toast.success(t('appointment.created'));
-        
-        // Refresh both customers and overview data after creation
-        await refreshCustomers();
-        await refreshOverviewData();
-      }
-      
-      setIsDialogOpen(false);
-      setSelectedAppointment(null);
-      
-      await loadAppointments();
-      
-      return true;
-    } catch (error) {
-      console.error("Error saving appointment:", error);
-      toast.error(t('common.error'));
-      return false;
-    }
-  };
-
-  const handleSelectAppointment = (appointment: CustomerAppointment) => {
-    setSelectedAppointment(appointment);
-    setIsDialogOpen(true);
-  };
-
-  const handleNewAppointmentAtDate = (date: Date) => {
-    setSelectedAppointment(createEmptyAppointment(date));
-    setIsDialogOpen(true);
-  };
-
-  const handleDeleteAppointment = async (appointmentId: string) => {
-    try {
-      const numericId = parseInt(appointmentId);
-      if (isNaN(numericId)) {
-        throw new Error("Invalid appointment ID");
-      }
-      
-      await deleteAppointmentApi(numericId);
-      setAppointments(appointments.filter(app => app.id !== appointmentId));
-      setIsDialogOpen(false);
-      setSelectedAppointment(null);
-      toast.success(t('appointment.deleted'));
-      
-      // Refresh both customers and overview data after deletion
-      await refreshCustomers();
-      await refreshOverviewData();
-      
-      await loadAppointments();
-      
-    } catch (error) {
-      console.error("Error deleting appointment:", error);
-      toast.error(t('common.error'));
-    }
-  };
-
-  const handleChangeViewMode = useCallback((mode: CalendarViewMode) => {
-    setViewMode(mode);
-    setCurrentDate(getStartOfCurrentPeriod(currentDate, mode));
-  }, [currentDate]);
+  }, [loadAppointments]);
 
   return {
     currentDate,
