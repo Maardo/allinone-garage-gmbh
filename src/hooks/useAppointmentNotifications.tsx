@@ -1,68 +1,31 @@
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Appointment } from '@/lib/overview/types';
-import { useNotificationService } from '@/lib/overview/notificationService';
-import { useToast } from '@/hooks/use-toast';
-import { useLanguage } from '@/context/LanguageContext';
-import { Button } from "@/components/ui/button";
+import { useAppointmentDialogState } from './useAppointmentDialogState';
+import { useNotificationHandler } from './useNotificationHandler';
 
 export function useAppointmentNotifications() {
-  const { t } = useLanguage();
-  const { toast } = useToast();
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  // Use our extracted hooks
+  const {
+    selectedAppointment,
+    setSelectedAppointment,
+    dialogOpen,
+    setDialogOpen
+  } = useAppointmentDialogState();
   
-  // Use notification service for email notifications
-  const { 
-    sendEmailNotification, 
-    scheduleEmailNotification, 
-    cancelPendingEmail 
-  } = useNotificationService();
-
-  const handleSendNotification = useCallback((
-    appointment: Appointment, 
-    sendEmail: boolean,
-    undoLastChange: () => boolean
-  ) => {
-    // If user chose to send email and email notifications are enabled
-    const emailNotificationsEnabled = localStorage.getItem("emailNotifications") !== "false";
-    
-    if (sendEmail && emailNotificationsEnabled && appointment.customerEmail) {
-      scheduleEmailNotification(appointment);
-      toast({
-        title: t('overview.appointmentCompleted'),
-        description: t('overview.emailScheduled'),
-        action: (
-          <Button
-            onClick={() => undoLastChange()}
-            className="px-6 py-2.5 text-sm font-medium bg-secondary hover:bg-secondary/90 text-foreground rounded-md"
-          >
-            {t('actions.undo')}
-          </Button>
-        ),
-      });
-    } else {
-      // No email sent
-      toast({
-        title: t('overview.appointmentCompleted'),
-        description: t('overview.appointmentMarkedComplete'),
-        action: (
-          <Button
-            onClick={() => undoLastChange()}
-            className="px-6 py-2.5 text-sm font-medium bg-secondary hover:bg-secondary/90 text-foreground rounded-md"
-          >
-            {t('actions.undo')}
-          </Button>
-        ),
-      });
-    }
-  }, [scheduleEmailNotification, toast, t]);
+  const {
+    handleSendNotification,
+    cancelPendingEmail
+  } = useNotificationHandler();
 
   return {
+    // Dialog state
     selectedAppointment,
     setSelectedAppointment,
     dialogOpen,
     setDialogOpen,
+    
+    // Notification functionality
     handleSendNotification,
     cancelPendingEmail
   };

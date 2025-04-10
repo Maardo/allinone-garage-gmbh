@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { Appointment, Stats } from '@/lib/overview/types';
 import { useAppointmentDialogState } from './useAppointmentDialogState';
 import { useAppointmentMarkComplete } from './useAppointmentMarkComplete';
-import { useNotificationService } from '@/lib/overview/notificationService';
+import { useNotificationHandler } from './useNotificationHandler';
 
 export function useAppointmentCompletion() {
   // Use our extracted hooks
@@ -18,11 +18,11 @@ export function useAppointmentCompletion() {
   
   const { markAppointmentAsComplete } = useAppointmentMarkComplete();
   
-  // Use notification service for email notifications
+  // Use notification handler for email notifications
   const { 
-    scheduleEmailNotification, 
+    handleSendNotification, 
     cancelPendingEmail 
-  } = useNotificationService();
+  } = useNotificationHandler();
 
   // Handle marking an appointment as complete
   const handleMarkComplete = useCallback((
@@ -75,7 +75,7 @@ export function useAppointmentCompletion() {
   ) => {
     // Send email notification if requested
     if (sendEmail && appointment.customerEmail) {
-      scheduleEmailNotification(appointment);
+      handleSendNotification(appointment, sendEmail, undoLastChange);
     }
     
     // Mark appointment as complete
@@ -88,7 +88,7 @@ export function useAppointmentCompletion() {
       setStats,
       undoLastChange
     );
-  }, [markAppointmentAsComplete, scheduleEmailNotification]);
+  }, [markAppointmentAsComplete, handleSendNotification]);
 
   return {
     selectedAppointment,
