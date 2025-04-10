@@ -1,60 +1,26 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Appointment, GroupedAppointments, Stats, TimeViewType } from '@/lib/overview/types';
-import { useNotificationService } from '@/lib/overview/notificationService';
-import { useAppointmentFiltering } from '@/lib/overview/filterService';
+import { updateAppointment } from '@/services/appointmentService';
+import { updateStats } from '@/services/statsService';
 import { useOverviewState } from './useOverviewState';
 import { useAppointmentCompletion } from './useAppointmentCompletion';
+import { useAppointmentDataLoader } from './useAppointmentDataLoader';
+import { useAppointmentNotifications } from './useAppointmentNotifications';
+import { useAppointmentFiltering } from '@/lib/overview/filterService';
 import { EmailConfirmationDialog } from '@/components/overview/EmailConfirmationDialog';
-import { fetchAppointments, updateAppointment } from '@/services/appointmentService';
-import { fetchStats, updateStats } from '@/services/statsService';
-import { useToast } from './use-toast';
-import { useLanguage } from '@/context/LanguageContext';
 
 // Re-export types for backward compatibility
 export type { Appointment, GroupedAppointments, Stats, TimeViewType };
 
 export function useOverviewAppointments() {
-  const { t } = useLanguage();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
-  const [initialStats, setInitialStats] = useState<Stats>({
-    todayAppointments: 0,
-    weekAppointments: 0,
-    totalCustomers: 0,
-    completedJobs: 0
-  });
-  const [initialAppointments, setInitialAppointments] = useState<Appointment[]>([]);
-  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
-  
-  // Fetch data from Supabase
-  const loadData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const [appointmentsData, statsData] = await Promise.all([
-        fetchAppointments(),
-        fetchStats()
-      ]);
-      
-      setInitialAppointments(appointmentsData);
-      setInitialStats(statsData);
-      setLastRefreshed(new Date());
-    } catch (error) {
-      console.error('Error loading data:', error);
-      toast({
-        title: t('common.error'),
-        description: t('overview.errorLoadingData'),
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [toast, t]);
-  
-  // Initial data loading
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  // Use our extracted hooks
+  const {
+    isLoading,
+    initialStats,
+    initialAppointments,
+    loadData: refreshData
+  } = useAppointmentDataLoader();
   
   const {
     timeView,
@@ -68,6 +34,24 @@ export function useOverviewAppointments() {
     updateTotalCustomers
   } = useOverviewState(initialStats, initialAppointments);
   
+  const {
+    selectedAppointment,
+    setSelectedAppointment,
+    dialogOpen,
+    setDialogOpen,
+    handleSendNotification,
+    cancelPendingEmail
+  } = useAppointmentNotifications();
+  
+  // Use the appointment completion hook
+  const {
+    markAppointmentAsComplete,
+    handleMarkComplete: baseHandleMarkComplete,
+  } = useAppointmentCompletion();
+  
+  // Use the filtering service to get filtered jobs
+  const { filteredJobs } = useAppointmentFiltering(timeView, upcomingJobs, setStats);
+
   // Effect to update database whenever stats or upcomingJobs change
   useEffect(() => {
     if (isLoading) return; // Don't update during initial load
@@ -89,48 +73,9 @@ export function useOverviewAppointments() {
     
     updateDatabase();
   }, [stats, upcomingJobs, isLoading]);
-  
-  // Refresh data every 30 seconds or when returning to the page
-  useEffect(() => {
-    const refreshInterval = setInterval(() => {
-      loadData();
-    }, 30000); // 30 seconds
-    
-    // Refresh when tab becomes visible again
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        // Only refresh if it's been more than 10 seconds since last refresh
-        const now = new Date();
-        const timeSinceLastRefresh = now.getTime() - lastRefreshed.getTime();
-        if (timeSinceLastRefresh > 10000) { // 10 seconds
-          loadData();
-        }
-      }
-    };
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    return () => {
-      clearInterval(refreshInterval);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [loadData, lastRefreshed]);
-  
-  const {
-    selectedAppointment,
-    setSelectedAppointment,
-    dialogOpen,
-    setDialogOpen,
-    markAppointmentAsComplete,
-    handleMarkComplete: baseHandleMarkComplete,
-    cancelPendingEmail
-  } = useAppointmentCompletion();
-  
-  // Use the filtering service to get filtered jobs
-  const { filteredJobs } = useAppointmentFiltering(timeView, upcomingJobs, setStats);
 
   // Wrap handleMarkComplete to pass the required parameters
-  const handleMarkComplete = (appointmentId: number) => {
+  const handleMarkComplete = useCallback((appointmentId: number) => {
     baseHandleMarkComplete(
       appointmentId,
       upcomingJobs,
@@ -140,10 +85,10 @@ export function useOverviewAppointments() {
       saveStateBeforeChange,
       undoLastChange
     );
-  };
+  }, [baseHandleMarkComplete, upcomingJobs, stats, setUpcomingJobs, setStats, saveStateBeforeChange, undoLastChange]);
 
   // Handle email confirmation dialog actions
-  const handleConfirmSendEmail = () => {
+  const handleConfirmSendEmail = useCallback(() => {
     if (selectedAppointment) {
       markAppointmentAsComplete(
         selectedAppointment,
@@ -154,10 +99,11 @@ export function useOverviewAppointments() {
         setStats,
         undoLastChange
       );
+      handleSendNotification(selectedAppointment, true, undoLastChange);
     }
-  };
+  }, [selectedAppointment, markAppointmentAsComplete, upcomingJobs, stats, setUpcomingJobs, setStats, undoLastChange, handleSendNotification]);
 
-  const handleConfirmNoEmail = () => {
+  const handleConfirmNoEmail = useCallback(() => {
     if (selectedAppointment) {
       markAppointmentAsComplete(
         selectedAppointment,
@@ -168,11 +114,12 @@ export function useOverviewAppointments() {
         setStats,
         undoLastChange
       );
+      handleSendNotification(selectedAppointment, false, undoLastChange);
     }
-  };
+  }, [selectedAppointment, markAppointmentAsComplete, upcomingJobs, stats, setUpcomingJobs, setStats, undoLastChange, handleSendNotification]);
 
   // Custom dialog component that uses our state and callbacks
-  const EmailConfirmationDialogComponent = () => (
+  const EmailConfirmationDialogComponent = useCallback(() => (
     <EmailConfirmationDialog
       open={dialogOpen}
       setOpen={setDialogOpen}
@@ -180,7 +127,7 @@ export function useOverviewAppointments() {
       onConfirmSendEmail={handleConfirmSendEmail}
       onConfirmNoEmail={handleConfirmNoEmail}
     />
-  );
+  ), [dialogOpen, setDialogOpen, selectedAppointment, handleConfirmSendEmail, handleConfirmNoEmail]);
 
   return {
     timeView,
@@ -195,7 +142,7 @@ export function useOverviewAppointments() {
     saveStateBeforeChange,
     undoLastChange,
     isLoading,
-    refreshData: loadData,
+    refreshData,
     EmailConfirmationDialog: EmailConfirmationDialogComponent
   };
 }
