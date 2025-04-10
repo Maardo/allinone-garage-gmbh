@@ -3,37 +3,51 @@ import { supabase } from "@/integrations/supabase/client";
 import { ServiceType, ServiceTypeInfo } from "@/lib/serviceTypes";
 import { COLOR_OPTIONS } from "@/lib/serviceTypes";
 
+// Interface to mirror the database schema
+interface ServiceTypeRecord {
+  id: number;
+  name: string;
+  description: string | null;
+  color: string;
+  code: string | null;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
 // Fetch service types from the database
 export async function fetchServiceTypesFromDb(userId: string): Promise<Record<ServiceType, ServiceTypeInfo>> {
   try {
     const { data, error } = await supabase
       .from('service_types')
       .select('*')
-      .eq('user_id', userId);
+      .eq('user_id', userId) as { data: ServiceTypeRecord[] | null, error: any };
 
     if (error) {
       console.error('Error fetching service types:', error);
-      return {};
+      return {} as Record<ServiceType, ServiceTypeInfo>;
     }
 
     // Convert the array of service types to the expected format
-    const serviceTypes: Record<ServiceType, ServiceTypeInfo> = {};
+    const serviceTypes: Record<ServiceType, ServiceTypeInfo> = {} as Record<ServiceType, ServiceTypeInfo>;
     
-    data.forEach(type => {
-      const serviceType = type.id as ServiceType;
-      serviceTypes[serviceType] = {
-        id: serviceType,
-        name: type.name,
-        description: type.description || '',
-        color: type.color,
-        code: type.code || undefined
-      };
-    });
+    if (data) {
+      data.forEach(type => {
+        const serviceType = type.id as ServiceType;
+        serviceTypes[serviceType] = {
+          id: serviceType,
+          name: type.name,
+          description: type.description || '',
+          color: type.color,
+          code: type.code || undefined
+        };
+      });
+    }
 
     return serviceTypes;
   } catch (error) {
     console.error('Error in fetchServiceTypesFromDb:', error);
-    return {};
+    return {} as Record<ServiceType, ServiceTypeInfo>;
   }
 }
 
@@ -52,7 +66,7 @@ export async function addServiceTypeToDb(
         color: serviceType.color,
         code: serviceType.code,
         user_id: userId
-      });
+      } as ServiceTypeRecord);
 
     if (error) {
       console.error('Error adding service type:', error);
@@ -80,7 +94,7 @@ export async function updateServiceTypeInDb(
         color: serviceType.color,
         code: serviceType.code,
         updated_at: new Date().toISOString()
-      })
+      } as Partial<ServiceTypeRecord>)
       .eq('id', serviceType.id)
       .eq('user_id', userId);
 
@@ -127,7 +141,7 @@ export async function initializeServiceTypesInDb(userId: string): Promise<boolea
     const { data, error: checkError } = await supabase
       .from('service_types')
       .select('id')
-      .eq('user_id', userId);
+      .eq('user_id', userId) as { data: ServiceTypeRecord[] | null, error: any };
 
     if (checkError) {
       console.error('Error checking existing service types:', checkError);
@@ -193,7 +207,7 @@ export async function initializeServiceTypesInDb(userId: string): Promise<boolea
 
     const { error } = await supabase
       .from('service_types')
-      .insert(defaultServiceTypes);
+      .insert(defaultServiceTypes as ServiceTypeRecord[]);
 
     if (error) {
       console.error('Error initializing service types:', error);

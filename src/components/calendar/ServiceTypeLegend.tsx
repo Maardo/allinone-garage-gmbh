@@ -40,7 +40,7 @@ export function ServiceTypeLegend() {
     <div className="mt-3 p-3 bg-card rounded-lg shadow-sm">
       <h3 className="font-medium mb-1.5 text-xs">{t('appointment.serviceType')}</h3>
       <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5">
-        {Object.values(serviceTypes).map((type) => (
+        {Object.values(serviceTypes || {}).map((type) => (
           <div 
             key={type.id} 
             className="flex items-center p-1 rounded-md text-xs"

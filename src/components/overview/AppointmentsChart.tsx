@@ -28,9 +28,11 @@ export function AppointmentsChart({ chartData }: AppointmentsChartProps) {
   const createChartConfig = () => {
     const config: Record<string, { color: string }> = {};
     
-    Object.values(serviceTypes).forEach(type => {
-      config[`type${type.id}`] = { color: type.color };
-    });
+    if (serviceTypes) {
+      Object.values(serviceTypes).forEach(type => {
+        config[`type${type.id}`] = { color: type.color };
+      });
+    }
     
     return config;
   };
