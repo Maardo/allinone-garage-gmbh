@@ -14,7 +14,9 @@ export const customerToOverviewAppointment = (appointment: CustomerAppointment):
     isCompleted: appointment.isCompleted || false,
     customerEmail: appointment.customerEmail || '',
     customerName: appointment.customerName || '',
-    licensePlate: appointment.vehicleLicense || ''
+    licensePlate: appointment.vehicleLicense || '',
+    needsLoanerCar: appointment.needsLoanerCar || false,
+    loanerCarId: appointment.loanerCarId
   };
 };
 
@@ -47,6 +49,7 @@ export const overviewToCustomerAppointment = (appointment: OverviewAppointment):
     notes: '',
     isPaid: false,
     isCompleted: appointment.isCompleted || false,
-    needsLoanerCar: false
+    needsLoanerCar: appointment.needsLoanerCar || false,
+    loanerCarId: appointment.loanerCarId
   };
 };

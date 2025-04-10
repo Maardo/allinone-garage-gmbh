@@ -1,4 +1,3 @@
-
 import { ServiceType } from '@/lib/serviceTypes';
 
 // Define the appointment type specifically for this component
@@ -11,6 +10,8 @@ export interface Appointment {
   customerEmail?: string;
   customerName?: string;
   licensePlate?: string;
+  needsLoanerCar?: boolean;
+  loanerCarId?: string;
 }
 
 // Define the grouped appointments type

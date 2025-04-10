@@ -1,8 +1,7 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Appointment as CustomerAppointment } from "@/lib/types";
 import { Appointment as OverviewAppointment } from "@/lib/overview/types";
-import { CalendarViewMode } from "@/lib/calendar/types";
+import { CalendarViewType } from "@/lib/calendar/types";
 import { MOCK_APPOINTMENTS } from "@/lib/calendar/mockData";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
@@ -26,16 +25,14 @@ export function useCalendar() {
   const [appointments, setAppointments] = useState<CustomerAppointment[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState<CustomerAppointment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<CalendarViewMode>(isMobile ? 'week' : 'week');
+  const [viewMode, setViewMode] = useState<CalendarViewType>(isMobile ? 'week' : 'week');
   const [isLoading, setIsLoading] = useState(true);
   const { handleAddCustomer, customers } = useCustomers();
 
-  // Load appointments from the database
   const loadAppointments = async () => {
     try {
       setIsLoading(true);
       const data = await fetchAppointments();
-      // Convert all overview appointments to customer appointments
       const customerAppointments = data.map(overviewToCustomerAppointment);
       setAppointments(customerAppointments);
     } catch (error) {
@@ -50,11 +47,8 @@ export function useCalendar() {
     loadAppointments();
   }, [t]);
 
-  // Ensure we're using the right view when screen size changes
   useEffect(() => {
     if (isMobile && viewMode === 'month') {
-      // Don't automatically change the view mode on mobile anymore
-      // We'll let the user decide which view they want to use
     }
   }, [isMobile, viewMode]);
 
@@ -74,15 +68,14 @@ export function useCalendar() {
   const handleAddAppointment = async (appointment: CustomerAppointment) => {
     try {
       if (selectedAppointment && selectedAppointment.id) {
-        // Update existing appointment
-        // Convert to overview appointment for the API
+        appointment.needsLoanerCar = appointment.needsLoanerCar ?? selectedAppointment.needsLoanerCar;
+        appointment.loanerCarId = appointment.loanerCarId ?? selectedAppointment.loanerCarId;
+        
         const overviewAppointment = customerToOverviewAppointment(appointment);
         const updatedOverviewAppointment = await updateAppointmentApi(overviewAppointment);
-        // Convert back to customer appointment
         const updatedCustomerAppointment = overviewToCustomerAppointment(updatedOverviewAppointment);
         setAppointments(updateAppointmentInList(appointments, updatedCustomerAppointment));
         
-        // Try to add the customer if they don't exist
         if (appointment.customerName && appointment.customerEmail) {
           const existingCustomer = customers.find(c => 
             c.email === appointment.customerEmail || 
@@ -96,15 +89,11 @@ export function useCalendar() {
         
         toast.success(t('appointment.updated'));
       } else {
-        // Add new appointment
-        // Convert to overview appointment for the API
         const overviewAppointment = customerToOverviewAppointment(appointment);
         const newOverviewAppointment = await createAppointmentApi(overviewAppointment);
-        // Convert back to customer appointment
         const newCustomerAppointment = overviewToCustomerAppointment(newOverviewAppointment);
         setAppointments([...appointments, newCustomerAppointment]);
         
-        // Try to add the customer if they don't exist
         if (appointment.customerName && appointment.customerEmail) {
           const existingCustomer = customers.find(c => 
             c.email === appointment.customerEmail || 
@@ -122,13 +111,14 @@ export function useCalendar() {
       setIsDialogOpen(false);
       setSelectedAppointment(null);
       
-      // Reload appointments to ensure consistency
       await loadAppointments();
       
     } catch (error) {
       console.error("Error saving appointment:", error);
       toast.error(t('common.error'));
     }
+    
+    return true;
   };
 
   const handleSelectAppointment = (appointment: CustomerAppointment) => {
@@ -143,7 +133,6 @@ export function useCalendar() {
 
   const handleDeleteAppointment = async (appointmentId: string) => {
     try {
-      // Convert string to number for the API
       const numericId = parseInt(appointmentId);
       if (isNaN(numericId)) {
         throw new Error("Invalid appointment ID");
@@ -155,7 +144,6 @@ export function useCalendar() {
       setSelectedAppointment(null);
       toast.success(t('appointment.deleted'));
       
-      // Reload appointments to ensure consistency
       await loadAppointments();
       
     } catch (error) {
@@ -164,10 +152,8 @@ export function useCalendar() {
     }
   };
 
-  const handleChangeViewMode = useCallback((mode: CalendarViewMode) => {
+  const handleChangeViewMode = useCallback((mode: CalendarViewType) => {
     setViewMode(mode);
-    
-    // Adjust current date to the beginning of appropriate period
     setCurrentDate(getStartOfCurrentPeriod(currentDate, mode));
   }, [currentDate]);
 
@@ -188,6 +174,6 @@ export function useCalendar() {
     handleNewAppointmentAtDate,
     handleDeleteAppointment,
     handleChangeViewMode,
-    loadAppointments // Expose this for other components to trigger refresh
+    loadAppointments
   };
 }

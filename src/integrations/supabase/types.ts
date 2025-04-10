@@ -36,6 +36,8 @@ export type Database = {
           id: string
           is_completed: boolean | null
           license_plate: string | null
+          loaner_car_id: string | null
+          needs_loaner_car: boolean | null
           service_type: string
           updated_at: string | null
           user_id: string
@@ -49,6 +51,8 @@ export type Database = {
           id?: string
           is_completed?: boolean | null
           license_plate?: string | null
+          loaner_car_id?: string | null
+          needs_loaner_car?: boolean | null
           service_type: string
           updated_at?: string | null
           user_id: string
@@ -62,6 +66,8 @@ export type Database = {
           id?: string
           is_completed?: boolean | null
           license_plate?: string | null
+          loaner_car_id?: string | null
+          needs_loaner_car?: boolean | null
           service_type?: string
           updated_at?: string | null
           user_id?: string

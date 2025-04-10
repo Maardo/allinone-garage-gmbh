@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { CalendarHeader } from "@/components/calendar/CalendarHeader";
@@ -7,12 +6,14 @@ import { ServiceTypeLegend } from "@/components/calendar/ServiceTypeLegend";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCalendar } from "@/hooks/useCalendar";
 import { useCustomers } from "@/hooks/useCustomers";
+import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CalendarPage() {
   const isMobile = useIsMobile();
   const { refreshCustomers } = useCustomers();
+  const { refreshData: refreshOverviewData } = useOverviewAppointments();
   const {
     currentDate,
     appointments,
@@ -37,10 +38,13 @@ export default function CalendarPage() {
   useEffect(() => {
     const syncData = async () => {
       await refreshCustomers();
+      
+      // Also refresh overview data when appointments change
+      await refreshOverviewData();
     };
     
     syncData();
-  }, [appointments, refreshCustomers]);
+  }, [appointments, refreshCustomers, refreshOverviewData]);
 
   if (isLoading) {
     return (
@@ -61,8 +65,18 @@ export default function CalendarPage() {
           onPrevMonth={handleNavigatePrev}
           onNextMonth={handleNavigateNext}
           onToday={goToToday}
-          onAddAppointment={handleAddAppointment}
-          onDeleteAppointment={handleDeleteAppointment}
+          onAddAppointment={(appointment) => {
+            handleAddAppointment(appointment).then(() => {
+              // After appointment is added, refresh overview data
+              refreshOverviewData();
+            });
+          }}
+          onDeleteAppointment={(id) => {
+            handleDeleteAppointment(id).then(() => {
+              // After appointment is deleted, refresh overview data
+              refreshOverviewData();
+            });
+          }}
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
           selectedAppointment={selectedAppointment}

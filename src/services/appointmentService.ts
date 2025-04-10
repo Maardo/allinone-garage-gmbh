@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Appointment } from "@/lib/overview/types";
 import { ServiceType } from "@/lib/serviceTypes";
@@ -14,7 +13,9 @@ export const mapDbAppointmentToAppointment = (dbAppointment: any): Appointment =
     isCompleted: dbAppointment.is_completed,
     customerEmail: dbAppointment.customer_email,
     customerName: dbAppointment.customer_name,
-    licensePlate: dbAppointment.license_plate
+    licensePlate: dbAppointment.license_plate,
+    needsLoanerCar: dbAppointment.needs_loaner_car || false,
+    loanerCarId: dbAppointment.loaner_car_id
   };
 };
 
@@ -27,7 +28,9 @@ export const mapAppointmentToDbFormat = (appointment: Appointment) => {
     is_completed: appointment.isCompleted,
     customer_email: appointment.customerEmail,
     customer_name: appointment.customerName,
-    license_plate: appointment.licensePlate
+    license_plate: appointment.licensePlate,
+    needs_loaner_car: appointment.needsLoanerCar || false,
+    loaner_car_id: appointment.loanerCarId
   };
 };
 

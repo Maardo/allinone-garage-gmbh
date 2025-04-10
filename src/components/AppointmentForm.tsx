@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
+import { useEffect } from "react";
 
 interface AppointmentFormProps {
   initialData?: Appointment;
@@ -22,9 +24,15 @@ interface AppointmentFormProps {
 export function AppointmentForm({ initialData, onSubmit, existingAppointments = [] }: AppointmentFormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const { refreshData: refreshOverviewData } = useOverviewAppointments();
   const { formData, handleChange, handleServiceTypeChange, handleDateChange, handleSwitchChange, validateDateAvailability } = useAppointmentForm(initialData);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Refresh overview data when form is mounted
+  useEffect(() => {
+    refreshOverviewData();
+  }, [refreshOverviewData]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Check for overlapping appointments
@@ -37,7 +45,10 @@ export function AppointmentForm({ initialData, onSubmit, existingAppointments = 
       return;
     }
     
-    onSubmit(formData);
+    await onSubmit(formData);
+    
+    // Refresh overview data after submission
+    refreshOverviewData();
   };
 
   return (

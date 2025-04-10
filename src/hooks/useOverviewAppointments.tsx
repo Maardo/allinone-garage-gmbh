@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Appointment, GroupedAppointments, Stats, TimeViewType } from '@/lib/overview/types';
 import { useNotificationService } from '@/lib/overview/notificationService';
 import { useAppointmentFiltering } from '@/lib/overview/filterService';
@@ -25,33 +25,36 @@ export function useOverviewAppointments() {
     completedJobs: 0
   });
   const [initialAppointments, setInitialAppointments] = useState<Appointment[]>([]);
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
   
   // Fetch data from Supabase
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setIsLoading(true);
-        const [appointmentsData, statsData] = await Promise.all([
-          fetchAppointments(),
-          fetchStats()
-        ]);
-        
-        setInitialAppointments(appointmentsData);
-        setInitialStats(statsData);
-      } catch (error) {
-        console.error('Error loading data:', error);
-        toast({
-          title: t('common.error'),
-          description: t('overview.errorLoadingData'),
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadData();
+  const loadData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const [appointmentsData, statsData] = await Promise.all([
+        fetchAppointments(),
+        fetchStats()
+      ]);
+      
+      setInitialAppointments(appointmentsData);
+      setInitialStats(statsData);
+      setLastRefreshed(new Date());
+    } catch (error) {
+      console.error('Error loading data:', error);
+      toast({
+        title: t('common.error'),
+        description: t('overview.errorLoadingData'),
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }, [toast, t]);
+  
+  // Initial data loading
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
   
   const {
     timeView,
@@ -86,6 +89,32 @@ export function useOverviewAppointments() {
     
     updateDatabase();
   }, [stats, upcomingJobs, isLoading]);
+  
+  // Refresh data every 30 seconds or when returning to the page
+  useEffect(() => {
+    const refreshInterval = setInterval(() => {
+      loadData();
+    }, 30000); // 30 seconds
+    
+    // Refresh when tab becomes visible again
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        // Only refresh if it's been more than 10 seconds since last refresh
+        const now = new Date();
+        const timeSinceLastRefresh = now.getTime() - lastRefreshed.getTime();
+        if (timeSinceLastRefresh > 10000) { // 10 seconds
+          loadData();
+        }
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      clearInterval(refreshInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [loadData, lastRefreshed]);
   
   const {
     selectedAppointment,
@@ -166,6 +195,7 @@ export function useOverviewAppointments() {
     saveStateBeforeChange,
     undoLastChange,
     isLoading,
+    refreshData: loadData,
     EmailConfirmationDialog: EmailConfirmationDialogComponent
   };
 }

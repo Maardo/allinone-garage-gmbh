@@ -1,4 +1,3 @@
-
 import { Car } from "lucide-react";
 import { format } from "date-fns";
 import { Layout } from "@/components/Layout";
@@ -16,12 +15,15 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
+import { useEffect } from "react";
 
 export default function LoanerCarsPage() {
   const { t } = useLanguage();
   const { currentUser } = useAuth();
   const isMobile = useIsMobile();
   const isAdmin = currentUser?.role === 'admin';
+  const { refreshData: refreshOverviewData } = useOverviewAppointments();
   
   const {
     loanerCars,
@@ -47,8 +49,23 @@ export default function LoanerCarsPage() {
     handleDeleteCar,
     handleUpdateDates,
     handleAssignToAppointment,
-    isLoading
+    isLoading,
+    loadLoanerCars
   } = useLoanerCars();
+
+  useEffect(() => {
+    refreshOverviewData();
+  }, [loanerCars, refreshOverviewData]);
+
+  const handleAssignToAppointmentWithRefresh = async (appointmentId: string) => {
+    await handleAssignToAppointment(appointmentId);
+    await refreshOverviewData();
+  };
+
+  const handleReturnWithRefresh = async (carId: string) => {
+    await handleReturn(carId);
+    await refreshOverviewData();
+  };
 
   if (isLoading) {
     return (
@@ -111,7 +128,6 @@ export default function LoanerCarsPage() {
           )}
         </div>
 
-        {/* Tabs for Available Cars and Loaner Car Needs */}
         <Tabs defaultValue="availableCars" className="w-full">
           <TabsList className="mb-4">
             <TabsTrigger value="availableCars" className="flex-grow">
@@ -125,7 +141,6 @@ export default function LoanerCarsPage() {
           </TabsList>
 
           <TabsContent value="availableCars" className="mt-0">
-            {/* Available Cars Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {loanerCars.map((car) => (
                 <LoanerCarCard
@@ -141,7 +156,7 @@ export default function LoanerCarsPage() {
                     });
                     setIsAssignDialogOpen(true);
                   }}
-                  onReturn={handleReturn}
+                  onReturn={handleReturnWithRefresh}
                   onEdit={(car) => {
                     setSelectedCar(car);
                     setIsEditDialogOpen(true);
@@ -190,7 +205,6 @@ export default function LoanerCarsPage() {
           </TabsContent>
 
           <TabsContent value="loanerNeeds" className="mt-0">
-            {/* Loaner Car Needs Section */}
             <div className="bg-blue-50/50 border rounded-md p-4">
               <h3 className="text-lg font-medium mb-3 flex items-center text-blue-800">
                 <Car className="h-5 w-5 mr-2 text-blue-600" />
@@ -206,7 +220,7 @@ export default function LoanerCarsPage() {
               
               <LoanerCarRequests 
                 appointments={appointmentsNeedingCars} 
-                onAssign={handleAssignToAppointment} 
+                onAssign={handleAssignToAppointmentWithRefresh} 
               />
               
               {appointmentsNeedingCars.length === 0 && (
@@ -220,7 +234,6 @@ export default function LoanerCarsPage() {
         </Tabs>
       </div>
 
-      {/* Dialogs */}
       <AssignDialog 
         isOpen={isAssignDialogOpen && selectedCar !== null}
         selectedCar={selectedCar}
