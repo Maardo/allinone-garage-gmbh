@@ -21,5 +21,8 @@ export const dashboard = {
   noAppointments: 'No appointments scheduled for today',
   schedule: 'Schedule',
   paymentRecords: 'Payment Records',
-  commonTasks: 'Common tasks and shortcuts'
+  commonTasks: 'Common tasks and shortcuts',
+  weekAppointments: 'This Week\'s Appointments',
+  totalCustomers: 'Total Customers',
+  completedJobs: 'Completed Jobs'
 };

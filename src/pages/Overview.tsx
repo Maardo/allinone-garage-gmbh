@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useLanguage } from "@/context/LanguageContext";
 import { sv, de, enUS } from "date-fns/locale";
@@ -11,6 +11,8 @@ import { useChartData } from "@/services/chartDataService";
 import { groupAppointmentsByDate } from "@/utils/appointmentUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCustomers } from "@/hooks/useCustomers";
+import { useLoanerCars } from "@/components/loaner-cars/useLoanerCars";
+import { useAvailableCarOperations } from "@/components/loaner-cars/hooks/useAvailableCarOperations";
 
 const dateLocales = {
   sv: sv,
@@ -20,7 +22,10 @@ const dateLocales = {
 
 export default function Overview() {
   const { language } = useLanguage();
-  const { refreshCustomers } = useCustomers();
+  const { refreshCustomers, customers } = useCustomers();
+  const { loanerCars } = useLoanerCars();
+  const { getAvailableLoanerCount } = useAvailableCarOperations(loanerCars);
+  
   const { 
     timeView, 
     setTimeView, 
@@ -29,21 +34,40 @@ export default function Overview() {
     upcomingJobs,
     handleMarkComplete,
     isLoading,
-    EmailConfirmationDialog
+    EmailConfirmationDialog,
+    refreshData
   } = useOverviewAppointments();
+  
   const { chartData } = useChartData(upcomingJobs);
   
   const locale = dateLocales[language as keyof typeof dateLocales] || enUS;
   const jobsByDate = groupAppointmentsByDate(filteredJobs);
 
+  // Enhanced stats with real-time data
+  const enhancedStats = {
+    todayAppointments: stats.todayAppointments,
+    weekAppointments: stats.weekAppointments,
+    totalCustomers: customers.length,
+    completedJobs: stats.completedJobs,
+    availableLoanerCars: getAvailableLoanerCount()
+  };
+
   // Ensure data is synchronized
   useEffect(() => {
     const syncData = async () => {
-      await refreshCustomers();
+      await Promise.all([
+        refreshCustomers(),
+        refreshData()
+      ]);
     };
     
     syncData();
-  }, [upcomingJobs, refreshCustomers]);
+    
+    // Set up an interval to refresh data every minute
+    const intervalId = setInterval(syncData, 60000);
+    
+    return () => clearInterval(intervalId);
+  }, [refreshCustomers, refreshData]);
 
   if (isLoading) {
     return (
@@ -66,7 +90,7 @@ export default function Overview() {
 
   return (
     <Layout>
-      <StatsCards stats={stats} />
+      <StatsCards stats={enhancedStats} />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <UpcomingAppointments 

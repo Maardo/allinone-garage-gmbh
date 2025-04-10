@@ -21,5 +21,8 @@ export const dashboard = {
   noAppointments: 'Inga bokningar schemalagda för idag',
   schedule: 'Schema',
   paymentRecords: 'Betalningshistorik',
-  commonTasks: 'Vanliga uppgifter och genvägar'
+  commonTasks: 'Vanliga uppgifter och genvägar',
+  weekAppointments: 'Veckans Bokningar',
+  totalCustomers: 'Totala Kunder',
+  completedJobs: 'Utförda Jobb'
 };

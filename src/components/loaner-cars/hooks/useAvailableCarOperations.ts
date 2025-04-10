@@ -7,7 +7,13 @@ export function useAvailableCarOperations(loanerCars: LoanerCar[]) {
     return loanerCars.filter(car => car.isAvailable);
   };
 
+  // Get count of available loaner cars (for dashboard)
+  const getAvailableLoanerCount = () => {
+    return loanerCars.filter(car => car.isAvailable).length;
+  };
+
   return {
-    getAvailableLoanerCars
+    getAvailableLoanerCars,
+    getAvailableLoanerCount
   };
 }

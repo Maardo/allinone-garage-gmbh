@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Users, CheckCircle } from "lucide-react";
+import { Calendar, Users, CheckCircle, Car } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface StatsCardsProps {
@@ -9,6 +9,7 @@ interface StatsCardsProps {
     weekAppointments: number;
     totalCustomers: number;
     completedJobs: number;
+    availableLoanerCars?: number;
   };
 }
 
@@ -19,7 +20,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <Card className="bg-blue-50 border-blue-100">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-blue-700">{t('overview.todayAppointments')}</CardTitle>
+          <CardTitle className="text-sm font-medium text-blue-700">{t('dashboard.todayAppointments')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex justify-between items-center">
@@ -31,7 +32,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
       
       <Card className="bg-green-50 border-green-100">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-green-700">{t('overview.weekAppointments')}</CardTitle>
+          <CardTitle className="text-sm font-medium text-green-700">{t('dashboard.weekAppointments')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex justify-between items-center">
@@ -43,7 +44,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
       
       <Card className="bg-purple-50 border-purple-100">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-purple-700">{t('overview.totalCustomers')}</CardTitle>
+          <CardTitle className="text-sm font-medium text-purple-700">{t('dashboard.totalCustomers')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex justify-between items-center">
@@ -55,7 +56,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
       
       <Card className="bg-amber-50 border-amber-100">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-amber-700">{t('overview.completedJobs')}</CardTitle>
+          <CardTitle className="text-sm font-medium text-amber-700">{t('dashboard.completedJobs')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex justify-between items-center">
@@ -64,6 +65,20 @@ export function StatsCards({ stats }: StatsCardsProps) {
           </div>
         </CardContent>
       </Card>
+
+      {stats.availableLoanerCars !== undefined && (
+        <Card className="bg-cyan-50 border-cyan-100">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-cyan-700">{t('dashboard.availableLoanerCars')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-between items-center">
+              <Car className="h-8 w-8 text-cyan-500" />
+              <span className="text-3xl font-bold text-cyan-700">{stats.availableLoanerCars}</span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
