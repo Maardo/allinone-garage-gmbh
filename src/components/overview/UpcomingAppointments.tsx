@@ -3,10 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 import { format } from "date-fns";
 import { sv, de, enUS } from "date-fns/locale";
-import { SERVICE_TYPES, ServiceType } from "@/lib/serviceTypes";
+import { useServiceTypes } from "@/hooks/useServiceTypes";
 import { Button } from "@/components/ui/button";
 import { Appointment, GroupedAppointments, TimeViewType } from "@/lib/overview/types";
-import { Check } from "lucide-react";
 
 type Locale = typeof sv | typeof de | typeof enUS;
 
@@ -28,6 +27,7 @@ export function UpcomingAppointments({
   onMarkComplete
 }: UpcomingAppointmentsProps) {
   const { t } = useLanguage();
+  const { serviceTypes } = useServiceTypes();
   
   // Helper function to get the translation key for a service type
   const getServiceTypeTranslationKey = (typeId: number): string => {
@@ -83,41 +83,46 @@ export function UpcomingAppointments({
                   {format(new Date(date), "EEEE, d MMMM", { locale })}
                 </h3>
                 <div className="space-y-2">
-                  {jobsByDate[date].map((job) => (
-                    <div
-                      key={job.id}
-                      className={`flex items-center p-2 rounded-md ${job.isCompleted ? 'bg-green-50' : 'bg-secondary/30'}`}
-                    >
+                  {jobsByDate[date].map((job) => {
+                    // Get the service type color, default to gray if type not found
+                    const serviceTypeColor = serviceTypes[job.serviceType]?.color || "#64748b";
+                    
+                    return (
                       <div
-                        className="w-2 h-6 rounded-full mr-3"
-                        style={{
-                          backgroundColor: SERVICE_TYPES[job.serviceType].color,
-                        }}
-                      ></div>
-                      <div className="flex-1">
-                        <div className="font-medium">{job.vehicleModel}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {t(getServiceTypeTranslationKey(job.serviceType))}
+                        key={job.id}
+                        className={`flex items-center p-2 rounded-md ${job.isCompleted ? 'bg-green-50' : 'bg-secondary/30'}`}
+                      >
+                        <div
+                          className="w-2 h-6 rounded-full mr-3"
+                          style={{
+                            backgroundColor: serviceTypeColor,
+                          }}
+                        ></div>
+                        <div className="flex-1">
+                          <div className="font-medium">{job.vehicleModel}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {t(getServiceTypeTranslationKey(job.serviceType))}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1 font-semibold">
+                            {job.customerName} {job.licensePlate && `• ${job.licensePlate}`}
+                          </div>
                         </div>
-                        <div className="text-xs text-muted-foreground mt-1 font-semibold">
-                          {job.customerName} {job.licensePlate && `• ${job.licensePlate}`}
+                        {onMarkComplete && !job.isCompleted && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="min-w-0 h-7 px-2 py-0.5 text-xs bg-green-50 border-green-200 text-green-600 hover:text-green-700 hover:bg-green-100 hover:border-green-300"
+                            onClick={() => onMarkComplete(job.id)}
+                          >
+                            {t('overview.markComplete')}
+                          </Button>
+                        )}
+                        <div className="text-sm ml-2">
+                          {format(job.date, "HH:mm")}
                         </div>
                       </div>
-                      {onMarkComplete && !job.isCompleted && (
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="min-w-0 h-7 px-2 py-0.5 text-xs bg-green-50 border-green-200 text-green-600 hover:text-green-700 hover:bg-green-100 hover:border-green-300"
-                          onClick={() => onMarkComplete(job.id)}
-                        >
-                          {t('overview.markComplete')}
-                        </Button>
-                      )}
-                      <div className="text-sm ml-2">
-                        {format(job.date, "HH:mm")}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))}

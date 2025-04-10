@@ -2,7 +2,7 @@
 import { useLanguage } from "@/context/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { SERVICE_TYPES } from "@/lib/serviceTypes";
+import { useServiceTypes } from "@/hooks/useServiceTypes";
 import {
   ChartContainer,
   ChartTooltip,
@@ -19,9 +19,21 @@ interface AppointmentsChartProps {
 
 export function AppointmentsChart({ chartData }: AppointmentsChartProps) {
   const { t } = useLanguage();
+  const { serviceTypes } = useServiceTypes();
   
   // Calculate the total number of appointments
   const totalAppointments = chartData.reduce((sum, item) => sum + item.value, 0);
+
+  // Create config from service types
+  const createChartConfig = () => {
+    const config: Record<string, { color: string }> = {};
+    
+    Object.values(serviceTypes).forEach(type => {
+      config[`type${type.id}`] = { color: type.color };
+    });
+    
+    return config;
+  };
 
   return (
     <Card>
@@ -33,15 +45,7 @@ export function AppointmentsChart({ chartData }: AppointmentsChartProps) {
       </CardHeader>
       <CardContent>
         <div className="h-[300px]">
-          <ChartContainer 
-            config={{
-              maintenance: { color: SERVICE_TYPES[1].color },
-              repair: { color: SERVICE_TYPES[2].color },
-              inspection: { color: SERVICE_TYPES[3].color },
-              tireChange: { color: SERVICE_TYPES[4].color },
-              other: { color: SERVICE_TYPES[5].color }
-            }}
-          >
+          <ChartContainer config={createChartConfig()}>
             <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />

@@ -1,10 +1,13 @@
 
-import { SERVICE_TYPES } from "@/lib/serviceTypes";
+import { useServiceTypes } from "@/hooks/useServiceTypes";
 import { useLanguage } from "@/context/LanguageContext";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Skeleton } from "@/components/ui/skeleton";
+import { COLOR_OPTIONS } from "@/lib/serviceTypes";
 
 export function ServiceTypeLegend() {
   const { t } = useLanguage();
+  const { serviceTypes, isLoading } = useServiceTypes();
   
   // Helper function to get the translation key for a service type
   const getServiceTypeTranslationKey = (typeId: number): string => {
@@ -18,12 +21,26 @@ export function ServiceTypeLegend() {
       default: return 'serviceTypes.other';
     }
   };
+
+  // Find color name from hex value
+  const getColorName = (hexColor: string): string => {
+    const colorOption = COLOR_OPTIONS.find(option => option.value === hexColor);
+    return colorOption ? `serviceTypes.${colorOption.name}` : '';
+  };
+  
+  if (isLoading) {
+    return (
+      <div className="mt-3 p-3 bg-card rounded-lg shadow-sm">
+        <Skeleton className="h-16 w-full" />
+      </div>
+    );
+  }
   
   return (
     <div className="mt-3 p-3 bg-card rounded-lg shadow-sm">
       <h3 className="font-medium mb-1.5 text-xs">{t('appointment.serviceType')}</h3>
       <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5">
-        {Object.values(SERVICE_TYPES).map((type) => (
+        {Object.values(serviceTypes).map((type) => (
           <div 
             key={type.id} 
             className="flex items-center p-1 rounded-md text-xs"
@@ -38,7 +55,7 @@ export function ServiceTypeLegend() {
                 </TooltipTrigger>
                 <TooltipContent>
                   {/* Use the translation function for the color name */}
-                  <p>{t(`serviceTypes.${type.color.substring(1)}`)}</p>
+                  <p>{t(getColorName(type.color))}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

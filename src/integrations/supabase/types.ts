@@ -174,6 +174,39 @@ export type Database = {
         }
         Relationships: []
       }
+      service_types: {
+        Row: {
+          code: string | null
+          color: string
+          created_at: string
+          description: string | null
+          id: number
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          code?: string | null
+          color: string
+          created_at?: string
+          description?: string | null
+          id: number
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string | null
+          color?: string
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       stats: {
         Row: {
           completed_jobs: number
