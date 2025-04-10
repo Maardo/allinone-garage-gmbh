@@ -25,7 +25,7 @@ export function useCustomers() {
     if (refreshData) {
       try {
         await refreshData();
-        // Don't return a boolean, just return void to match the expected type
+        // Return undefined implicitly instead of boolean to match Promise<void>
       } catch (error) {
         console.error("Error refreshing customer data:", error);
       }
