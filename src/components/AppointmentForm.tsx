@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
 import { useEffect } from "react";
+import { useCustomers } from "@/hooks/useCustomers";
 
 interface AppointmentFormProps {
   initialData?: Appointment;
@@ -25,12 +26,14 @@ export function AppointmentForm({ initialData, onSubmit, existingAppointments = 
   const { t } = useLanguage();
   const { toast } = useToast();
   const { refreshData: refreshOverviewData } = useOverviewAppointments();
+  const { refreshCustomers } = useCustomers();
   const { formData, handleChange, handleServiceTypeChange, handleDateChange, handleSwitchChange, validateDateAvailability } = useAppointmentForm(initialData);
 
-  // Refresh overview data when form is mounted
+  // Refresh data when form is mounted
   useEffect(() => {
     refreshOverviewData();
-  }, [refreshOverviewData]);
+    refreshCustomers();
+  }, [refreshOverviewData, refreshCustomers]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,8 +50,9 @@ export function AppointmentForm({ initialData, onSubmit, existingAppointments = 
     
     await onSubmit(formData);
     
-    // Refresh overview data after submission
+    // Refresh overview and customer data after submission
     refreshOverviewData();
+    refreshCustomers();
   };
 
   return (

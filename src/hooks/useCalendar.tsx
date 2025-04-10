@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
 import { customerToOverviewAppointment, overviewToCustomerAppointment } from "@/lib/overview/appointmentConverter";
 import { useCustomers } from "@/hooks/useCustomers";
+import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
 
 export function useCalendar() {
   const { t } = useLanguage();
@@ -28,7 +29,8 @@ export function useCalendar() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<CalendarViewMode>(isMobile ? 'week' : 'week');
   const [isLoading, setIsLoading] = useState(true);
-  const { handleAddCustomer, customers } = useCustomers();
+  const { handleAddCustomer, customers, refreshCustomers } = useCustomers();
+  const { refreshData: refreshOverviewData } = useOverviewAppointments();
 
   const loadAppointments = async () => {
     try {
@@ -50,6 +52,7 @@ export function useCalendar() {
 
   useEffect(() => {
     if (isMobile && viewMode === 'month') {
+      // Adjust view mode based on device size
     }
   }, [isMobile, viewMode]);
 
@@ -84,11 +87,21 @@ export function useCalendar() {
           );
           
           if (!existingCustomer) {
-            await handleAddCustomer();
+            await handleAddCustomer({
+              name: appointment.customerName,
+              email: appointment.customerEmail || '',
+              phone: appointment.customerPhone || '',
+              address: appointment.customerAddress || { street: '', zipCode: '', city: '' },
+            });
           }
         }
         
         toast.success(t('appointment.updated'));
+        
+        // Refresh both customers and overview data after updating
+        await refreshCustomers();
+        await refreshOverviewData();
+        
       } else {
         const overviewAppointment = customerToOverviewAppointment(appointment);
         const newOverviewAppointment = await createAppointmentApi(overviewAppointment);
@@ -102,11 +115,20 @@ export function useCalendar() {
           );
           
           if (!existingCustomer) {
-            await handleAddCustomer();
+            await handleAddCustomer({
+              name: appointment.customerName,
+              email: appointment.customerEmail || '',
+              phone: appointment.customerPhone || '',
+              address: appointment.customerAddress || { street: '', zipCode: '', city: '' },
+            });
           }
         }
         
         toast.success(t('appointment.created'));
+        
+        // Refresh both customers and overview data after creation
+        await refreshCustomers();
+        await refreshOverviewData();
       }
       
       setIsDialogOpen(false);
@@ -114,12 +136,12 @@ export function useCalendar() {
       
       await loadAppointments();
       
+      return true;
     } catch (error) {
       console.error("Error saving appointment:", error);
       toast.error(t('common.error'));
+      return false;
     }
-    
-    return true;
   };
 
   const handleSelectAppointment = (appointment: CustomerAppointment) => {
@@ -144,6 +166,10 @@ export function useCalendar() {
       setIsDialogOpen(false);
       setSelectedAppointment(null);
       toast.success(t('appointment.deleted'));
+      
+      // Refresh both customers and overview data after deletion
+      await refreshCustomers();
+      await refreshOverviewData();
       
       await loadAppointments();
       

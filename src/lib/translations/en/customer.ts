@@ -39,5 +39,7 @@ export const customer = {
   notProvided: 'Not provided',
   noNotes: 'No notes available',
   addedVehicles: 'Added Vehicles',
-  addVehicle: 'Add Vehicle'
+  addVehicle: 'Add Vehicle',
+  search: 'Search for existing customer',
+  searchExisting: 'Search existing customers'
 };

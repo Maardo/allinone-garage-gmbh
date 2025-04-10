@@ -39,5 +39,7 @@ export const customer = {
   notProvided: 'Ej angiven',
   noNotes: 'Inga anteckningar tillgängliga',
   addedVehicles: 'Tillagda Fordon',
-  addVehicle: 'Lägg till Fordon'
+  addVehicle: 'Lägg till Fordon',
+  search: 'Sök efter befintlig kund',
+  searchExisting: 'Sök bland befintliga kunder'
 };

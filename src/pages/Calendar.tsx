@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { CalendarHeader } from "@/components/calendar/CalendarHeader";
@@ -34,12 +35,10 @@ export default function CalendarPage() {
     loadAppointments
   } = useCalendar();
 
-  // Ensure data is synchronized by refreshing customers when appointments change
+  // Ensure data is synchronized
   useEffect(() => {
     const syncData = async () => {
       await refreshCustomers();
-      
-      // Also refresh overview data when appointments change
       await refreshOverviewData();
     };
     
@@ -65,17 +64,19 @@ export default function CalendarPage() {
           onPrevMonth={handleNavigatePrev}
           onNextMonth={handleNavigateNext}
           onToday={goToToday}
-          onAddAppointment={(appointment) => {
-            handleAddAppointment(appointment).then(() => {
-              // After appointment is added, refresh overview data
+          onAddAppointment={async (appointment) => {
+            const success = await handleAddAppointment(appointment);
+            if (success) {
+              // After appointment is added, refresh overview data and customers
               refreshOverviewData();
-            });
+              refreshCustomers();
+            }
+            return success;
           }}
-          onDeleteAppointment={(id) => {
-            handleDeleteAppointment(id).then(() => {
-              // After appointment is deleted, refresh overview data
-              refreshOverviewData();
-            });
+          onDeleteAppointment={async (id) => {
+            await handleDeleteAppointment(id);
+            // After appointment is deleted, refresh overview data
+            refreshOverviewData();
           }}
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
