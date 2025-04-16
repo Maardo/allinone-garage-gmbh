@@ -18,7 +18,7 @@ interface EditLoanerDateDialogProps {
   isOpen: boolean;
   selectedCar: LoanerCar | null;
   onOpenChange: (open: boolean) => void;
-  onSave: (startDate: string, returnDate: string) => void;
+  onSave: (startDate: string, returnDate: string) => Promise<void>;
 }
 
 export function EditLoanerDateDialog({
