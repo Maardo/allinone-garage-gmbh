@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LoanerCar } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -42,15 +42,17 @@ export function EditLoanerDateDialog({
   );
 
   // Update dates when the selected car changes
-  if (selectedCar && isOpen) {
-    if (selectedCar.assignedFrom && format(new Date(selectedCar.assignedFrom), "yyyy-MM-dd") !== startDate) {
-      setStartDate(format(new Date(selectedCar.assignedFrom), "yyyy-MM-dd"));
+  useEffect(() => {
+    if (selectedCar && isOpen) {
+      if (selectedCar.assignedFrom) {
+        setStartDate(format(new Date(selectedCar.assignedFrom), "yyyy-MM-dd"));
+      }
+      
+      if (selectedCar.assignedUntil) {
+        setReturnDate(format(new Date(selectedCar.assignedUntil), "yyyy-MM-dd"));
+      }
     }
-    
-    if (selectedCar.assignedUntil && format(new Date(selectedCar.assignedUntil), "yyyy-MM-dd") !== returnDate) {
-      setReturnDate(format(new Date(selectedCar.assignedUntil), "yyyy-MM-dd"));
-    }
-  }
+  }, [selectedCar, isOpen]);
   
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>

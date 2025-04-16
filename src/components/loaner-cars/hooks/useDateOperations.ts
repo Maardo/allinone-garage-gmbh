@@ -12,8 +12,8 @@ export function useDateOperations(
   const { t } = useLanguage();
   const { toast } = useToast();
 
-  const handleUpdateDates = async (carId: string, startDate: string, returnDate: string) => {
-    if (!carId) return;
+  const handleUpdateDates = async (carId: string, startDate: string, returnDate: string): Promise<void> => {
+    if (!carId) return Promise.resolve();
     
     const updatedCars = loanerCars.map(car => {
       if (car.id === carId) {

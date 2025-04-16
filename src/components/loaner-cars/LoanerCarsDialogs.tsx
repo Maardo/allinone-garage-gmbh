@@ -103,12 +103,10 @@ export function LoanerCarsDialogs({
         selectedCar={selectedCar}
         onOpenChange={(open) => setEditDatesDialogOpen(open)}
         onSave={async (startDate, returnDate) => {
-          if (selectedCar) {
-            await onUpdateDates(startDate, returnDate);
-            setEditDatesDialogOpen(false);
-            refreshOverviewData();
-            loadAppointments();
-          }
+          await onUpdateDates(startDate, returnDate);
+          setEditDatesDialogOpen(false);
+          await refreshOverviewData();
+          await loadAppointments();
         }}
       />
     </>
