@@ -60,27 +60,48 @@ export default function LoanerCarsPage() {
     appointmentsNeedingCars.length > 0 ? "loanerNeeds" : "availableCars"
   );
 
+  // Load data on component mount
   useEffect(() => {
-    // Refresh data when component mounts
-    refreshOverviewData();
-    loadAppointments();
+    const loadAllData = async () => {
+      await refreshOverviewData();
+      await loadAppointments();
+      await loadLoanerCars();
+    };
+    
+    loadAllData();
     
     // Set active tab based on appointments needing cars
     if (appointmentsNeedingCars.length > 0) {
       setActiveTab("loanerNeeds");
     }
-  }, [appointmentsNeedingCars.length, refreshOverviewData, loadAppointments]);
+  }, [refreshOverviewData, loadAppointments, loadLoanerCars]);
+
+  // Reload data when tab changes
+  useEffect(() => {
+    refreshOverviewData();
+    loadAppointments();
+  }, [activeTab, refreshOverviewData, loadAppointments]);
 
   const handleAssignToAppointmentWithRefresh = async (appointmentId: string) => {
-    await handleAssignToAppointment(appointmentId);
-    await refreshOverviewData();
-    await loadAppointments();
+    try {
+      await handleAssignToAppointment(appointmentId);
+      await refreshOverviewData();
+      await loadAppointments();
+      await loadLoanerCars();
+    } catch (error) {
+      console.error("Error in handleAssignToAppointmentWithRefresh:", error);
+    }
   };
 
   const handleReturnWithRefresh = async (carId: string) => {
-    await handleReturn(carId);
-    await refreshOverviewData();
-    await loadAppointments();
+    try {
+      await handleReturn(carId);
+      await refreshOverviewData();
+      await loadAppointments();
+      await loadLoanerCars();
+    } catch (error) {
+      console.error("Error in handleReturnWithRefresh:", error);
+    }
   };
 
   const handleAddNewCar = () => {
@@ -169,10 +190,15 @@ export default function LoanerCarsPage() {
         selectedCar={selectedCar}
         onOpenChange={(open) => setIsAssignDialogOpen(open)}
         onAssign={async () => {
-          await handleAssign();
-          setIsAssignDialogOpen(false);
-          refreshOverviewData();
-          loadAppointments();
+          try {
+            await handleAssign();
+            setIsAssignDialogOpen(false);
+            await refreshOverviewData();
+            await loadAppointments();
+            await loadLoanerCars();
+          } catch (error) {
+            console.error("Error in AssignDialog onAssign:", error);
+          }
         }}
         assignData={assignData}
         setAssignData={setAssignData}
@@ -183,12 +209,17 @@ export default function LoanerCarsPage() {
         isNewCar={!selectedCar}
         onOpenChange={(open) => setIsEditDialogOpen(open)}
         onSave={async () => {
-          if (selectedCar) {
-            await handleUpdateCar();
-          } else {
-            await handleAddCar();
+          try {
+            if (selectedCar) {
+              await handleUpdateCar();
+            } else {
+              await handleAddCar();
+            }
+            await refreshOverviewData();
+            await loadLoanerCars();
+          } catch (error) {
+            console.error("Error in EditCarDialog onSave:", error);
           }
-          refreshOverviewData();
         }}
         car={selectedCar || newCar}
         setCar={selectedCar ? setSelectedCar : setNewCar}
@@ -199,8 +230,13 @@ export default function LoanerCarsPage() {
         selectedCar={selectedCar}
         onOpenChange={(open) => setIsDeleteDialogOpen(open)}
         onDelete={async () => {
-          await handleDeleteCar();
-          refreshOverviewData();
+          try {
+            await handleDeleteCar();
+            await refreshOverviewData();
+            await loadLoanerCars();
+          } catch (error) {
+            console.error("Error in DeleteCarDialog onDelete:", error);
+          }
         }}
       />
       
@@ -209,11 +245,16 @@ export default function LoanerCarsPage() {
         selectedCar={selectedCar}
         onOpenChange={(open) => setIsEditDatesDialogOpen(open)}
         onSave={async (startDate, returnDate) => {
-          if (selectedCar) {
-            await handleUpdateDates(selectedCar.id, startDate, returnDate);
-            setIsEditDatesDialogOpen(false);
-            refreshOverviewData();
-            loadAppointments();
+          try {
+            if (selectedCar) {
+              await handleUpdateDates(selectedCar.id, startDate, returnDate);
+              setIsEditDatesDialogOpen(false);
+              await refreshOverviewData();
+              await loadAppointments();
+              await loadLoanerCars();
+            }
+          } catch (error) {
+            console.error("Error in EditLoanerDateDialog onSave:", error);
           }
         }}
       />

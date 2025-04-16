@@ -1,7 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { LoanerCar } from "@/lib/types";
-import { useAuth } from "@/context/AuthContext";
 
 export async function fetchLoanerCarsFromDb(userId: string): Promise<LoanerCar[]> {
   try {
@@ -58,6 +57,14 @@ export async function addLoanerCarToDb(car: Partial<LoanerCar>, userId: string):
 
 export async function updateLoanerCarInDb(car: LoanerCar): Promise<boolean> {
   try {
+    // Validate the appointmentId if it exists (must be UUID or null)
+    const appointmentId = car.appointmentId || null;
+    
+    console.log("Updating loaner car with data:", {
+      id: car.id,
+      appointmentId: appointmentId
+    });
+    
     // Convert Date objects to ISO strings for Supabase
     const { error } = await supabase
       .from('loaner_cars')
@@ -68,7 +75,7 @@ export async function updateLoanerCarInDb(car: LoanerCar): Promise<boolean> {
         assigned_to: car.assignedTo,
         assigned_until: car.assignedUntil ? car.assignedUntil.toISOString() : null,
         assigned_from: car.assignedFrom ? car.assignedFrom.toISOString() : null,
-        appointment_id: car.appointmentId
+        appointment_id: appointmentId
       })
       .eq('id', car.id);
 
