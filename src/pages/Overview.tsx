@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useLanguage } from "@/context/LanguageContext";
@@ -23,8 +22,6 @@ const dateLocales = {
 export default function Overview() {
   const { language } = useLanguage();
   const { refreshCustomers, customers } = useCustomers();
-  const { loanerCars } = useLoanerCars();
-  const { getAvailableLoanerCount } = useAvailableCarOperations(loanerCars);
   
   const { 
     timeView, 
@@ -43,13 +40,12 @@ export default function Overview() {
   const locale = dateLocales[language as keyof typeof dateLocales] || enUS;
   const jobsByDate = groupAppointmentsByDate(filteredJobs);
 
-  // Enhanced stats with real-time data
+  // Simplified stats without loaner cars
   const enhancedStats = {
     todayAppointments: stats.todayAppointments,
     weekAppointments: stats.weekAppointments,
     totalCustomers: customers.length,
     completedJobs: stats.completedJobs,
-    availableLoanerCars: getAvailableLoanerCount()
   };
 
   // Ensure data is synchronized
