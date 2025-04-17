@@ -3,7 +3,7 @@ import { Appointment, Customer } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCustomers } from "@/hooks/useCustomers";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,37 +17,30 @@ interface CustomerDetailsProps {
 
 export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps) {
   const { t } = useLanguage();
-  const { customers, refreshCustomers } = useCustomers();
+  const { customers } = useCustomers();
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
-  
-  // Fetch the latest customer data when component mounts
-  useEffect(() => {
-    refreshCustomers();
-  }, [refreshCustomers]);
 
   // Handle selecting a customer from search results
   const handleSelectCustomer = (customer: Customer) => {
-    // Create an artificial change event for each customer field
+    // Create artificial change events for each customer field
     const createChangeEvent = (name: string, value: string) => ({
-      target: {
-        name,
-        value
-      }
+      target: { name, value }
     }) as React.ChangeEvent<HTMLInputElement>;
     
     // Update customer fields
     handleChange(createChangeEvent("customerName", customer.name));
-    handleChange(createChangeEvent("customerPhone", customer.phone));
-    handleChange(createChangeEvent("customerEmail", customer.email));
+    handleChange(createChangeEvent("customerEmail", customer.email || ""));
+    handleChange(createChangeEvent("customerPhone", customer.phone || ""));
     
     // Update address fields
     if (customer.address) {
-      handleChange(createChangeEvent("customerAddress.street", customer.address.street));
-      handleChange(createChangeEvent("customerAddress.zipCode", customer.address.zipCode));
-      handleChange(createChangeEvent("customerAddress.city", customer.address.city));
+      handleChange(createChangeEvent("customerAddress.street", customer.address.street || ""));
+      handleChange(createChangeEvent("customerAddress.zipCode", customer.address.zipCode || ""));
+      handleChange(createChangeEvent("customerAddress.city", customer.address.city || ""));
     }
     
+    setSearchTerm(customer.name);
     setOpen(false);
   };
 
@@ -77,14 +70,14 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
                     <CommandItem
                       key={customer.id}
                       value={customer.name}
-                      onSelect={() => {
-                        handleSelectCustomer(customer);
-                        setSearchTerm(customer.name);
-                      }}
+                      onSelect={() => handleSelectCustomer(customer)}
+                      className="cursor-pointer"
                     >
                       <div className="flex flex-col">
-                        <span>{customer.name}</span>
-                        <span className="text-xs text-muted-foreground">{customer.email} • {customer.phone}</span>
+                        <span className="font-medium">{customer.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {customer.email} • {customer.phone}
+                        </span>
                       </div>
                     </CommandItem>
                   ))}
@@ -112,7 +105,7 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
           <Input
             id="customerPhone"
             name="customerPhone"
-            value={formData.customerPhone}
+            value={formData.customerPhone || ""}
             onChange={handleChange}
             required
           />
@@ -125,7 +118,7 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
           id="customerEmail"
           name="customerEmail"
           type="email"
-          value={formData.customerEmail}
+          value={formData.customerEmail || ""}
           onChange={handleChange}
         />
       </div>
@@ -135,7 +128,7 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
         <Input
           id="customerAddress.street"
           name="customerAddress.street"
-          value={formData.customerAddress.street}
+          value={formData.customerAddress?.street || ""}
           onChange={handleChange}
           placeholder={t('appointment.street')}
         />
@@ -147,7 +140,7 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
           <Input
             id="customerAddress.zipCode"
             name="customerAddress.zipCode"
-            value={formData.customerAddress.zipCode}
+            value={formData.customerAddress?.zipCode || ""}
             onChange={handleChange}
           />
         </div>
@@ -157,7 +150,7 @@ export function CustomerDetails({ formData, handleChange }: CustomerDetailsProps
           <Input
             id="customerAddress.city"
             name="customerAddress.city"
-            value={formData.customerAddress.city}
+            value={formData.customerAddress?.city || ""}
             onChange={handleChange}
           />
         </div>
