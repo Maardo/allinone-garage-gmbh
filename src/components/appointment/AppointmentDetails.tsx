@@ -30,7 +30,7 @@ export function AppointmentDetails({
   const {
     selectedCustomer,
     handleSelectCustomer,
-    customers
+    customers = [] // Ensure customers is initialized with a default empty array
   } = useCustomerSelection(formData, handleChange);
 
   return (
@@ -55,7 +55,7 @@ export function AppointmentDetails({
               <CommandInput placeholder={t('customer.searchPlaceholder')} />
               <CommandEmpty>{t('customer.noResults')}</CommandEmpty>
               <CommandGroup>
-                {customers.map((customer) => (
+                {Array.isArray(customers) && customers.map((customer) => (
                   <CommandItem
                     key={customer.id}
                     value={customer.name}

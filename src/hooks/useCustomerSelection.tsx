@@ -4,10 +4,12 @@ import { Customer, Vehicle, Appointment } from '@/lib/types';
 import { useCustomers } from './useCustomers';
 
 export function useCustomerSelection(formData: Appointment, handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void) {
-  const { customers } = useCustomers();
+  const { customers = [] } = useCustomers(); // Ensure customers has a default empty array
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
   const handleSelectCustomer = useCallback((customer: Customer) => {
+    if (!customer) return; // Guard against null/undefined customer
+
     setSelectedCustomer(customer);
 
     // Create synthetic change events for each field
@@ -16,11 +18,11 @@ export function useCustomerSelection(formData: Appointment, handleChange: (e: Re
     }) as React.ChangeEvent<HTMLInputElement>;
 
     // Update customer details
-    handleChange(createChangeEvent("customerName", customer.name));
+    handleChange(createChangeEvent("customerName", customer.name || ""));
     handleChange(createChangeEvent("customerEmail", customer.email || ""));
     handleChange(createChangeEvent("customerPhone", customer.phone || ""));
     
-    // Update address
+    // Update address if it exists
     if (customer.address) {
       handleChange(createChangeEvent("customerAddress.street", customer.address.street || ""));
       handleChange(createChangeEvent("customerAddress.zipCode", customer.address.zipCode || ""));
@@ -30,11 +32,11 @@ export function useCustomerSelection(formData: Appointment, handleChange: (e: Re
     // If customer has vehicles, use the first one's details
     if (customer.vehicles && customer.vehicles.length > 0) {
       const primaryVehicle = customer.vehicles[0];
-      handleChange(createChangeEvent("vehicleMake", primaryVehicle.make));
-      handleChange(createChangeEvent("vehicleModel", primaryVehicle.model));
-      handleChange(createChangeEvent("vehicleLicense", primaryVehicle.license));
-      handleChange(createChangeEvent("vehicleVin", primaryVehicle.vin));
-      handleChange(createChangeEvent("vehicleCarId", primaryVehicle.carId));
+      handleChange(createChangeEvent("vehicleMake", primaryVehicle.make || ""));
+      handleChange(createChangeEvent("vehicleModel", primaryVehicle.model || ""));
+      handleChange(createChangeEvent("vehicleLicense", primaryVehicle.license || ""));
+      handleChange(createChangeEvent("vehicleVin", primaryVehicle.vin || ""));
+      handleChange(createChangeEvent("vehicleCarId", primaryVehicle.carId || ""));
       handleChange(createChangeEvent("vehicleInfo", `${primaryVehicle.make} ${primaryVehicle.model} (${primaryVehicle.license})`));
     }
   }, [handleChange]);
