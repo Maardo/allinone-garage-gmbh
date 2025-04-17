@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Appointment, ServiceType } from "@/lib/types";
 import { useLanguage } from "@/context/LanguageContext";
 import { Label } from "@/components/ui/label";
