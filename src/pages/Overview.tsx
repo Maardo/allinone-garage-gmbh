@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useLanguage } from "@/context/LanguageContext";
@@ -10,8 +11,7 @@ import { useChartData } from "@/services/chartDataService";
 import { groupAppointmentsByDate } from "@/utils/appointmentUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCustomers } from "@/hooks/useCustomers";
-import { useLoanerCars } from "@/components/loaner-cars/useLoanerCars";
-import { useAvailableCarOperations } from "@/components/loaner-cars/hooks/useAvailableCarOperations";
+import { syncCustomerCount } from "@/services/statsService";
 
 const dateLocales = {
   sv: sv,
@@ -21,7 +21,7 @@ const dateLocales = {
 
 export default function Overview() {
   const { language } = useLanguage();
-  const { refreshCustomers, customers } = useCustomers();
+  const { refreshCustomers } = useCustomers();
   
   const { 
     timeView, 
@@ -40,21 +40,19 @@ export default function Overview() {
   const locale = dateLocales[language as keyof typeof dateLocales] || enUS;
   const jobsByDate = groupAppointmentsByDate(filteredJobs);
 
-  // Simplified stats without loaner cars
-  const enhancedStats = {
-    todayAppointments: stats.todayAppointments,
-    weekAppointments: stats.weekAppointments,
-    totalCustomers: customers.length,
-    completedJobs: stats.completedJobs,
-  };
-
   // Ensure data is synchronized
   useEffect(() => {
     const syncData = async () => {
-      await Promise.all([
-        refreshCustomers(),
-        refreshData()
-      ]);
+      try {
+        // Synchronize in parallel for better performance
+        await Promise.all([
+          refreshCustomers(),
+          refreshData(),
+          syncCustomerCount() // Ensure customer count is accurate
+        ]);
+      } catch (error) {
+        console.error("Error syncing data:", error);
+      }
     };
     
     syncData();
@@ -86,7 +84,7 @@ export default function Overview() {
 
   return (
     <Layout>
-      <StatsCards stats={enhancedStats} />
+      <StatsCards stats={stats} />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <UpcomingAppointments 

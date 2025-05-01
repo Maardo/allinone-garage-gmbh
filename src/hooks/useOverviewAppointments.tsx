@@ -2,7 +2,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { Appointment, GroupedAppointments, Stats, TimeViewType } from '@/lib/overview/types';
 import { updateAppointment } from '@/services/appointmentService';
-import { updateStats } from '@/services/statsService';
+import { updateStats, fetchStats } from '@/services/statsService';
 import { useOverviewState } from './useOverviewState';
 import { useAppointmentCompletion } from './useAppointmentCompletion';
 import { useAppointmentDataLoader } from './useAppointmentDataLoader';
@@ -73,6 +73,22 @@ export function useOverviewAppointments() {
     
     updateDatabase();
   }, [stats, upcomingJobs, isLoading]);
+
+  // Sync stats with the database
+  useEffect(() => {
+    const syncStats = async () => {
+      if (isLoading) return;
+      
+      try {
+        const dbStats = await fetchStats();
+        setStats(dbStats);
+      } catch (error) {
+        console.error("Error syncing stats:", error);
+      }
+    };
+    
+    syncStats();
+  }, [isLoading, setStats]);
 
   // Wrap handleMarkComplete to pass the required parameters
   const handleMarkComplete = useCallback((appointmentId: number) => {

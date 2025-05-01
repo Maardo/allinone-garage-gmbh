@@ -53,6 +53,24 @@ export const importMockDataToDb = async (mockCustomers: Customer[], userId: stri
       }
     }
     
+    // Update stats table with the total number of imported customers
+    const { error: statsError } = await supabase
+      .from('stats')
+      .upsert({
+        user_id: userId,
+        total_customers: mockCustomers.length,
+        today_appointments: 0,
+        week_appointments: 0,
+        completed_jobs: 0
+      }, {
+        onConflict: 'user_id'
+      });
+      
+    if (statsError) {
+      console.error('Error updating stats after mock data import:', statsError);
+      // Continue anyway as customers were added
+    }
+    
     return true;
   } catch (error) {
     console.error('Error importing mock data:', error);

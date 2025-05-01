@@ -7,6 +7,7 @@ import {
   fetchCustomersFromDb,
   importMockDataToDb
 } from "@/lib/customers/customerService";
+import { syncCustomerCount } from "@/services/statsService";
 
 export function useCustomerData() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -34,6 +35,9 @@ export function useCustomerData() {
         console.log(`Found ${dbCustomers.length} customers in database`);
         setCustomers(dbCustomers);
         setPreviousCustomers(dbCustomers);
+        
+        // Synchronize customer count with database
+        await syncCustomerCount();
       } else {
         console.log("No customers found in database, importing mock data");
         // Import mock data to database for this user
@@ -44,6 +48,9 @@ export function useCustomerData() {
           const importedCustomers = await fetchCustomersFromDb(currentUser.id);
           setCustomers(importedCustomers);
           setPreviousCustomers(importedCustomers);
+          
+          // Synchronize customer count with database
+          await syncCustomerCount();
         } else {
           // Fallback to mock data if import fails
           setCustomers(MOCK_CUSTOMERS);

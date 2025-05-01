@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import { Appointment, Stats, TimeViewType } from '@/lib/overview/types';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/LanguageContext';
+import { updateStats } from '@/services/statsService';
 
 export function useOverviewState(initialStats: Stats, initialAppointments: Appointment[]) {
   const { t } = useLanguage();
@@ -34,13 +35,23 @@ export function useOverviewState(initialStats: Stats, initialAppointments: Appoi
   }, [previousUpcomingJobs, previousStats, toast, t]);
 
   // Function to update total customers count
-  const updateTotalCustomers = useCallback((change: number) => {
-    saveStateBeforeChange();
-    setStats(currentStats => ({
-      ...currentStats,
-      totalCustomers: currentStats.totalCustomers + change
-    }));
-  }, [saveStateBeforeChange]);
+  const updateTotalCustomers = useCallback(async (change: number) => {
+    try {
+      saveStateBeforeChange();
+      
+      const newStats = {
+        ...stats,
+        totalCustomers: stats.totalCustomers + change
+      };
+      
+      setStats(newStats);
+      
+      // Persist to database
+      await updateStats(newStats);
+    } catch (error) {
+      console.error('Error updating total customers count:', error);
+    }
+  }, [saveStateBeforeChange, stats]);
 
   return {
     timeView,

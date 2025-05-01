@@ -3,13 +3,13 @@ import { Customer } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
-import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
 import { 
   createCustomer, 
   addCustomerToDb,
   updateCustomerInDb,
   deleteCustomerFromDb
 } from "@/lib/customers/customerService";
+import { syncCustomerCount, fetchStats, updateStats } from "@/services/statsService";
 
 interface UseCustomerActionsProps {
   customers: Customer[];
@@ -35,7 +35,6 @@ export function useCustomerActions({
   const { toast } = useToast();
   const { t } = useLanguage();
   const { currentUser } = useAuth();
-  const { updateTotalCustomers } = useOverviewAppointments();
 
   const saveStateBeforeChange = () => {
     setPreviousCustomers([...customers]);
@@ -48,6 +47,24 @@ export function useCustomerActions({
       description: t('actions.changesReverted'),
     });
     return true;
+  };
+
+  const updateTotalCustomers = async (change: number) => {
+    try {
+      // Get current stats
+      const currentStats = await fetchStats();
+      
+      // Update stats with the new count
+      const updatedStats = {
+        ...currentStats,
+        totalCustomers: currentStats.totalCustomers + change
+      };
+      
+      // Save updated stats
+      await updateStats(updatedStats);
+    } catch (error) {
+      console.error('Error updating total customers count:', error);
+    }
   };
 
   const handleAddCustomer = async () => {
@@ -66,8 +83,6 @@ export function useCustomerActions({
     
     // First update UI for responsiveness
     setCustomers([...customers, customer]);
-    // Update total customers count
-    updateTotalCustomers(1);
     
     // Reset form
     resetNewCustomerForm();
@@ -91,6 +106,9 @@ export function useCustomerActions({
     if (savedCustomer) {
       // Update with saved customer from DB (with proper IDs)
       setCustomers(prev => prev.map(c => c.id === customer.id ? savedCustomer : c));
+      
+      // Update total customers count
+      await updateTotalCustomers(1);
       
       // Refresh related data if needed
       if (refreshData) {
@@ -177,9 +195,6 @@ export function useCustomerActions({
     const updatedCustomers = customers.filter(c => c.id !== selectedCustomer.id);
     setCustomers(updatedCustomers);
     
-    // Update total customers count
-    updateTotalCustomers(-1);
-    
     // Show toast
     toast({
       title: t('customer.deletedTitle'),
@@ -197,6 +212,9 @@ export function useCustomerActions({
     // Then delete from database
     const success = await deleteCustomerFromDb(selectedCustomer.id);
     if (success) {
+      // Update total customers count
+      await updateTotalCustomers(-1);
+      
       // Refresh related data if needed
       if (refreshData) {
         await refreshData();

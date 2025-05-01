@@ -1,22 +1,24 @@
 
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { DashboardAppointments } from "@/components/dashboard/DashboardAppointments";
 import { DashboardQuickActions } from "@/components/dashboard/DashboardQuickActions";
+import { fetchStats } from "@/services/statsService";
+import { syncCustomerCount } from "@/services/statsService";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  
-  // Mock statistics for demonstration
-  const stats = {
-    todayAppointments: 3,
-    pendingPayments: 5,
+  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState({
+    todayAppointments: 0,
+    pendingPayments: 0,
     availableLoanerCars: 1,
-    completedToday: 2
-  };
+    completedToday: 0
+  });
   
   // Mock upcoming appointments
   const upcomingAppointments = [
@@ -42,6 +44,32 @@ export default function Dashboard() {
       serviceType: t('serviceTypes.inspection')
     }
   ];
+
+  // Load stats from the database
+  useEffect(() => {
+    const loadStats = async () => {
+      setIsLoading(true);
+      try {
+        const dbStats = await fetchStats();
+        
+        // Ensure customer count is accurate
+        await syncCustomerCount();
+        
+        setStats({
+          todayAppointments: dbStats.todayAppointments,
+          pendingPayments: 5, // Mock data
+          availableLoanerCars: 1, // Mock data
+          completedToday: dbStats.completedJobs
+        });
+      } catch (error) {
+        console.error("Error loading stats:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadStats();
+  }, []);
 
   return (
     <Layout title={t('dashboard.welcome')} subtitle={t('dashboard.summary')}>

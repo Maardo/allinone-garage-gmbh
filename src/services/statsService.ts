@@ -162,3 +162,46 @@ export const updateStats = async (stats: Stats): Promise<Stats> => {
     completedJobs: updatedStats.completed_jobs
   };
 };
+
+// Synchronize customer count with actual data
+export const syncCustomerCount = async (): Promise<number> => {
+  // Get current user ID
+  const { data: session } = await supabase.auth.getSession();
+  const userId = session?.session?.user?.id;
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  try {
+    // Count customers
+    const { count, error: countError } = await supabase
+      .from('customers')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId);
+      
+    if (countError) {
+      console.error('Error counting customers:', countError);
+      throw countError;
+    }
+    
+    // Get the current stats
+    const currentStats = await fetchStats();
+    
+    // Only update if the count is different
+    if (count !== null && count !== currentStats.totalCustomers) {
+      const updatedStats = {
+        ...currentStats,
+        totalCustomers: count
+      };
+      
+      await updateStats(updatedStats);
+      return count;
+    }
+    
+    return currentStats.totalCustomers;
+  } catch (error) {
+    console.error('Error syncing customer count:', error);
+    throw error;
+  }
+};
