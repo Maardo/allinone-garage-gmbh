@@ -14,10 +14,6 @@ import { useCustomers } from '@/hooks/useCustomers';
 export function useLoanerCars() {
   const [loanerCars, setLoanerCars] = useState<LoanerCar[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isEditDatesDialogOpen, setIsEditDatesDialogOpen] = useState(false);
   const today = format(new Date(), "yyyy-MM-dd");
   const [assignData, setAssignData] = useState({
     customerId: "",
@@ -104,44 +100,26 @@ export function useLoanerCars() {
     loadLoanerCars();
   }, [loadLoanerCars]);
 
-  // Ensure customer data is refreshed when assign dialog opens
+  // Ensure customer data is refreshed when needed
   useEffect(() => {
-    if (isAssignDialogOpen) {
-      refreshCustomers();
-    }
-  }, [isAssignDialogOpen, refreshCustomers]);
-
-  // Wrapper functions that call our extracted operations with the right parameters
-  const handleAssignWrapper = () => handleAssign(assignData);
-  const handleUpdateCarWrapper = () => handleUpdateCar(selectedCar);
-  const handleDeleteCarWrapper = () => handleDeleteCar(selectedCar);
-  const handleUpdateDatesWrapper = (carId: string, startDate: string, returnDate: string) => {
-    handleUpdateDates(carId, startDate, returnDate);
-  };
+    refreshCustomers();
+  }, [refreshCustomers]);
 
   return {
     loanerCars,
     selectedCar,
     setSelectedCar,
-    isAssignDialogOpen,
-    setIsAssignDialogOpen,
-    isEditDialogOpen,
-    setIsEditDialogOpen,
-    isDeleteDialogOpen,
-    setIsDeleteDialogOpen,
-    isEditDatesDialogOpen,
-    setIsEditDatesDialogOpen,
     appointmentsNeedingCars,
     assignData,
     setAssignData,
     newCar,
     setNewCar,
-    handleAssign: handleAssignWrapper,
+    handleAssign: () => handleAssign(assignData),
     handleReturn,
     handleAddCar,
-    handleUpdateCar: handleUpdateCarWrapper,
-    handleDeleteCar: handleDeleteCarWrapper,
-    handleUpdateDates: handleUpdateDatesWrapper,
+    handleUpdateCar: () => handleUpdateCar(selectedCar),
+    handleDeleteCar: () => handleDeleteCar(selectedCar),
+    handleUpdateDates,
     getAvailableLoanerCars,
     handleAssignToAppointment,
     isLoading,

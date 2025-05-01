@@ -3,6 +3,7 @@ import { Car } from "lucide-react";
 import { Appointment } from "@/lib/types";
 import { LoanerCarRequests } from "@/components/loaner-cars/LoanerCarRequests";
 import { useLanguage } from "@/context/LanguageContext";
+import { useState } from "react";
 
 interface LoanerNeedsTabProps {
   appointments: Appointment[];
@@ -11,6 +12,16 @@ interface LoanerNeedsTabProps {
 
 export function LoanerNeedsTab({ appointments, onAssign }: LoanerNeedsTabProps) {
   const { t } = useLanguage();
+  const [isAssigning, setIsAssigning] = useState<string | null>(null);
+
+  const handleAssign = async (appointmentId: string) => {
+    try {
+      setIsAssigning(appointmentId);
+      await onAssign(appointmentId);
+    } finally {
+      setIsAssigning(null);
+    }
+  };
 
   return (
     <div className="bg-blue-50/50 border rounded-md p-4">
@@ -28,7 +39,8 @@ export function LoanerNeedsTab({ appointments, onAssign }: LoanerNeedsTabProps) 
       
       <LoanerCarRequests 
         appointments={appointments} 
-        onAssign={onAssign} 
+        onAssign={handleAssign}
+        isAssigning={isAssigning}
       />
       
       {appointments.length === 0 && (

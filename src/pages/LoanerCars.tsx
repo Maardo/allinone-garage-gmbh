@@ -9,12 +9,13 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { useOverviewAppointments } from "@/hooks/useOverviewAppointments";
 import { useCalendar } from "@/hooks/useCalendar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LoanerCarsHeader } from "@/components/loaner-cars/LoanerCarsHeader";
 import { LoanerCarsLoading } from "@/components/loaner-cars/LoanerCarsLoading";
 import { LoanerCarsTabs } from "@/components/loaner-cars/LoanerCarsTabs";
 import { useTabOperations } from "@/components/loaner-cars/hooks/useTabOperations";
 import { useDialogOperations } from "@/components/loaner-cars/hooks/useDialogOperations";
+import { format } from "date-fns";
 
 export default function LoanerCarsPage() {
   const { t } = useLanguage();
@@ -22,10 +23,22 @@ export default function LoanerCarsPage() {
   const isAdmin = currentUser?.role === 'admin';
   const { refreshData: refreshOverviewData } = useOverviewAppointments();
   const { loadAppointments } = useCalendar();
+
+  // Track dialog states
+  const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditDatesDialogOpen, setIsEditDatesDialogOpen] = useState(false);
   
   const {
     loanerCars,
     appointmentsNeedingCars,
+    selectedCar,
+    setSelectedCar,
+    newCar,
+    setNewCar,
+    assignData,
+    setAssignData,
     handleAssign,
     handleReturn,
     handleAddCar,
@@ -36,25 +49,6 @@ export default function LoanerCarsPage() {
     isLoading,
     loadLoanerCars
   } = useLoanerCars();
-
-  const {
-    isAssignDialogOpen,
-    setIsAssignDialogOpen,
-    isEditDialogOpen,
-    setIsEditDialogOpen,
-    isDeleteDialogOpen,
-    setIsDeleteDialogOpen,
-    isEditDatesDialogOpen,
-    setIsEditDatesDialogOpen,
-    selectedCar,
-    setSelectedCar,
-    newCar,
-    setNewCar,
-    assignData,
-    setAssignData,
-    handleAddNewCar,
-    handleAssignCar
-  } = useDialogOperations();
 
   const { activeTab, setActiveTab } = useTabOperations(
     appointmentsNeedingCars,
@@ -75,6 +69,7 @@ export default function LoanerCarsPage() {
 
   const handleAssignToAppointmentWithRefresh = async (appointmentId: string) => {
     try {
+      console.log("Assigning to appointment:", appointmentId);
       await handleAssignToAppointment(appointmentId);
       await refreshOverviewData();
       await loadAppointments();
@@ -93,6 +88,27 @@ export default function LoanerCarsPage() {
     } catch (error) {
       console.error("Error in handleReturnWithRefresh:", error);
     }
+  };
+
+  const handleAssignCar = (car: LoanerCar) => {
+    setSelectedCar(car);
+    const today = format(new Date(), "yyyy-MM-dd");
+    setAssignData({
+      customerId: "",
+      startDate: today,
+      returnDate: format(new Date(new Date().setDate(new Date().getDate() + 3)), "yyyy-MM-dd"),
+    });
+    setIsAssignDialogOpen(true);
+  };
+
+  const handleAddNewCar = () => {
+    setSelectedCar(null);
+    setNewCar({
+      name: "",
+      license: "",
+      isAvailable: true
+    });
+    setIsEditDialogOpen(true);
   };
 
   if (isLoading) {
@@ -133,11 +149,12 @@ export default function LoanerCarsPage() {
       </div>
 
       <AssignDialog 
-        isOpen={isAssignDialogOpen && selectedCar !== null}
+        isOpen={isAssignDialogOpen}
         selectedCar={selectedCar}
         onOpenChange={(open) => setIsAssignDialogOpen(open)}
         onAssign={async () => {
           try {
+            console.log("Assigning car in dialog:", { selectedCar, assignData });
             await handleAssign();
             setIsAssignDialogOpen(false);
             await refreshOverviewData();
@@ -162,6 +179,7 @@ export default function LoanerCarsPage() {
             } else {
               await handleAddCar();
             }
+            setIsEditDialogOpen(false);
             await refreshOverviewData();
             await loadLoanerCars();
           } catch (error) {
@@ -179,6 +197,7 @@ export default function LoanerCarsPage() {
         onDelete={async () => {
           try {
             await handleDeleteCar();
+            setIsDeleteDialogOpen(false);
             await refreshOverviewData();
             await loadLoanerCars();
           } catch (error) {

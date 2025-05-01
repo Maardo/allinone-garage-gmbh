@@ -3,6 +3,8 @@ import { LoanerCar, Appointment } from '@/lib/types';
 import { useAssignmentOperations } from './hooks/useAssignmentOperations';
 import { useDateOperations } from './hooks/useDateOperations';
 import { useReturnOperations } from './hooks/useReturnOperations';
+import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function useLoanerCarOperations(
   loanerCars: LoanerCar[],
@@ -11,6 +13,9 @@ export function useLoanerCarOperations(
   appointments: Appointment[],
   refreshData: () => Promise<void>
 ) {
+  const { t } = useLanguage();
+  const { toast } = useToast();
+  
   // Assignment operations
   const {
     selectedCar,

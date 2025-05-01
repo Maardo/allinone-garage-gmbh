@@ -9,7 +9,8 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle,
-  DialogFooter 
+  DialogFooter,
+  DialogDescription 
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -52,19 +53,30 @@ export function AssignDialog({
       refreshCustomers();
     }
   }, [isOpen, refreshCustomers]);
+
+  // Function to handle the assign button click
+  const handleAssignClick = () => {
+    if (!assignData.customerId) {
+      return; // Don't proceed if no customer is selected
+    }
+    onAssign();
+  };
   
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('loanerCar.assignLoanerCar')}</DialogTitle>
+          <DialogDescription>
+            {t('loanerCar.assignLoanerCarDescription', 'Select a customer to assign this loaner car.')}
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="car">{t('loanerCar.car')}</Label>
             <Input 
               id="car" 
-              value={`${selectedCar?.name} (${selectedCar?.license})`} 
+              value={selectedCar ? `${selectedCar.name} (${selectedCar.license})` : ''} 
               readOnly 
             />
           </div>
@@ -109,7 +121,12 @@ export function AssignDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={onAssign}>{t('loanerCar.assignCar')}</Button>
+          <Button 
+            onClick={handleAssignClick} 
+            disabled={!assignData.customerId}
+          >
+            {t('loanerCar.assignCar')}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

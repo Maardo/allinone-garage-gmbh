@@ -19,10 +19,28 @@ export function useAssignmentOperations(
   const { customers } = useCustomers();
 
   const handleAssign = async (assignData: { customerId: string; startDate: string; returnDate: string }): Promise<void> => {
-    if (!selectedCar || !assignData.customerId) return;
+    if (!selectedCar || !assignData.customerId) {
+      console.log("Missing data for assignment:", { selectedCar, customerId: assignData.customerId });
+      toast({
+        title: "Assignment failed",
+        description: "Missing required information. Please try again.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    console.log("Assigning car with data:", { carId: selectedCar.id, ...assignData });
     
     const customer = customers.find(c => c.id === assignData.customerId);
-    if (!customer) return;
+    if (!customer) {
+      console.error("Customer not found:", assignData.customerId);
+      toast({
+        title: "Assignment failed",
+        description: "Selected customer not found. Please try again.",
+        variant: "destructive"
+      });
+      return;
+    }
 
     const updatedCars = loanerCars.map(car => {
       if (car.id === selectedCar.id) {
@@ -42,6 +60,7 @@ export function useAssignmentOperations(
     const updatedCar = updatedCars.find(car => car.id === selectedCar.id);
     if (updatedCar) {
       try {
+        console.log("Updating car in DB:", updatedCar);
         const success = await updateLoanerCarInDb(updatedCar);
         if (success) {
           toast({
@@ -70,6 +89,7 @@ export function useAssignmentOperations(
 
   const handleAssignToAppointment = async (appointmentId: string): Promise<void> => {
     try {
+      console.log("Looking for appointment with ID:", appointmentId);
       const appointment = appointments.find(app => app.id === appointmentId);
       if (!appointment) {
         console.error("Appointment not found:", appointmentId);
@@ -91,8 +111,11 @@ export function useAssignmentOperations(
         return;
       }
       
-      // Make sure the appointment ID is a valid UUID string
-      console.log("Assigning car to appointment ID:", appointmentId);
+      console.log("Assigning car to appointment:", {
+        carId: availableCar.id,
+        appointmentId: appointmentId,
+        customerName: appointment.customerName
+      });
       
       const updatedCars = loanerCars.map(car => {
         if (car.id === availableCar.id) {
@@ -100,7 +123,7 @@ export function useAssignmentOperations(
             ...car,
             isAvailable: false,
             assignedTo: appointment.customerName,
-            appointmentId: appointmentId, // Ensure we're passing the ID as a string
+            appointmentId: appointmentId,
             assignedFrom: new Date(),
             assignedUntil: new Date(new Date().setDate(new Date().getDate() + 3))
           };
@@ -112,6 +135,7 @@ export function useAssignmentOperations(
       
       const updatedCar = updatedCars.find(car => car.id === availableCar.id);
       if (updatedCar) {
+        console.log("Updating car in DB:", updatedCar);
         const success = await updateLoanerCarInDb(updatedCar);
         
         // Update the appointment with the loaner car ID

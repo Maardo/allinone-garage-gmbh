@@ -5,15 +5,16 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
 import { Appointment } from "@/lib/types";
-import { Calendar, Clock, Car } from "lucide-react";
+import { Calendar, Clock, Car, Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LoanerCarRequestsProps {
   appointments: Appointment[];
   onAssign: (appointmentId: string) => void;
+  isAssigning: string | null;
 }
 
-export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsProps) {
+export function LoanerCarRequests({ appointments, onAssign, isAssigning }: LoanerCarRequestsProps) {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   
@@ -53,8 +54,16 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
                 size="sm" 
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 onClick={() => onAssign(appointment.id)}
+                disabled={isAssigning === appointment.id}
               >
-                {t('loanerCar.assign')}
+                {isAssigning === appointment.id ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    {t('common.processing')}
+                  </>
+                ) : (
+                  t('loanerCar.assign')
+                )}
               </Button>
             </div>
           </div>
@@ -105,8 +114,16 @@ export function LoanerCarRequests({ appointments, onAssign }: LoanerCarRequestsP
                     size="sm" 
                     className="bg-blue-600 hover:bg-blue-700"
                     onClick={() => onAssign(appointment.id)}
+                    disabled={isAssigning === appointment.id}
                   >
-                    {t('loanerCar.assign')}
+                    {isAssigning === appointment.id ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        {t('common.processing')}
+                      </>
+                    ) : (
+                      t('loanerCar.assign')
+                    )}
                   </Button>
                 )}
               </TableCell>
